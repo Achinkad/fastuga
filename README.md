@@ -7,7 +7,7 @@
 Make sure that your system has the following dependecies installed.
 
 - npm / nodejs
-- php > 8.0
+- php >= 8.0
 - mysql / mariadb
 - composer
 
