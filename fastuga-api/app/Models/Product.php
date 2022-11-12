@@ -23,6 +23,6 @@ class Product extends Model
     ];
 
     public function order_item() {
-        return $this->belongsTo(OrderItem::class, 'product_id', 'id');
+        return $this->hasMany(OrderItem::class, 'product_id', 'id')->withTrashed();
     }
 }

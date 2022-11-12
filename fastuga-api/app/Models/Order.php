@@ -29,15 +29,15 @@ class Order extends Model
         '$delivered_by',
     ];
 
-    public function customer() {
-        return $this->hasOne(Customer::class, 'id', 'customer_id')->withTrashed();
-    }
-
-    public function user() {
-        return $this->hasOne(User::class, 'id', 'delivered_by')->withTrashed();
-    }
-
     public function order_item() {
-        return $this->belongsTo(OrderItem::class, 'order_id', 'id');
+        return $this->hasMany(OrderItem::class, 'order_id', 'id')->withTrashed();
+    }
+
+    public function customer() {
+        return $this->belongsTo(Customer::class, 'customer_id', 'id')->withTrashed();
+    }
+
+    public function delivered_by() {
+        return $this->belongsTo(User::class, 'delivered_by', 'id')->withTrashed();
     }
 }

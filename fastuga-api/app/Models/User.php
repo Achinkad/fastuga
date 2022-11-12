@@ -21,7 +21,6 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
-        'blocked',
         'photo_url',
         'custom'
     ];
@@ -29,21 +28,22 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'blocked'
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
 
     public function customer() {
-        return $this->belongsTo(Customer::class, 'user_id', 'id');
+        return $this->hasOne(Customer::class, 'user_id', 'id')->withTrashed();
     }
 
-    public function order_item() {
-        return $this->belongsTo(OrderItem::class, 'user_id', 'id');
+    public function preparation_order() {
+        return $this->hasMany(OrderItem::class, 'preparation_id', 'id')->withTrashed();
     }
 
-    public function order() {
-        return $this->belongsTo(Order::class, 'user_id', 'id');
+    public function delivered_order() {
+        return $this->hasMany(Order::class, 'delivered_id', 'id')->withTrashed();
     }
 }
