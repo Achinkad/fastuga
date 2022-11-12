@@ -36,14 +36,14 @@ class User extends Authenticatable
     ];
 
     public function customer() {
-        return $this->hasOne(Customer::class, 'user_id', 'id')->withTrashed();
+        return $this->hasOne(Customer::class, 'user_id')->withTrashed();
     }
 
     public function preparation_order() {
-        return $this->hasMany(OrderItem::class, 'preparation_id', 'id')->withTrashed();
+        return $this->hasMany(OrderItem::class, 'preparation_id')->withTrashed();
     }
 
     public function delivered_order() {
-        return $this->hasMany(Order::class, 'delivered_id', 'id')->withTrashed();
+        return $this->hasMany(Order::class, 'delivered_id')->withTrashed();
     }
 }

@@ -27,14 +27,14 @@ class OrderItem extends Model
     ];
 
     public function product() {
-        return $this->belongsTo(Product::class, 'product_id', 'id')->withTrashed();
+        return $this->belongsTo(Product::class, 'product_id')->withTrashed();
     }
 
     public function order() {
-        return $this->belongsTo(Order::class, 'order_id', 'id')->withTrashed();
+        return $this->belongsTo(Order::class, 'order_id')->withTrashed();
     }
 
     public function preparation_by() {
-        return $this->belongsTo(User::class, 'preparation_by', 'id')->withTrashed();
+        return $this->belongsTo(User::class, 'preparation_by')->withTrashed();
     }
 }

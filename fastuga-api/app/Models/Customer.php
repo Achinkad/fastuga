@@ -24,10 +24,10 @@ class Customer extends Model
     ];
 
     public function user() {
-        return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function order() {
-        return $this->hasMany(Order::class, 'customer_id', 'id')->withTrashed();
+        return $this->hasMany(Order::class, 'customer_id')->withTrashed();
     }
 }
