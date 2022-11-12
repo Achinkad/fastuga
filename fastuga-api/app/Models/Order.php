@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'orders';
     protected $primaryKey = 'id';
@@ -21,12 +20,12 @@ class Order extends Model
         'total_paid_with_points',
         'points_gained',
         'points_used_to_pay',
-        'payment_type'
+        'payment_type',
         'payment_reference',
         'date',
-        'custom'
+        'custom',
         '$customer_id',
-        '$delivered_by',
+        '$delivered_by'
     ];
 
     public function order_item() {
