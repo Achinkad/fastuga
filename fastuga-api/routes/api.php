@@ -17,6 +17,7 @@ Route::resource('customers', CustomerController::class);
 
 /* --- [API Routes] -> Users --- */
 Route::resource('users', UserController::class);
+Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block / Unblock User
 
 /* --- [API Routes] -> Orders --- */
 Route::resource('orders', OrderController::class);
