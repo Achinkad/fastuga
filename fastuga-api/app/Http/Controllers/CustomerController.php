@@ -49,6 +49,13 @@ class CustomerController extends Controller
 
     public function destroy($id)
     {
-        //
+        $deleted_customer = DB::transaction(function () use ($id) {
+            $customer = new CustomerResource(Customer::findOrFail($id));
+            $customer->user->delete();
+            $customer->delete();
+            return $customer;
+        });
+
+        return $deleted_customer;
     }
 }

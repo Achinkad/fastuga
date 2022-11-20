@@ -46,6 +46,6 @@ class UserController extends Controller
     {
         $user = new UserResource(User::findOrFail($id));
         // if ($user->customer) { $user->customer->forceDelete(); } --> NONSENSE?
-        return $deleted = $user->delete();
+        return $user->delete();
     }
 }
