@@ -1,5 +1,31 @@
 <?php
+function cors()
+{
 
+    // Allow from any origin
+    if (isset($_SERVER['HTTP_ORIGIN'])) {
+        // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
+        // you want to allow, and if so:
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 86400');    // cache for 1 day
+    }
+
+    // Access-Control headers are received during OPTIONS requests
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+            // may also be using PUT, PATCH, HEAD etc
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+            header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+        exit(0);
+    }
+
+    echo "You have CORS!";
+}
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
@@ -12,18 +38,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/* --- [API Routes] -> Customers --- */
-Route::resource('customers', CustomerController::class);
-
-/* --- [API Routes] -> Users --- */
-Route::resource('users', UserController::class);
-Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block / Unblock User
-
-/* --- [API Routes] -> Orders --- */
 Route::resource('orders', OrderController::class);
-
-/* --- [API Routes] -> Products --- */
+Route::resource('users', UserController::class);
 Route::resource('products', ProductController::class);
-
-/* --- [API Routes] -> Order Items --- */
+Route::resource('customers', CustomerController::class);
 Route::resource('order-items', OrderItemController::class);

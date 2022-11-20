@@ -12,16 +12,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'blocked' => $this->blocked ? true : false,
+            'blocked' => $this->blocked,
             'photo_url' => $this->photo_url
-        ];
-    }
-
-    public function with($request)
-    {
-        return [
-            'version' => '1.0.0',
-            'api_url' => url('http://fastuga.com')
         ];
     }
 }

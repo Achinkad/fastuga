@@ -15,16 +15,8 @@ class CustomerResource extends JsonResource
             'nif' => $this->nif,
             'default_payment_type' => $this->default_payment_type,
             'default_payment_reference' => $this->default_payment_reference,
-            'user_id' => $this->user_id,
-            'user' => new UserResource($this->user)
-        ];
-    }
-
-    public function with($request)
-    {
-        return [
-            'version' => '1.0.0',
-            'api_url' => url('http://fastuga.com')
+            'custom' => $this->custom,
+            'user_id' => $this->user_id
         ];
     }
 }
