@@ -37,14 +37,26 @@ class UserController extends Controller
         return new UserResource(User::findOrFail($id));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUserRequest $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $fields = $request->validated();
+        $user->fill($fields);
+        $user->save();
+
+        return new UserResource($user);
+    }
+
+    public function toogle($id) {
+        $user = User::findOrFail($id);
+        $user->blocked = $user->blocked == 1 ? 0 : 1;
+        $user->save();
+        return new UserResource($user);
     }
 
     public function destroy($id)
     {
-        $user = new UserResource(User::findOrFail($id));
+        $user = User::findOrFail($id);
         // if ($user->customer) { $user->customer->forceDelete(); } --> NONSENSE?
         return $user->delete();
     }
