@@ -13,23 +13,29 @@ class OrderController extends Controller
         return OrderResource::collection(Order::all());
     }
 
-    public function store(Request $request)
+    public function store(ValidateNewOrder $request)
     {
-        //
+        $newOrder = Order::create($request->validated());
+        return new TaskResource($newTask);
     }
 
-    public function show($id)
+    public function show(Order $order)
     {
-        return OrderResource::collection(Order::where('id', $id)->get());
+        return new OrderResource($order);
     }
 
-    public function update(Request $request, $id)
+    public function update(ValidateNewOrder $request, Order $order)
     {
-        //
+        $order->update($request->validated());
+        return new OrderRequest($order);
     }
 
-    public function destroy($id)
+    public function destroy(Order $order)
     {
-        //
+        //falta algum detach?
+        $order->customer()->detatch();
+        $order->delivered_by()->detatch();
+        $order->delete();
+        return new OrderResource($order);
     }
 }
