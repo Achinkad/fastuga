@@ -2,7 +2,7 @@
 import { ref, watch, computed } from "vue";
 
 const props = defineProps({
-  task: {
+  order: {
     type: Object,
     required: true,
   },
@@ -26,12 +26,12 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel"]);
 
-const editingTask = ref(props.task);
+const editingOrder = ref(props.order);
 
 watch(
-  () => props.task,
-  (newTask) => {
-    editingTask.value = newTask;
+  () => props.order,
+  (newOrder) => {
+    editingOrder.value = newOrder;
   }
 );
 
@@ -39,31 +39,31 @@ watch(
   () => props.fixedProject,
   (newFixedProject) => {
     if (newFixedProject) {
-      editingTask.value.project_id = newFixedProject;
+      editingOrder.value.project_id = newFixedProject;
     }
   },
   { immediate: true }
 );
 
-const taskTitle = computed(() => {
-  if (!editingTask.value) {
+const orderTittle = computed(() => {
+  if (!editingOrder.value) {
     return "";
   }
-  return props.operationType == "insert" ? "New Task" : "Task #" + editingTask.value.id;
+  return props.operationType == "insert" ? "New Order" : "Order #" + editingOrder.value.id;
 });
 
 const save = () => {
-  emit("save", editingTask.value);
+  emit("save", editingOrder.value);
 };
 
 const cancel = () => {
-  emit("cancel", editingTask.value);
+  emit("cancel", editingOrder.value);
 };
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">{{ taskTitle }}</h3>
+    <h3 class="mt-5 mb-3">{{ orderTittle }}</h3>
     <hr />
 
     <div class="d-flex flex-wrap justify-content-between">
@@ -72,17 +72,17 @@ const cancel = () => {
           <input
             class="form-check-input"
             type="checkbox"
-            v-model="editingTask.completed"
+            v-model="editingOrder.completed"
             id="inputCompleted"
           />
-          <label class="form-check-label" for="inputCompleted"> Task is Completed </label>
+          <label class="form-check-label" for="inputCompleted"> Order is Completed </label>
           <field-error-message
             :errors="errors"
             fieldName="completed"
           ></field-error-message>
         </div>
       </div>
-      <div class="row mb-3 total_hours" v-show="editingTask.completed">
+      <div class="row mb-3 total_hours" v-show="editingOrder.completed">
         <label for="inputHours" class="col-sm-2 col-form-label">Hours</label>
         <div class="col-sm-10">
           <input
@@ -90,7 +90,7 @@ const cancel = () => {
             class="form-control"
             id="inputHours"
             placeholder="Total hours to complete the task"
-            v-model="editingTask.total_hours"
+            v-model="editingOrder.total_hours"
           />
           <field-error-message
             :errors="errors"
@@ -108,7 +108,7 @@ const cancel = () => {
         id="inputDescription"
         placeholder="Task Description"
         required
-        v-model="editingTask.description"
+        v-model="editingOrder.description"
       />
       <field-error-message :errors="errors" fieldName="description"></field-error-message>
     </div>
@@ -118,7 +118,7 @@ const cancel = () => {
         class="form-select"
         id="inputProject"
         :disabled="fixedProject"
-        v-model="editingTask.project_id"
+        v-model="editingOrder.project_id"
       >
         <option :value="null">-- No Project --</option>
         <option v-for="prj in projects" :key="prj.id" :value="prj.id">
@@ -133,7 +133,7 @@ const cancel = () => {
         class="form-control"
         id="inputNotes"
         rows="4"
-        v-model="editingTask.notes"
+        v-model="editingOrder.notes"
       ></textarea>
       <field-error-message :errors="errors" fieldName="notes"></field-error-message>
     </div>

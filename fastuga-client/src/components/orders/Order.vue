@@ -2,13 +2,13 @@
   import { ref, watch, computed, onMounted, inject } from 'vue'
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
 
-  import TaskDetail from "./TaskDetail.vue"
+  import OrderDetail from "./OrderDetails.vue"
 
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const newTask = () => {
+  const newOrder = () => {
       return {
         id: null,
         owner_id: 1,  // Change it later
@@ -21,16 +21,16 @@
   }
 
   let originalValueStr = ''
-  const loadTask = (id) => {
+  const loadOrder = (id) => {
       originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
-        task.value = newTask()
+        order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
-        axios.get('tasks/' + id)
+        axios.get('orders/' + id)
           .then((response) => {
-            task.value = response.data.data
+            order.value = response.data.data
             originalValueStr = dataAsString()
           })
           .catch((error) => {
@@ -42,35 +42,35 @@
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post('tasks', task.value)
+        axios.post('order', order.value)
           .then((response) => {
-            task.value = response.data.data
+            order.value = response.data.data
             originalValueStr = dataAsString()
-            toast.success('Task #' + task.value.id + ' was created successfully.')
+            toast.success('order #' + order.value.id + ' was created successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Task was not created due to validation errors!')
+              toast.error('order was not created due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Task was not created due to unknown server error!')
+              toast.error('order was not created due to unknown server error!')
             }
           })
       } else {
-        axios.put('tasks/' + props.id, task.value)
+        axios.put('order/' + props.id, order.value)
           .then((response) => {
-            task.value = response.data.data
+            order.value = response.data.data
             originalValueStr = dataAsString()
-            toast.success('Task #' + task.value.id + ' was updated successfully.')
+            toast.success('order #' + order.value.id + ' was updated successfully.')
             router.back()
           })
           .catch((error) => {
             if (error.response.status == 422) {
-              toast.error('Task #' + props.id + ' was not updated due to validation errors!')
+              toast.error('order #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('Task #' + props.id + ' was not updated due to unknown server error!')
+              toast.error('order #' + props.id + ' was not updated due to unknown server error!')
             }
           })
       }
@@ -82,7 +82,7 @@
   }
 
   const dataAsString = () => {
-      return JSON.stringify(task.value)
+    return JSON.stringify(order.value)
   }
 
   let nextCallBack = null
@@ -114,7 +114,7 @@
     }
   })
 
-  const task = ref(newTask())
+  const order = ref(newOrder())
   const projects = ref([])
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
@@ -126,7 +126,7 @@
   watch(
     () => props.id,
     (newValue) => {
-        loadTask(newValue)
+        loadOrder(newValue)
       }, 
     { immediate: true}
   )
@@ -152,13 +152,13 @@
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  
-  <task-detail
+  <OrderDetail
     :operationType="operation"
-    :task="task"
+    :order="order"
     :errors="errors"
     :projects="projects"
     :fixedProject="fixedProject"
     @save="save"
     @cancel="cancel"
-  ></task-detail>
+  ></OrderDetail>
 </template>

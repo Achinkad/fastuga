@@ -26,7 +26,7 @@ onMounted(() => {
     <div class="container-fluid">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
         <img src="@/assets/logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
-        App name
+        Fastuga
       </a>
       <button id="buttonSidebarExpandId" class="navbar-toggler" type="button"
       data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
@@ -83,62 +83,33 @@ onMounted(() => {
           </router-link>
         </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-list-stars"></i>
-              Current Tasks
-            </a>
+            <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder'}" :to="{ name: 'CurrentOrder'}">
+              <i class="bi bi-house"></i>
+              Current Orders
+            </router-link>
           </li>
         <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-          <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Tasks' }" :to="{ name: 'Tasks' }">
+          <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }" :to="{ name: 'Orders' }">
             <i class="bi bi-list-check"></i>
-            Tasks
+            Orders
           </router-link>
          
         </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-files"></i>
-              Projects
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-people"></i>
-              Team Members
-            </a>
-          </li>
+        <!--
           <li class="nav-item">
             <a class="nav-link" href="#">
               <i class="bi bi-bar-chart-line"></i>
               Reports
             </a>
-          </li>
+          </li>-->
         </ul>
         
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>My Projects</span>
+          <span>My Orders</span>
           <a class="link-secondary" href="#" aria-label="Add a new project">
             <i class="bi bi-xs bi-plus-circle"></i>
           </a>
         </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-file-ruled"></i>
-              Some project
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-file-ruled"></i>
-              Another project
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="bi bi-file-ruled"></i>
-              Yet another project
-            </a>
-          </li>
-        </ul>
         
         <div class="d-block d-md-none">
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -150,28 +121,26 @@ onMounted(() => {
                 Register
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-box-arrow-in-right"></i>
-                Login
-              </a>
-            </li>
+          <li class="nav-item">
+            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+              <i class="bi bi-box-arrow-in-right"></i>
+              Login
+            </router-link>
+          </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image">
                 <span class="avatar-text">User Name</span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                <li>
-                  <a class="dropdown-item" href="#">
-                    <i class="bi bi-person-square"></i>Profile</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      <i class="bi bi-key-fill"></i>
-                      Change password
-                    </a>
-                  </li>
+                 
+              
+                
+                  <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                    :to="{ name: 'ChangePassword' }">
+                    <i class="bi bi-key-fill"></i>
+                    Change password
+                  </router-link>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
