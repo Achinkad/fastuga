@@ -29,6 +29,11 @@ class CustomerController extends Controller
             $customer = new Customer;
             $customer->fill($customer_fields);
             $customer->user_id = trim($create_user->id);
+
+            if ($customer_request->has('photo_url')) {
+                
+            }
+
             $customer->save();
 
             return $customer;
@@ -47,15 +52,12 @@ class CustomerController extends Controller
         //
     }
 
-    public function destroy($id)
+    public function destroy($id) // -> Boolean Return
     {
-        $deleted_customer = DB::transaction(function () use ($id) {
-            $customer = Customer::findOrFail($id);
+        return DB::transaction(function () use ($id) {
+            $customer = Customer::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
             $customer->user->delete();
-            $customer->delete();
-            return $customer;
+            return $customer->delete();
         });
-
-        return new CustomerResource($deleted_customer);
     }
 }

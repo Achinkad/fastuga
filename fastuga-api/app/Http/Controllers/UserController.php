@@ -48,16 +48,21 @@ class UserController extends Controller
     }
 
     public function toogle($id) {
-        $user = User::findOrFail($id);
+        /* --- Authorization --- */
+        if (Auth()->user()->type() != "EM") { abort(403); }
+
+        $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
         $user->blocked = $user->blocked == 1 ? 0 : 1;
         $user->save();
         return new UserResource($user);
     }
 
-    public function destroy($id)
+    public function destroy($id) // -> Boolean Return
     {
-        $user = User::findOrFail($id);
-        // if ($user->customer) { $user->customer->forceDelete(); } --> NONSENSE?
-        return $user->delete();
+        return DB::transaction(function () use ($id) {
+            $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
+            if ($user->customer) { $user->customer->delete(); }
+            return $user->delete();
+        });
     }
 }
