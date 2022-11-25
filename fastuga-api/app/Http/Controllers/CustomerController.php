@@ -30,26 +30,51 @@ class CustomerController extends Controller
             $customer->fill($customer_fields);
             $customer->user_id = trim($create_user->id);
 
+            // -> Stores Customer Photo
             if ($customer_request->has('photo_url')) {
-                
+                $photo = $customer_request->file('photo_url');
+                $photo_id = $customer->id . '_' . $photo->hashName() . '.' . $photo->extension();
+                Storage::disk('public')->putFileAs('fotos/', $photo, $photo_id);
+                $customer->photo_url = $photo_id;
             }
 
             $customer->save();
-
             return $customer;
         });
 
         return new CustomerResource($new_customer);
     }
 
-    public function show($id)
+    public function show(Customer $customer)
     {
-        return new CustomerResource(Customer::findOrFail($id));
+        return new CustomerResource($user);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreCustomerRequest $customer_request, StoreUserRequest $user_request, Customer $customer)
     {
-        //
+        $updated_customer = DB:Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
+            // -> Updates User
+            $updated_user = (new UserController)->update($user_request, $customer->user);
+
+            // -> Updates Customer
+            $customer->fill($customer_request->validated());
+
+            if ($customer_request->has('photo_url')) {
+                // -> Check if a previous file exists and deletes it
+                if(Storage::disk('public')->exists($customer->photo_url)) {
+                    Storage::delete($customer->photo_url);
+                }
+                // -> Stores the new photo
+                $photo = $customer_request->file('photo_url');
+                $photo_id = $customer->id . '_' . $photo->hashName() . '.' . $photo->extension();
+                Storage::disk('public')->putFileAs('fotos/', $photo, $photo_id);
+                $customer->photo_url = $photo_id;
+            }
+
+            $customer->save();
+            return $customer;
+        }
+        return new CustomerResource($updated_customer);
     }
 
     public function destroy($id) // -> Boolean Return

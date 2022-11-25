@@ -32,18 +32,15 @@ class UserController extends Controller
         return new UserResource($new_user);
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        return new UserResource(User::findOrFail($id));
+        return new UserResource($user);
     }
 
-    public function update(StoreUserRequest $request, $id)
+    public function update(StoreUserRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-        $fields = $request->validated();
-        $user->fill($fields);
+        $user->fill($request->validated());
         $user->save();
-
         return new UserResource($user);
     }
 
