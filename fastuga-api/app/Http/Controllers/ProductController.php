@@ -9,6 +9,14 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'index',
+            'show'
+        ]]);
+    }
+
     public function index()
     {
         return ProductResource::collection(Product::all());
