@@ -12,11 +12,7 @@ const props = defineProps({
   },
   operationType: {
     type: String,
-    default: "insert", // insert / update
-  },
-  projects: {
-    type: Array,
-    required: true,
+    default: "insert", 
   },
   fixedProject: {
     type: Number,
@@ -35,15 +31,6 @@ watch(
   }
 );
 
-watch(
-  () => props.fixedProject,
-  (newFixedProject) => {
-    if (newFixedProject) {
-      editingOrder.value.project_id = newFixedProject;
-    }
-  },
-  { immediate: true }
-);
 
 const orderTittle = computed(() => {
   if (!editingOrder.value) {
@@ -111,21 +98,6 @@ const cancel = () => {
         v-model="editingOrder.description"
       />
       <field-error-message :errors="errors" fieldName="description"></field-error-message>
-    </div>
-    <div class="mb-3">
-      <label for="inputProject" class="form-label">Project</label>
-      <select
-        class="form-select"
-        id="inputProject"
-        :disabled="fixedProject"
-        v-model="editingOrder.project_id"
-      >
-        <option :value="null">-- No Project --</option>
-        <option v-for="prj in projects" :key="prj.id" :value="prj.id">
-          {{ prj.name }}
-        </option>
-      </select>
-      <field-error-message :errors="errors" fieldName="project_id"></field-error-message>
     </div>
     <div class="mb-3">
       <label for="inputNotes" class="form-label">Notes</label>

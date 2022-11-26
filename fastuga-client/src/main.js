@@ -13,7 +13,7 @@ import "bootstrap"
 
 
 const app = createApp(App)
-const serverBaseUrl = 'http://localhost/fastuga-api/public'
+const serverBaseUrl = 'http://127.0.0.1:8000'
 app.provide('axios', axios.create({
     baseURL: serverBaseUrl + '/api',
     headers: {

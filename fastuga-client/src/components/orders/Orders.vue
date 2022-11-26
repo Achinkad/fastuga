@@ -7,26 +7,17 @@ const axios = inject('axios')
 const router = useRouter()
 
 const loadOrders = () => {
-  // Change later when authentication is implemented
-  const userId = 1
-  axios.get('users/' + userId + '/orders')
+  axios.get('orders')
     .then((response) => {
       orders.value = response.data.data
+      console.log(orders.value)
     })
     .catch((error) => {
       console.log(error)
     })
 }
 
-const loadProjects = () => {
-  axios.get('projects')
-    .then((response) => {
-      projects.value = response.data.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
+
 
 const addOrder = () => {
   router.push({ name: 'NewOrder' })
@@ -55,7 +46,6 @@ const props = defineProps({
 })
 
 const orders = ref([])
-const filterByProjectId = ref(-1)
 const filterByCompleted = ref(-1)
 
 const filteredOrders = computed(() => {
@@ -63,8 +53,7 @@ const filteredOrders = computed(() => {
     (props.onlyCurrentOrders && !t.completed)
     ||
     (!props.onlyCurrentOrders && (
-      (filterByProjectId.value == -1
-      ) &&
+      
       (filterByCompleted.value == -1
         || filterByCompleted.value == 0 && !t.completed
         || filterByCompleted.value == 1 && t.completed
@@ -93,6 +82,21 @@ onMounted(() => {
 
 <template>
 
+  <div class="mx-2">
+    <h3 class="mt-4">{{ orderTittle }}</h3>
+  </div>
+  <div class="mx-2 total-filtro">
+    <h5 class="mt-4">Total: {{ totalOrders }}</h5>
+  </div>
+  <hr>
+  <div v-if="!onlyCurrentOrders" class="mb-3 d-flex justify-content-between flex-wrap">
+    <div class="mx-2 mt-2">
+      <button type="button" class="btn btn-success px-4 btn-addtask" @click="addOrder"><i
+          class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
+    </div>
+  </div>
+  <order-table :tasks="filteredOrders" :showId="true" :showOwner="false" @edit="editOrder" @deleted="deletedOrder">
+  </order-table>
 </template>
 
 

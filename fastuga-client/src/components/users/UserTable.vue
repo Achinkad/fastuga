@@ -39,7 +39,7 @@ const emit = defineEmits(["edit"]);
 
 const photoFullUrl = (user) => {
   return user.photo_url
-    ? serverBaseUrl + "/storage/fotos/" + user.photo_url
+    ? serverBaseUrl + "/storage/app/public/fotos/" + user.photo_url
     : avatarNoneUrl;
 };
 

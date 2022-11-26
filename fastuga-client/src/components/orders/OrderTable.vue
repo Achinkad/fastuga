@@ -17,11 +17,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showOwner: {
+  showCustomer: {
     type: Boolean,
     default: true,
   },
-  showProject: {
+  showPrice: {
     type: Boolean,
     default: true,
   },
@@ -94,9 +94,50 @@ const deleteClick = (order) => {
 </script>
 
 <template>
- 
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-if="showId">#</th>
+        <th class="text-center" v-if="showCompleted">Completed</th>
+        <th v-if="showCompletedButton || showEditButton || showDeleteButton"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="order in editingOrders" :key="order.id">
+        <td v-if="showId">{{ task.id }}</td>
+        <td class="text-center" v-if="showCompleted">
+          {{ order.completed ? "yes" : "-" }}
+        </td>
+        <td>
+          <span :class="{ completed: order.completed }">{{ order.description }}</span>
+        </td>
+        <td v-if="showId">{{ order.id }}</td>
 
-  
+        <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="toogleClick(task)" v-if="showCompletedButton">
+              <i class="bi bi-xs" :class="{
+                'bi-square': !order.completed,
+                'bi-check2-square': order.completed,
+              }"></i>
+            </button>
+
+            <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
+              <i class="bi bi-xs bi-pencil"></i>
+            </button>
+
+            <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
+              <i class="bi bi-xs bi-x-square-fill"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
 </template>
 
 <style scoped>

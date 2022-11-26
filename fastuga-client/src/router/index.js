@@ -25,8 +25,6 @@ const router = createRouter({
       path: '/users/:id',
       name: 'User',
       component: User,
-      //props: true
-      // Replaced with the following line to ensure that id is a number
       props: route => ({ id: parseInt(route.params.id) })
     },
     {
@@ -51,6 +49,12 @@ const router = createRouter({
       props: { onlyCurrentOrders: true, ordersTittle: 'Current Order' }
     },
     {
+      path: '/order/new',
+      name: 'newOrder',
+      component: Orders,
+      props: { onlyNewOrders: true, ordersTittle: 'New Order' }
+    },
+    {
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
@@ -58,9 +62,7 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+    
       component: () => import('../views/AboutView.vue')
     }
   ]

@@ -11,12 +11,12 @@
   const newOrder = () => {
       return {
         id: null,
-        owner_id: 1,  // Change it later
-        project_id: null,
+        ticket_number: 1,  // Change it later
+        status: D,
         completed: false,
-        description: '',
-        notes: '',
-        total_hours: null
+        total_price: 0,
+        customer_id: null,
+        delivered_by: null
       }
   }
 
@@ -131,16 +131,7 @@
     { immediate: true}
   )
 
-  onMounted (() => {
-    projects.value = []
-    axios.get('projects')
-      .then((response) => {
-        projects.value = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
+
 </script>
 
 
@@ -156,8 +147,7 @@
     :operationType="operation"
     :order="order"
     :errors="errors"
-    :projects="projects"
-    :fixedProject="fixedProject"
+  
     @save="save"
     @cancel="cancel"
   ></OrderDetail>
