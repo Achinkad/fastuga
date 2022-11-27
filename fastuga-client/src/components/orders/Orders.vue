@@ -53,7 +53,7 @@ const filteredOrders = computed(() => {
     (props.onlyCurrentOrders && !t.completed)
     ||
     (!props.onlyCurrentOrders && (
-      
+
       (filterByCompleted.value == -1
         || filterByCompleted.value == 0 && !t.completed
         || filterByCompleted.value == 1 && t.completed
@@ -83,17 +83,28 @@ onMounted(() => {
 <template>
 
   <div class="mx-2">
-    <h3 class="mt-4">{{ orderTittle }}</h3>
+    <h3 class="mt-4">{{ }}</h3>
   </div>
   <div class="mx-2 total-filtro">
     <h5 class="mt-4">Total: {{ totalOrders }}</h5>
   </div>
   <hr>
   <div v-if="!onlyCurrentOrders" class="mb-3 d-flex justify-content-between flex-wrap">
-    <div class="mx-2 mt-2">
-      <button type="button" class="btn btn-success px-4 btn-addtask" @click="addOrder"><i
-          class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
+    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+      <label for="selectCompleted" class="form-label">Filter by completed:</label>
+      <select class="form-select" id="selectCompleted" v-model="filterByCompleted">
+        <option value="-1">Any</option>
+        <option value="0">Pending Orders</option>
+        <option value="1">Completed Orders</option>
+      </select>
+      <div class="mx-0 mt-2">
+        <button type="button" class="btn btn-success px-4 btn-addtask" @click="addOrder"><i
+            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
+      </div>
+
     </div>
+
+
   </div>
   <order-table :tasks="filteredOrders" :showId="true" :showOwner="false" @edit="editOrder" @deleted="deletedOrder">
   </order-table>

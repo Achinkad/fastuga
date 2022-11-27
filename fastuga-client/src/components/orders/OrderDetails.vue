@@ -76,7 +76,7 @@ const cancel = () => {
             type="number"
             class="form-control"
             id="inputHours"
-            placeholder="Total hours to complete the task"
+            placeholder="Total minutes to complete the order"
             v-model="editingOrder.total_hours"
           />
           <field-error-message
@@ -93,7 +93,7 @@ const cancel = () => {
         type="text"
         class="form-control"
         id="inputDescription"
-        placeholder="Task Description"
+        placeholder="Order Description"
         required
         v-model="editingOrder.description"
       />

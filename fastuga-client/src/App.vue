@@ -87,7 +87,7 @@ onMounted(() => {
               <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }"
                 :to="{ name: 'CurrentOrder' }">
                 <i class="bi bi-list-stars"></i>
-                Current Orders
+                My Orders
               </router-link>
             </li>
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
@@ -96,7 +96,9 @@ onMounted(() => {
                 <i class="bi bi-list-check"></i>
                 Orders
               </router-link>
-
+              <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order">
+                <i class="bi bi-xs bi-plus-circle"></i>
+              </router-link>
             </li>
 
             <li class="nav-item">

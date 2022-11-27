@@ -12,7 +12,7 @@
       return {
         id: null,
         ticket_number: 1,  // Change it later
-        status: D,
+        status: "D",
         completed: false,
         total_price: 0,
         customer_id: null,
@@ -108,14 +108,10 @@
       type: Number,
       default: null
     },
-    fixedProject: {
-      type: Number,
-      default: null
-    }
+ 
   })
 
   const order = ref(newOrder())
-  const projects = ref([])
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
@@ -147,7 +143,6 @@
     :operationType="operation"
     :order="order"
     :errors="errors"
-  
     @save="save"
     @cancel="cancel"
   ></OrderDetail>
