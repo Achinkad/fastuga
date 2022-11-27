@@ -37,6 +37,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  
 })
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
@@ -106,7 +107,7 @@ const deleteClick = (order) => {
       <tr v-for="order in orders" :key="order.id">
         <td v-if="showId">{{ order.id }}</td>
         <td class="text-center" v-if="showCompleted">
-          {{ order.completed ? "yes" : "-" }}
+          {{ order.completed ? "Done" : "Pending" }}
         </td>
         <td v-if="showId">{{ order.id }}</td>
 

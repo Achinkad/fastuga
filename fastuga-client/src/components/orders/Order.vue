@@ -139,11 +139,11 @@
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  
-  <OrderDetail
+  <order-detail
     :operationType="operation"
     :order="order"
     :errors="errors"
     @save="save"
     @cancel="cancel"
-  ></OrderDetail>
+  ></order-detail>
 </template>

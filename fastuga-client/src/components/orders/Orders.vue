@@ -35,7 +35,7 @@ const deletedOrder = (deletedOrder) => {
 }
 
 const props = defineProps({
-  orderTittle: {
+  ordersTittle: {
     type: String,
     default: 'Order',
   },
@@ -46,7 +46,7 @@ const props = defineProps({
 })
 
 const orders = ref([])
-const filterByCompleted = ref(-1)
+const filterByCompleted = ref("D")
 
 const filteredOrders = computed(() => {
   return orders.value.filter(t =>
@@ -54,9 +54,9 @@ const filteredOrders = computed(() => {
     ||
     (!props.onlyCurrentOrders && (
 
-      (filterByCompleted.value == -1
-        || filterByCompleted.value == 0 && !t.completed
-        || filterByCompleted.value == 1 && t.completed
+      (filterByCompleted.value == "D"
+        || filterByCompleted.value == "C" && !t.completed
+        || filterByCompleted.value == "D" && t.completed
       ))))
 
 })
@@ -67,9 +67,9 @@ const totalOrders = computed(() => {
       ||
       (!props.onlyCurrentOrders && (
 
-        (filterByCompleted.value == -1
-          || filterByCompleted.value == 0 && !t.completed
-          || filterByCompleted.value == 1 && t.completed
+        (filterByCompleted.value == "D"
+          || filterByCompleted.value == "C" && !t.completed
+          || filterByCompleted.value == "D" && t.completed
         ))) ? c + 1 : c, 0)
 
 })
@@ -83,7 +83,7 @@ onMounted(() => {
 <template>
 
   <div class="mx-2">
-    <h3 class="mt-4">{{ }}</h3>
+    <h3 class="mt-4">{{ ordersTittle }}</h3>
   </div>
   <div class="mx-2 total-filtro">
     <h5 class="mt-4">Total: {{ totalOrders }}</h5>
@@ -98,7 +98,7 @@ onMounted(() => {
         <option value="1">Completed Orders</option>
       </select>
       <div class="mx-0 mt-2">
-        <button type="button" class="btn btn-success px-4 btn-addtask" @click="addOrder"><i
+        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
       </div>
 
@@ -106,7 +106,7 @@ onMounted(() => {
 
 
   </div>
-  <order-table :tasks="filteredOrders" :showId="true" :showOwner="false" @edit="editOrder" @deleted="deletedOrder">
+  <order-table :orders="orders" :showId="true" :showOwner="false" @edit="editOrder" @deleted="deletedOrder">
   </order-table>
 </template>
 

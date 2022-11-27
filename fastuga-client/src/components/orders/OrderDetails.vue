@@ -70,7 +70,7 @@ const cancel = () => {
         </div>
       </div>
       <div class="row mb-3 total_hours" v-show="editingOrder.completed">
-        <label for="inputHours" class="col-sm-2 col-form-label">Hours</label>
+        <label for="inputHours" class="col-sm-2 col-form-label">Minutes</label>
         <div class="col-sm-10">
           <input
             type="number"
