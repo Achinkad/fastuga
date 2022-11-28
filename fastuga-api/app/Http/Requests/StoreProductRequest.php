@@ -19,7 +19,7 @@ class StoreProductRequest extends FormRequest
             'name' => 'required|unique:products|min:3|max:255',
             'type' => 'required|in:hot dish,cold dish,drink,dessert',
             'description' => 'required|max:255',
-            'photo_url' => 'required',
+            'photo_url' => 'sometimes',
             'price' => 'required',
             'custom' => 'nullable'
         ];

@@ -22,7 +22,9 @@ class OrderResource extends JsonResource
             'date' => $this->date,
             'custom' => $this->custom,
             'customer_id' => $this->customer_id,
-            'delivered_by' => $this->delivered_by
+            'customer' => $this->customer_id ? new CustomerResource($this->customer) : null,
+            'delivered_by' => $this->delivered_by,
+            'user' => $this->delivered_by ? new UserResource($this->delivered_by_user) : null
         ];
     }
 }

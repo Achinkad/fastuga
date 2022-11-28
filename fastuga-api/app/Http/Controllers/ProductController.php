@@ -27,7 +27,7 @@ class ProductController extends Controller
         $product = Product::create($request->validated());
 
         // -> Stores Product Photo
-        if ($request->has('photo_url')) {
+        if ($request->has('photo_url') & $request->file('photo_url')->isValid()) {
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName() . '.' . $photo->extension();
             Storage::disk('public')->putFileAs('products/', $photo, $photo_id);

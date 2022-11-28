@@ -36,7 +36,7 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id')->withTrashed();
     }
 
-    public function delivered_by() {
+    public function delivered_by_user() {
         return $this->belongsTo(User::class, 'delivered_by')->withTrashed();
     }
 }
