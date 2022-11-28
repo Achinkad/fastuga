@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl ="http://fastuga-api";
 
 const props = defineProps({
   order: {
