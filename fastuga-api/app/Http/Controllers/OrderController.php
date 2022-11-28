@@ -25,6 +25,9 @@ class OrderController extends Controller
         $order->fill($request->validated());
         $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
         $order->status = "P";
+
+        // TODO: Handle Payments & Points
+
         $order->save();
 
         return new OrderResource($order);
