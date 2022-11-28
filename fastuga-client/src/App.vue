@@ -4,10 +4,11 @@ import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
 const workInProgressProjects = ref([]);
+const serverBaseUrl ="http://fastuga-api.test";
 
 onMounted(() => {
   const userId = 1
-  axios.get("users/" + userId)
+  axios.get(serverBaseUrl+"/api/users/" + userId)
     .then((response) => {
       console.log(response);
       workInProgressProjects.value = response.data.data;
@@ -107,12 +108,7 @@ onMounted(() => {
                 Users
               </router-link>
             </li>
-            <!--<li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bar-chart-line"></i>
-                Reports
-              </a>
-            </li>-->
+
           </ul>
 
           <div class="d-block d-md-none">

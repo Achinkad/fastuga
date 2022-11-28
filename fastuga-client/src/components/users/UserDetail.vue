@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = inject("serverBaseUrl");
+  const serverBaseUrl ="http://fastuga-api.test";
 
 const props = defineProps({
   user: {
@@ -90,32 +90,7 @@ const cancel = () => {
               <field-error-message :errors="errors" fieldName="type"></field-error-message>
             </div>
           </div>
-          <div class="mb-3 ms-xs-3 flex-grow-1">
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="M"
-                required
-                v-model="editingUser.gender"
-                id="inputGenderM"
-              />
-              <label class="form-check-label" for="inputGenderM">Masculino</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="radioGender"
-                value="F"
-                v-model="editingUser.gender"
-                id="inputGenderF"
-              />
-              <label class="form-check-label" for="inputGenderF">Feminino</label>
-            </div>
-            <field-error-message :errors="errors" fieldName="gender"></field-error-message>
-          </div>
+          
         </div>
       </div>
       <div class="w-25">

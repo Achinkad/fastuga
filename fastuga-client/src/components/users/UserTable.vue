@@ -2,7 +2,9 @@
 import { inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = inject("serverBaseUrl");
+
+
+const serverBaseUrl ="http://fastuga-api.test";
 
 const props = defineProps({
   users: {
@@ -17,13 +19,9 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showAdmin: {
+  showRole: {
     type: Boolean,
     default: true,
-  },
-  showGender: {
-    type: Boolean,
-    default: false,
   },
   showPhoto: {
     type: Boolean,
@@ -46,6 +44,7 @@ const photoFullUrl = (user) => {
 const editClick = (user) => {
   emit("edit", user);
 };
+
 </script>
 
 <template>
@@ -56,8 +55,7 @@ const editClick = (user) => {
         <th v-if="showPhoto" class="align-middle">Photo</th>
         <th class="align-middle">Name</th>
         <th v-if="showEmail" class="align-middle">Email</th>
-        <th v-if="showAdmin" class="align-middle">Admin?</th>
-        <th v-if="showGender" class="align-middle">Gender</th>
+        <th v-if="showRole" class="align-middle">Role</th>
       </tr>
     </thead>
     <tbody>
@@ -68,8 +66,12 @@ const editClick = (user) => {
         </td>
         <td class="align-middle">{{ user.name }}</td>
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
-        <td v-if="showAdmin" class="align-middle">{{ user.type == "A" ? "Sim" : "" }}</td>
-        <td v-if="showGender" class="align-middle">{{ user.gender_name }}</td>
+        <td v-if="showRole" class="align-middle"> 
+        <span v-if="user.type =='EM'">Manager</span>
+        <span v-if="user.type =='EC'">Chef</span>
+        <span v-if="user.type =='ED'">Delivery</span>
+        <span v-if="user.type =='C'">Customer</span>
+        </td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end">
             <button

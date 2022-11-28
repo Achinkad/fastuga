@@ -2,15 +2,18 @@
 import { ref, computed, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import OrderTable from "./OrderTable.vue"
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
 const axios = inject('axios')
 const router = useRouter()
+const serverBaseUrl ="http://fastuga-api.test";
+const pagination = ref({})
 
-const loadOrders = () => {
-  axios.get('orders')
+const loadOrders = (page = 1) => {
+  axios.get(serverBaseUrl+'/api/orders?page='+page)
     .then((response) => {
       orders.value = response.data.data
-      console.log(orders.value)
+      pagination.value = response.data
     })
     .catch((error) => {
       console.log(error)
@@ -108,6 +111,10 @@ onMounted(() => {
   </div>
   <order-table :orders="orders" :showId="true" :showOwner="false" @edit="editOrder" @deleted="deletedOrder">
   </order-table>
+
+  <hr>
+  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+  <hr>
 </template>
 
 
