@@ -4,7 +4,7 @@ import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
 const workInProgressProjects = ref([]);
-const serverBaseUrl = "http://fastuga-api";
+const serverBaseUrl = "http://fastuga-api.test";
 
 onMounted(() => {
   const userId = 1

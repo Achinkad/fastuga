@@ -2,21 +2,24 @@
   import { ref, computed, onMounted, inject } from 'vue'
   import {useRouter} from 'vue-router'
   import ProductTable from "./ProductTable.vue"
+  import { Bootstrap5Pagination } from 'laravel-vue-pagination';
   
   const router = useRouter()
-
+  const serverBaseUrl ="http://fastuga-api.test";
   const axios = inject('axios')
 
   const products = ref([])
+  const pagination = ref({})
 
   const totalProducts = computed(() => {
     return products.value.length
   })
 
-  const loadProducts = () => {
-    axios.get('products')
+  const loadProducts = (page = 1) => {
+    axios.get(serverBaseUrl+'/api/products?page='+page)
         .then((response) => {
           products.value = response.data.data
+          pagination.value=response.data
         })
         .catch((error) => {
           console.log(error)
@@ -52,6 +55,9 @@ const deletedOrder = (deletedProduct) => {
     :showId="false"
     @edit="editProduct"
   ></product-table>
+  <hr>
+  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
+  <hr>
 </template>
 
 <style scoped>

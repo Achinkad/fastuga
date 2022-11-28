@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = inject("serverBaseUrl");
+const serverBaseUrl = "http://fastuga-api.test";
 
 const props = defineProps({
   products: {
@@ -89,6 +89,8 @@ const deleteClick = (product) => {
           <img :src="photoFullUrl(product)" class="rounded-circle img_photo" />
         </td>
         <td class="align-middle">{{ product.name }}</td>
+        <td class="align-middle">{{ product.type }}</td>
+        <td class="align-middle">{{ product.price }}€</td>
         <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
           <i class="bi bi-xs bi-x-square-fill"></i>
         </button>

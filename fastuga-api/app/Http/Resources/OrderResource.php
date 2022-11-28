@@ -24,7 +24,8 @@ class OrderResource extends JsonResource
             'customer_id' => $this->customer_id,
             'customer' => $this->customer_id ? new CustomerResource($this->customer) : null,
             'delivered_by' => $this->delivered_by,
-            'user' => $this->delivered_by ? new UserResource($this->delivered_by_user) : null
+            'user' => $this->delivered_by ? new UserResource($this->delivered_by_user) : null,
+            'order_item' => OrderItemResource::collection($this->order_item)
         ];
     }
 }
