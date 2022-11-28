@@ -9,6 +9,8 @@ import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
 import Register from "../components/auth/Register.vue"
 import Products from "../components/products/Products.vue"
+import Product from "../components/products/Product.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -66,6 +68,12 @@ const router = createRouter({
       props: { id: -1}
     },
     {
+      path: '/products/new',
+      name: 'newProduct',
+      component: Product,
+      props: { id: -1}
+    },
+    {
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
@@ -74,6 +82,12 @@ const router = createRouter({
       path: '/orders/:id',
       name: 'Order',
       component: Order,
+      props: route => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/products/:id',
+      name: 'Product',
+      component: Product,
       props: route => ({ id: parseInt(route.params.id) })
     },
     {

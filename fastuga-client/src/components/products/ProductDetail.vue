@@ -29,7 +29,7 @@ watch(
 
 const photoFullUrl = computed(() => {
   return editingProduct.value.photo_url
-    ? serverBaseUrl + "/storage/fotos/" + editingProduct.value.photo_url
+    ? serverBaseUrl + "/storage/products/" + editingProduct.value.photo_url
     : avatarNoneUrl
 })
 

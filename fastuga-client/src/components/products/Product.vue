@@ -27,7 +27,7 @@
     originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
-        product.value = newProducts()
+        product.value = newProduct()
         originalValueStr = dataAsString()
       } else {
         axios.get('products/' + id)
@@ -87,7 +87,7 @@
     }
   })  
 
-  const Product = ref(newProduct())
+  const product = ref(newProduct())
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 

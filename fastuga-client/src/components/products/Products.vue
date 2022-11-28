@@ -23,10 +23,18 @@
         })
     }
 
-  const editProduct = (product) => {
-    router.push({ name: 'Product', params: { id: product.id } })
+const addProduct = () => {
+  router.push({ name: 'newProduct' })
+}
+const editProduct = (product) => {
+  router.push({ name: 'Product', params: { id: product.id } })
+}
+const deletedOrder = (deletedProduct) => {
+  let idx = orders.value.findIndex((t) => t.id === deletedProduct.id)
+  if (idx >= 0) {
+    orders.value.splice(idx, 1)
   }
-
+}
   onMounted (() => {
     loadProducts()
   })
@@ -34,6 +42,10 @@
 
 <template>
   <h3 class="mt-5 mb-3">Products</h3>
+  <div class="mx-0 mt-2">
+        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addProduct"><i
+            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Product</button>
+      </div>
   <hr>
   <product-table
     :products="products"
