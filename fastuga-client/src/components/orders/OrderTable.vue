@@ -3,7 +3,7 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 
 const axios = inject("axios")
 const toast = inject("toast")
-const serverBaseUrl = ine
+const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
   orders: {

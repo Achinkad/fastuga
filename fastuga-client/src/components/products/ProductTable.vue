@@ -80,7 +80,6 @@ const deleteClick = (product) => {
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
         <th class="align-middle">Name</th>
-
       </tr>
     </thead>
     <tbody>
@@ -96,7 +95,6 @@ const deleteClick = (product) => {
         <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
           <i class="bi bi-xs bi-pencil"></i>
         </button>
-
       </tr>
     </tbody>
   </table>
