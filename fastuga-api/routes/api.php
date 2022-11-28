@@ -21,6 +21,8 @@ Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block
 
 /* --- [API Routes] -> Orders --- */
 Route::resource('orders', OrderController::class);
+Route::patch('orders/status/{id}', [OrderController::class, 'status']); // ->Change Order Status
+// -> Orders por utilizador
 
 /* --- [API Routes] -> Products --- */
 Route::resource('products', ProductController::class);

@@ -76,7 +76,6 @@ class CustomerController extends Controller
         });
         return new CustomerResource($updated_customer);
     }
-
     public function destroy($id) // -> Boolean Return
     {
         return DB::transaction(function () use ($id) {

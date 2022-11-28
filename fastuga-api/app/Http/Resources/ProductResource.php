@@ -18,4 +18,13 @@ class ProductResource extends JsonResource
             'custom' => $this->custom
         ];
     }
+
+    public function with($request)
+    {
+        return [
+            'version' => '1.0.0',
+            'api_url' => url('http://fastuga.com'),
+            'product_url' => url('http://fastuga.com/api/products/' . $this->id)
+        ];
+    }
 }

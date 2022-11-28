@@ -4,7 +4,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 
 
 
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl ="http://fastuga-api";
 
 const props = defineProps({
   users: {
