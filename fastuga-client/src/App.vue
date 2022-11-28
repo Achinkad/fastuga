@@ -113,21 +113,7 @@ onMounted(() => {
                 Users
               </router-link>
             </li>
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-         
-
-            <!--<li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="bi bi-bar-chart-line"></i>
-                Reports
-              </a>
-            </li>-->
->>>>>>> 2eb46971a83a75542475ed21518dca67a982e701
-=======
->>>>>>> vue
           </ul>
 
           <div class="d-block d-md-none">
