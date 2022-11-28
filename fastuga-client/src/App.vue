@@ -114,6 +114,7 @@ onMounted(() => {
               </router-link>
             </li>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
          
@@ -125,6 +126,8 @@ onMounted(() => {
               </a>
             </li>-->
 >>>>>>> 2eb46971a83a75542475ed21518dca67a982e701
+=======
+>>>>>>> vue
           </ul>
 
           <div class="d-block d-md-none">
