@@ -4,7 +4,7 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 const axios = inject("axios")
 const toast = inject("toast")
 
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl ="http://fastuga-api";
 
 const props = defineProps({
   orders: {
