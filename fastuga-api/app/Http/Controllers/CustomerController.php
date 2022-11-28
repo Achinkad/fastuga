@@ -52,7 +52,7 @@ class CustomerController extends Controller
 
     public function update(StoreCustomerRequest $customer_request, StoreUserRequest $user_request, Customer $customer)
     {
-        $updated_customer = DB:Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
+        $updated_customer = DB::Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
             // -> Updates User
             $updated_user = (new UserController)->update($user_request, $customer->user);
 
@@ -73,7 +73,7 @@ class CustomerController extends Controller
 
             $customer->save();
             return $customer;
-        }
+        });
         return new CustomerResource($updated_customer);
     }
 
