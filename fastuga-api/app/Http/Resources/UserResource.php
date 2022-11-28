@@ -21,7 +21,8 @@ class UserResource extends JsonResource
     {
         return [
             'version' => '1.0.0',
-            'api_url' => url('http://fastuga.com')
+            'api_url' => url('http://fastuga.com'),
+            'user_url' => url('http://fastuga.com/api/users/' . $this->id)
         ];
     }
 }

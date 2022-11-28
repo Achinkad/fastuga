@@ -4,42 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'index',
+            'show'
+        ]]);
+    }
+
     public function index()
     {
         return ProductResource::collection(Product::all());
     }
 
-    public function store(ValidateNewProduct $request)
+    public function store(StoreProductRequest $request)
     {
-        /*
-        $newPhoto = $request->file('photo_url');
-        $newProduct = $request->only('name', 'type', 'description', 'photo_url', 'price');
+        $product = Product::create($request->validated());
 
-        $product = new Product([
-            'name' => $newProduct["name"],
-            'type' => $newProduct["type"],
-            'description' => $newProduct["description"],
-            'price' => $newProduct["price"],
-        ]);
-
-        if($newPhoto){
-            $filename = Storage::putFileAs('public/products', $request->photo_url, time() . '.' . $newPhoto->getClientOriginalExtension());
-
-            $filename = substr($filename, strrpos($filename, '/')+1, strlen($filename));
-            $product->photo_url = $filename;
+        // -> Stores Product Photo
+        if ($request->has('photo_url')) {
+            $photo = $request->file('photo_url');
+            $photo_id = $photo->hashName() . '.' . $photo->extension();
+            Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            $product->photo_url = $photo_id;
+            $product->save();
         }
 
-        
-        if ($product->save()) {
-            return response()->json("Produto adicionado com sucesso", 200);
-        }else {
-            return response()->json("Não foi possível adicionar o produto", 404);
-        }
-        */
+        return new ProductResource($product);
     }
 
     public function show(Product $product)
@@ -47,38 +43,32 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function update(ValidateNewProduct $request, Product $product)
+    public function update(StoreProductRequest $request, Product $product)
     {
-        /*
-        $newPhoto = $request->file('photo_url');
-        $newProduct = $request->only('id','name', 'type', 'description', 'photo_url', 'price');
-        $product = Product::find($id);
+        $product->fill($request->validated());
 
-        $product->name = $newProduct["name"];
-        $product->type = $newProduct["type"];
-        $product->description = $newProduct["description"];
-        $product->price = $newProduct["price"];
-
-
-        if($newPhoto){
-            $filename = Storage::putFileAs('public/products', $request->photo_url, time() . '.' . $newPhoto->getClientOriginalExtension());
-
-            $filename = substr($filename, strrpos($filename, '/')+1, strlen($filename));
-            $product->photo_url = $filename;
+        if ($request->has('photo_url')) {
+            // -> Check if a previous file exists and deletes it
+            if(Storage::disk('public')->exists($product->photo_url)) {
+                Storage::delete($product->photo_url);
+            }
+            // -> Stores the new photo
+            $photo = $request->file('photo_url');
+            $photo_id = $photo->hashName() . '.' . $photo->extension();
+            Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            $product->photo_url = $photo_id;
         }
 
-        
-        if ($product->save()) {
-            return response()->json("Produto atualizado com sucesso", 200);
-        }else {
-            return response()->json("Não foi possível atualizar o produto", 404);
-        }
-        */
+        $product->save();
+        return new ProductResource($product);
     }
 
-    public function destroy(Product $product)
+    public function destroy($id) // -> Boolean Return
     {
-        $product->delete();
-        return new ProductResource($product);
+        return DB::transaction(function () use ($id) {
+            $user = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
+            if ($product->order_item) { $product->order_item->detach(); }
+            return $product->delete();
+        });
     }
 }
