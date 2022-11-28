@@ -38,7 +38,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  
+
 })
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
@@ -63,7 +63,7 @@ watch(
 
 const toogleClick = (order) => {
   axios
-    .patch(serverBaseUrl+"(api/orders/" + order.id + "/completed", { completed: !order.completed })
+    .patch(serverBaseUrl + "(api/orders/" + order.id + "/completed", { completed: !order.completed })
     .then((response) => {
       order.completed = response.data.data.completed
       emit("completeToggled", order)
@@ -79,7 +79,7 @@ const editClick = (order) => {
 
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl+"/api/orders/" + orderToDelete.value.id)
+    .delete(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
@@ -96,12 +96,15 @@ const deleteClick = (order) => {
 </script>
 
 <template>
+  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
+    :msg="`Do you really want to delete the order ${taskToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+  </confirmation-dialog>
   <table class="table">
     <thead>
       <tr>
         <th v-if="showId">ID</th>
         <th class="text-center" v-if="showCompleted">Status</th>
-      
+
       </tr>
     </thead>
     <tbody>
