@@ -74,7 +74,7 @@ const cancel = () => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
         
-         <div class="mb-3 px-1">
+         <div class="mb-3">
             <label for="type">Role:</label>
             <select id="type" name="type"  v-model="editingUser.type">
               <option value="EM">Manager</option>

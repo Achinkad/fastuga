@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,7 +14,9 @@ class ProductController extends Controller
     {
         $this->middleware('auth.manager', ['except' => [
             'index',
-            'show'
+            'show',
+            'store',
+            'update'
         ]]);
     }
 

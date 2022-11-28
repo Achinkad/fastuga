@@ -80,7 +80,8 @@ const deleteClick = (product) => {
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
         <th class="align-middle">Name</th>
-
+        <th class="align-middle">Type</th>
+        <th class="align-middle">Price</th>
       </tr>
     </thead>
     <tbody>
@@ -90,6 +91,8 @@ const deleteClick = (product) => {
           <img :src="photoFullUrl(product)" class="rounded-circle img_photo" />
         </td>
         <td class="align-middle">{{ product.name }}</td>
+        <td class="align-middle">{{ product.type }}</td>
+        <td class="align-middle">{{ product.price }}€</td>
         <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
           <i class="bi bi-xs bi-x-square-fill"></i>
         </button>

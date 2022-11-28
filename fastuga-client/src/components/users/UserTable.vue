@@ -2,9 +2,7 @@
 import { inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-
-
-const serverBaseUrl ="http://fastuga-api";
+const serverBaseUrl ="http://fastuga-api.test";
 
 const props = defineProps({
   users: {
