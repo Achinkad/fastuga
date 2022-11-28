@@ -38,6 +38,7 @@ const editClick = (product) => {
 </script>
 
 <template>
+  
   <table class="table">
     <thead>
       <tr>
