@@ -101,14 +101,18 @@ onMounted(() => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-
+               <li class="nav-item">
+              <router-link class="nav-link" :class="{ active: $route.name === 'Products' }" :to="{ name: 'Products' }">
+                <i class="bi bi-list-check"></i>
+                Products
+              </router-link>
+            </li>
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
                 <i class="bi bi-people"></i>
                 Users
               </router-link>
             </li>
-
           </ul>
 
           <div class="d-block d-md-none">

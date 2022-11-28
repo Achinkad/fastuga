@@ -24,7 +24,8 @@ class CustomerResource extends JsonResource
     {
         return [
             'version' => '1.0.0',
-            'api_url' => url('http://fastuga.com')
+            'api_url' => url('http://fastuga.com'),
+            'customer_url' => url('http://fastuga.com/api/customers/' . $this->id)
         ];
     }
 }
