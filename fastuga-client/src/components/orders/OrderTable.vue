@@ -4,6 +4,8 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 const axios = inject("axios")
 const toast = inject("toast")
 
+const serverBaseUrl ="http://fastuga-api.test";
+
 const props = defineProps({
   orders: {
     type: Array,
@@ -17,11 +19,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showOwner: {
+  showCustomer: {
     type: Boolean,
     default: true,
   },
-  showProject: {
+  showPrice: {
     type: Boolean,
     default: true,
   },
@@ -37,6 +39,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  
 })
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
@@ -61,7 +64,7 @@ watch(
 
 const toogleClick = (order) => {
   axios
-    .patch("orders/" + order.id + "/completed", { completed: !order.completed })
+    .patch(serverBaseUrl+"(api/orders/" + order.id + "/completed", { completed: !order.completed })
     .then((response) => {
       order.completed = response.data.data.completed
       emit("completeToggled", order)
@@ -77,7 +80,7 @@ const editClick = (order) => {
 
 const dialogConfirmedDelete = () => {
   axios
-    .delete("orders/" + orderToDelete.value.id)
+    .delete(serverBaseUrl+"/api/orders/" + orderToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
@@ -94,9 +97,46 @@ const deleteClick = (order) => {
 </script>
 
 <template>
- 
+  <table class="table">
+    <thead>
+      <tr>
+        <th v-if="showId">ID</th>
+        <th class="text-center" v-if="showCompleted">Status</th>
+      
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="order in orders" :key="order.id">
+        <td v-if="showId">{{ order.id }}</td>
+        <td class="text-center" v-if="showCompleted">
+          {{ order.completed ? "Done" : "Pending" }}
+        </td>
+        <td v-if="showId">{{ order.id }}</td>
 
-  
+        <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-xs btn-light" @click="toogleClick(task)" v-if="showCompletedButton">
+              <i class="bi bi-xs" :class="{
+                'bi-square': !order.completed,
+                'bi-check2-square': order.completed,
+              }"></i>
+            </button>
+
+            <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
+              <i class="bi bi-xs bi-pencil"></i>
+            </button>
+            <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
+              <i class="bi bi-xs bi-x-square-fill"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
 </template>
 
 <style scoped>

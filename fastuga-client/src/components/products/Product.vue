@@ -1,14 +1,11 @@
 <script setup>
   import { ref, watch, inject } from 'vue'
-  import UserDetail from "./UserDetail.vue"
-  import { useRouter, onBeforeRouteLeave } from 'vue-router'
-  
+  import ProductDetail from "./ProductDetail.vue"
+  import { useRouter, onBeforeRouteLeave } from 'vue-router'  
   
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
-
-  const serverBaseUrl ="http://fastuga-api.test";
 
   const props = defineProps({
       id: {
@@ -17,27 +14,25 @@
       }
   })
 
-  const newUser = () => {
+  const newProduct = () => {
       return {
         id: null,
         name: '',
-        email: '',
-        gender: 'M',
         photo_url: null
       }
   }
 
   let originalValueStr = ''
-  const loadUser = (id) => {    
+  const loadProduct = (id) => {    
     originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
-        user.value = newUser()
+        product.value = newProduct()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/api/users/' + id)
+        axios.get('products/' + id)
           .then((response) => {
-            user.value = response.data.data
+            product.value = response.data.data
             originalValueStr = dataAsString()
           })
           .catch((error) => {
@@ -48,19 +43,19 @@
 
   const save = () => {
       errors.value = null
-      axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
+      axios.put('products/' + props.id, product.value)
         .then((response) => {
-          user.value = response.data.data
+          product.value = response.data.data
           originalValueStr = dataAsString()
-          toast.success('User #' + user.value.id + ' was updated successfully.')
+          toast.success('Product #' + product.value.id + ' was updated successfully.')
           router.back()
         })
         .catch((error) => {
           if (error.response.status == 422) {
-              toast.error('User #' + props.id + ' was not updated due to validation errors!')
+              toast.error('Product #' + props.id + ' was not updated due to validation errors!')
               errors.value = error.response.data.errors
             } else {
-              toast.error('User #' + props.id + ' was not updated due to unknown server error!')
+              toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
             }
         })
   }
@@ -71,7 +66,7 @@
   }
 
   const dataAsString = () => {
-      return JSON.stringify(user.value)
+      return JSON.stringify(product.value)
   }
 
   let nextCallBack = null
@@ -92,14 +87,14 @@
     }
   })  
 
-  const user = ref(newUser())
+  const product = ref(newProduct())
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
   watch(
     () => props.id,
     (newValue) => {
-        loadUser(newValue)
+        loadProduct(newValue)
       },
     {immediate: true}  
     )
@@ -115,10 +110,10 @@
   >
   </confirmation-dialog>  
 
-  <user-detail
-    :user="user"
+  <product-detail
+    :product="product"
     :errors="errors"
     @save="save"
     @cancel="cancel"
-  ></user-detail>
+  ></product-detail>
 </template>

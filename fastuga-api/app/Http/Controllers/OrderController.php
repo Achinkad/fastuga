@@ -12,7 +12,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return OrderResource::collection(Order::paginate(10));
+        return OrderResource::collection(Order::paginate(30));
     }
 
     public function store(StoreOrderRequest $request)

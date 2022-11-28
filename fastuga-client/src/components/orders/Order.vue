@@ -4,6 +4,8 @@
 
   import OrderDetail from "./OrderDetails.vue"
 
+  const serverBaseUrl ="http://fastuga-api.test";
+
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
@@ -11,12 +13,12 @@
   const newOrder = () => {
       return {
         id: null,
-        owner_id: 1,  // Change it later
-        project_id: null,
+        ticket_number: 1,  // Change it later
+        status: "D",
         completed: false,
-        description: '',
-        notes: '',
-        total_hours: null
+        total_price: 0,
+        customer_id: null,
+        delivered_by: null
       }
   }
 
@@ -28,7 +30,7 @@
         order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
-        axios.get('orders/' + id)
+        axios.get(serverBaseUrl+'/api/orders/' + id)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -42,7 +44,7 @@
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post('order', order.value)
+        axios.post(serverBaseUrl+'/api/order', order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -58,7 +60,7 @@
             }
           })
       } else {
-        axios.put('order/' + props.id, order.value)
+        axios.put(serverBaseUrl+'/api/order/' + props.id, order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -108,14 +110,10 @@
       type: Number,
       default: null
     },
-    fixedProject: {
-      type: Number,
-      default: null
-    }
+ 
   })
 
   const order = ref(newOrder())
-  const projects = ref([])
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
@@ -131,16 +129,7 @@
     { immediate: true}
   )
 
-  onMounted (() => {
-    projects.value = []
-    axios.get('projects')
-      .then((response) => {
-        projects.value = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
+
 </script>
 
 
@@ -152,13 +141,11 @@
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  
-  <OrderDetail
+  <order-detail
     :operationType="operation"
     :order="order"
     :errors="errors"
-    :projects="projects"
-    :fixedProject="fixedProject"
     @save="save"
     @cancel="cancel"
-  ></OrderDetail>
+  ></order-detail>
 </template>

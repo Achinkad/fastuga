@@ -2,10 +2,10 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-  const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
-  user: {
+  product: {
     type: Object,
     required: true,
   },
@@ -17,34 +17,34 @@ const props = defineProps({
 
 const emit = defineEmits(["save", "cancel"]);
 
-const editingUser = ref(props.user)
+const editingProduct = ref(props.product)
 
 watch(
-  () => props.user,
-  (newUser) => {
-    editingUser.value = newUser
+  () => props.product,
+  (newProduct) => {
+    editingProduct.value = newProduct
   },
   { immediate: true }
 )
 
 const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
-    ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
+  return editingProduct.value.photo_url
+    ? serverBaseUrl + "/storage/products/" + editingProduct.value.photo_url
     : avatarNoneUrl
 })
 
 const save = () => {
-  emit("save", editingUser.value);
+  emit("save", editingProduct.value);
 }
 
 const cancel = () => {
-  emit("cancel", editingUser.value);
+  emit("cancel", editingProduct.value);
 }
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">User #{{ editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3">Product #{{ editingProduct.id }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -54,43 +54,23 @@ const cancel = () => {
             type="text"
             class="form-control"
             id="inputName"
-            placeholder="User Name"
+            placeholder="Product Name"
             required
-            v-model="editingUser.name"
+            v-model="editingProduct.name"
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
 
         <div class="mb-3 px-1">
-          <label for="inputEmail" class="form-label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="inputEmail"
-            placeholder="Email"
-            required
-            v-model="editingUser.email"
-          />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
         <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
           <div class="mb-3 me-3 flex-grow-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                true-value="A"
-                false-value="M"
-                v-model="editingUser.type"
-                id="inputType"
-              />
-              <label class="form-check-label" for="inputType">
-                User is Administrator
-              </label>
-              <field-error-message :errors="errors" fieldName="type"></field-error-message>
-            </div>
           </div>
-          
+          <div class="mb-3 ms-xs-3 flex-grow-1">
+
+            <field-error-message :errors="errors" fieldName="gender"></field-error-message>
+          </div>
         </div>
       </div>
       <div class="w-25">
