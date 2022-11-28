@@ -12,11 +12,7 @@ const props = defineProps({
   },
   operationType: {
     type: String,
-    default: "insert", // insert / update
-  },
-  projects: {
-    type: Array,
-    required: true,
+    default: "insert", 
   },
   fixedProject: {
     type: Number,
@@ -35,15 +31,6 @@ watch(
   }
 );
 
-watch(
-  () => props.fixedProject,
-  (newFixedProject) => {
-    if (newFixedProject) {
-      editingOrder.value.project_id = newFixedProject;
-    }
-  },
-  { immediate: true }
-);
 
 const orderTittle = computed(() => {
   if (!editingOrder.value) {
@@ -83,13 +70,13 @@ const cancel = () => {
         </div>
       </div>
       <div class="row mb-3 total_hours" v-show="editingOrder.completed">
-        <label for="inputHours" class="col-sm-2 col-form-label">Hours</label>
+        <label for="inputHours" class="col-sm-2 col-form-label">Minutes</label>
         <div class="col-sm-10">
           <input
             type="number"
             class="form-control"
             id="inputHours"
-            placeholder="Total hours to complete the task"
+            placeholder="Total minutes to complete the order"
             v-model="editingOrder.total_hours"
           />
           <field-error-message
@@ -106,26 +93,11 @@ const cancel = () => {
         type="text"
         class="form-control"
         id="inputDescription"
-        placeholder="Task Description"
+        placeholder="Order Description"
         required
         v-model="editingOrder.description"
       />
       <field-error-message :errors="errors" fieldName="description"></field-error-message>
-    </div>
-    <div class="mb-3">
-      <label for="inputProject" class="form-label">Project</label>
-      <select
-        class="form-select"
-        id="inputProject"
-        :disabled="fixedProject"
-        v-model="editingOrder.project_id"
-      >
-        <option :value="null">-- No Project --</option>
-        <option v-for="prj in projects" :key="prj.id" :value="prj.id">
-          {{ prj.name }}
-        </option>
-      </select>
-      <field-error-message :errors="errors" fieldName="project_id"></field-error-message>
     </div>
     <div class="mb-3">
       <label for="inputNotes" class="form-label">Notes</label>

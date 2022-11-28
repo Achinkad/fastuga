@@ -11,12 +11,12 @@
   const newOrder = () => {
       return {
         id: null,
-        owner_id: 1,  // Change it later
-        project_id: null,
+        ticket_number: 1,  // Change it later
+        status: "D",
         completed: false,
-        description: '',
-        notes: '',
-        total_hours: null
+        total_price: 0,
+        customer_id: null,
+        delivered_by: null
       }
   }
 
@@ -108,14 +108,10 @@
       type: Number,
       default: null
     },
-    fixedProject: {
-      type: Number,
-      default: null
-    }
+ 
   })
 
   const order = ref(newOrder())
-  const projects = ref([])
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
@@ -131,16 +127,7 @@
     { immediate: true}
   )
 
-  onMounted (() => {
-    projects.value = []
-    axios.get('projects')
-      .then((response) => {
-        projects.value = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  })
+
 </script>
 
 
@@ -152,13 +139,11 @@
     @confirmed="leaveConfirmed"
   >
   </confirmation-dialog>  
-  <OrderDetail
+  <order-detail
     :operationType="operation"
     :order="order"
     :errors="errors"
-    :projects="projects"
-    :fixedProject="fixedProject"
     @save="save"
     @cancel="cancel"
-  ></OrderDetail>
+  ></order-detail>
 </template>
