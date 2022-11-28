@@ -13,7 +13,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'blocked' => $this->blocked ? true : false,
-            'photo_url' => $this->photo_url
+            'photo_url' => $this->photo_url,
+            'type' => $this->type
         ];
     }
 

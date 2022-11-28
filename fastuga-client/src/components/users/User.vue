@@ -1,11 +1,14 @@
 <script setup>
   import { ref, watch, inject } from 'vue'
   import UserDetail from "./UserDetail.vue"
-  import { useRouter, onBeforeRouteLeave } from 'vue-router'  
+  import { useRouter, onBeforeRouteLeave } from 'vue-router'
+  
   
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
+
+  const serverBaseUrl ="http://fastuga-api.test";
 
   const props = defineProps({
       id: {
@@ -32,7 +35,7 @@
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
-        axios.get('users/' + id)
+        axios.get(serverBaseUrl+'/api/users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()
@@ -45,7 +48,7 @@
 
   const save = () => {
       errors.value = null
-      axios.put('users/' + props.id, user.value)
+      axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
         .then((response) => {
           user.value = response.data.data
           originalValueStr = dataAsString()

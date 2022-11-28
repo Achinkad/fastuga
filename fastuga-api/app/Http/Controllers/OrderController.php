@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return OrderResource::collection(Order::all());
+        return OrderResource::collection(Order::paginate(30));
     }
 
     public function store(ValidateNewOrder $request)

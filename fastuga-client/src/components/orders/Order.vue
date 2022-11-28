@@ -4,6 +4,8 @@
 
   import OrderDetail from "./OrderDetails.vue"
 
+  const serverBaseUrl ="http://fastuga-api.test";
+
   const router = useRouter()  
   const axios = inject('axios')
   const toast = inject('toast')
@@ -28,7 +30,7 @@
         order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
-        axios.get('orders/' + id)
+        axios.get(serverBaseUrl+'/api/orders/' + id)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -42,7 +44,7 @@
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post('order', order.value)
+        axios.post(serverBaseUrl+'/api/order', order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -58,7 +60,7 @@
             }
           })
       } else {
-        axios.put('order/' + props.id, order.value)
+        axios.put(serverBaseUrl+'/api/order/' + props.id, order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
