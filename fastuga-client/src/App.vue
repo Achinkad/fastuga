@@ -4,11 +4,11 @@ import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
 const workInProgressProjects = ref([]);
-const serverBaseUrl ="http://fastuga-api";
+const serverBaseUrl = "http://fastuga-api";
 
 onMounted(() => {
   const userId = 1
-  axios.get(serverBaseUrl+"/api/users/" + userId)
+  axios.get(serverBaseUrl + "/api/users/" + userId)
     .then((response) => {
       console.log(response);
       workInProgressProjects.value = response.data.data;
@@ -94,19 +94,24 @@ onMounted(() => {
             <li class="nav-item d-flex justify-content-between align-items-center pe-3">
               <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
                 :to="{ name: 'Orders' }">
-                <i class="bi bi-list-check"></i>
+                <i class="bi bi-bag-plus-fill"></i>
                 Orders
               </router-link>
               <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order">
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-               <li class="nav-item">
-              <router-link class="nav-link" :class="{ active: $route.name === 'Products' }" :to="{ name: 'Products' }">
-                <i class="bi bi-list-check"></i>
+            <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+              <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
+                :to="{ name: 'Products' }">
+                <i class="bi bi-egg-fried"></i>
                 Products
               </router-link>
+              <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
+                <i class="bi bi-xs bi-plus-circle"></i>
+              </router-link>
             </li>
+      
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
                 <i class="bi bi-people"></i>
