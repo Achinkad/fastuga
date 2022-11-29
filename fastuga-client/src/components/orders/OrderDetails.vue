@@ -1,9 +1,9 @@
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed,inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
   order: {
