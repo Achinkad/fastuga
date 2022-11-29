@@ -3,7 +3,8 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 
 const axios = inject("axios")
 const toast = inject("toast")
-const serverBaseUrl = "http://fastuga-api.test";
+
+const serverBaseUrl ="http://fastuga.test";
 
 const props = defineProps({
   orders: {
@@ -17,6 +18,11 @@ const props = defineProps({
   showStatus: {
     type: Boolean,
     default: true,
+  },
+  showStatus: {
+    type: Boolean,
+    default: true,
+
   },
   showCustomer: {
     type: Boolean,
@@ -47,13 +53,13 @@ const props = defineProps({
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
 
-const editingOrders = ref(props.ordersDay)
+const editingOrders = ref(props.orders)
 const orderToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
 const orderToDeleteDescription = computed(() => {
   return orderToDelete.value
-    ? `#${orderToDelete.value.id} (${orderToDelete.value.description})`
+    ? `#${orderToDelete.value.id} (${orderToDelete.value.id})`
     : ""
 })
 
@@ -64,7 +70,7 @@ watch(
   }
 )
 
-
+/*
 const toogleClick = (order) => {
   axios
     .patch(serverBaseUrl + "(api/orders/" + order.id + "/completed", { completed: !order.completed })
@@ -76,7 +82,7 @@ const toogleClick = (order) => {
       console.log(error)
     })
 }
-
+*/
 const editClick = (order) => {
   emit("edit", order)
 }
@@ -100,8 +106,12 @@ const deleteClick = (order) => {
 </script>
 
 <template>
-  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the order ${taskToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+    <confirmation-dialog
+    ref="deleteConfirmationDialog"
+    confirmationBtn="Delete task"
+    :msg="`Do you really want to delete the task ${orderToDeleteDescription}?`"
+    @confirmed="dialogConfirmedDelete"
+  >
   </confirmation-dialog>
   <table class="table">
     <thead>
@@ -113,7 +123,7 @@ const deleteClick = (order) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="order in orders" :key="order.id">
+      <tr v-for="order in editingOrders" :key="order.id">
         <td v-if="showId">{{ order.id }}</td>
         <td v-if="showStatus">
          <span v-if="order.status=='P'">Preparing</span>
@@ -126,7 +136,7 @@ const deleteClick = (order) => {
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="toogleClick(task)" v-if="showCompletedButton">
+            <button class="btn btn-xs btn-light" @click="toogleClick(order)" v-if="showCompletedButton">
               <i class="bi bi-xs" :class="{
                 'bi-square': !order.completed,
                 'bi-check2-square': order.completed,
