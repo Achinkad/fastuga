@@ -22,7 +22,7 @@
         id: null,
         name: '',
         email: '',
-        gender: 'M',
+        type: 'C',
         photo_url: null
       }
   }

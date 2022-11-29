@@ -73,34 +73,34 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-        <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
-          <div class="mb-3 me-3 flex-grow-1">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                true-value="A"
-                false-value="M"
-                v-model="editingUser.type"
-                id="inputType"
-              />
-              <label class="form-check-label" for="inputType">
-                User is Administrator
-              </label>
-              <field-error-message :errors="errors" fieldName="type"></field-error-message>
-            </div>
-          </div>
-          
+        
+         <div class="mb-3">
+            <label for="type">Role:</label>
+            <select id="type" name="type"  v-model="editingUser.type">
+              <option value="EM">Manager</option>
+              <option value="EC">Chef</option>
+              <option value="ED">Delivery</option>
+              <option value="C">Customer</option>
+            </select>
+          <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
+
       </div>
       <div class="w-25">
         <div class="mb-3">
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
+          
+              <input type="file" id="actual-btn" hidden/>
+              <label for="actual-btn" id="label">Choose File</label>
+            
           </div>
+          
         </div>
+        
       </div>
+      
     </div>
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
@@ -112,5 +112,15 @@ const cancel = () => {
 <style scoped>
 .total_hours {
   width: 26rem;
+}
+#label {
+  background-color: orange;
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+
 }
 </style>

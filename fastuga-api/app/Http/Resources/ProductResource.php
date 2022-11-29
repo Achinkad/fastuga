@@ -15,7 +15,16 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'photo_url' => $this->photo_url,
             'price' => $this->price,
-            'custom' => $this->custom
+            'custom' => $this->customd            
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'version' => '1.0.0',
+            'api_url' => url('http://fastuga.com'),
+            'product_url' => url('http://fastuga.com/api/products/' . $this->id)
         ];
     }
 }

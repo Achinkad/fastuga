@@ -52,7 +52,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  
+
 })
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
@@ -77,7 +77,7 @@ watch(
 /*
 const toogleClick = (order) => {
   axios
-    .patch(serverBaseUrl+"(api/orders/" + order.id + "/completed", { completed: !order.completed })
+    .patch(serverBaseUrl + "(api/orders/" + order.id + "/completed", { completed: !order.completed })
     .then((response) => {
       order.completed = response.data.data.completed
       emit("completeToggled", order)
@@ -93,7 +93,7 @@ const editClick = (order) => {
 
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl+"/api/orders/" + orderToDelete.value.id)
+    .delete(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")

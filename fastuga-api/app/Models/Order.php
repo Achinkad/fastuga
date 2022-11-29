@@ -29,14 +29,14 @@ class Order extends Model
     ];
 
     public function order_item() {
-        return $this->hasMany(OrderItem::class, 'order_id')->withTrashed();
+        return $this->hasMany(OrderItem::class, 'order_id');
     }
 
     public function customer() {
         return $this->belongsTo(Customer::class, 'customer_id')->withTrashed();
     }
 
-    public function delivered_by() {
+    public function delivered_by_user() {
         return $this->belongsTo(User::class, 'delivered_by')->withTrashed();
     }
 }

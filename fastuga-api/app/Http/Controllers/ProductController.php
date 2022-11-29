@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,7 +14,9 @@ class ProductController extends Controller
     {
         $this->middleware('auth.manager', ['except' => [
             'index',
-            'show'
+            'show',
+            'store',
+            'update'
         ]]);
     }
 
@@ -27,7 +30,7 @@ class ProductController extends Controller
         $product = Product::create($request->validated());
 
         // -> Stores Product Photo
-        if ($request->has('photo_url')) {
+        if ($request->has('photo_url') & $request->file('photo_url')->isValid()) {
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName() . '.' . $photo->extension();
             Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
