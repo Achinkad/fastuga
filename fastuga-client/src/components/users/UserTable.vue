@@ -1,8 +1,8 @@
 <script setup>
 import { inject } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
+import avatarNoneUrl from "@/assets/avatar-none.png";
 
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
   users: {
@@ -42,7 +42,6 @@ const photoFullUrl = (user) => {
 const editClick = (user) => {
   emit("edit", user);
 };
-
 </script>
 
 <template>
@@ -64,11 +63,11 @@ const editClick = (user) => {
         </td>
         <td class="align-middle">{{ user.name }}</td>
         <td v-if="showEmail" class="align-middle">{{ user.email }}</td>
-        <td v-if="showRole" class="align-middle"> 
-        <span v-if="user.type =='EM'">Manager</span>
-        <span v-if="user.type =='EC'">Chef</span>
-        <span v-if="user.type =='ED'">Delivery</span>
-        <span v-if="user.type =='C'">Customer</span>
+        <td v-if="showRole" class="align-middle">
+          <span v-if="user.type == 'EM'">Manager</span>
+          <span v-if="user.type == 'EC'">Chef</span>
+          <span v-if="user.type == 'ED'">Delivery</span>
+          <span v-if="user.type == 'C'">Customer</span>
         </td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end">

@@ -1,7 +1,6 @@
 <script setup>
-import { ref, watch, computed } from "vue";
-
-const serverBaseUrl ="http://fastuga-api.test";
+import { ref, watch, computed,inject } from "vue";
+const serverBaseUrl = inject("serverBaseUrl")
 
 const props = defineProps({
   order: {
@@ -16,10 +15,7 @@ const props = defineProps({
     type: String,
     default: "insert", 
   },
-  fixedProject: {
-    type: Number,
-    default: null,
-  },
+
 });
 
 const emit = defineEmits(["save", "cancel"]);
@@ -106,7 +102,7 @@ const cancel = () => {
       <textarea
         class="form-control"
         id="inputNotes"
-        rows="4"
+        rows="2"
         v-model="editingOrder.notes"
       ></textarea>
       <field-error-message :errors="errors" fieldName="notes"></field-error-message>

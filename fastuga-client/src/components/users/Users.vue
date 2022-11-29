@@ -10,8 +10,7 @@
 
   const users = ref([])
   const pagination = ref({})
-
-  const serverBaseUrl ="http://fastuga-api.test";
+  const serverBaseUrl = inject("serverBaseUrl")
 
   const totalUsers = computed(() => {
     return users.value.length

@@ -3,8 +3,7 @@
   import { useRouter, onBeforeRouteLeave } from 'vue-router'  
 
   import OrderDetail from "./OrderDetails.vue"
-
-  const serverBaseUrl ="http://fastuga-api.test";
+  const serverBaseUrl = inject("serverBaseUrl");
 
   const router = useRouter()  
   const axios = inject('axios')

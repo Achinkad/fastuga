@@ -1,8 +1,7 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
-import avatarNoneUrl from '@/assets/product-none.png'
-
-const serverBaseUrl = "http://fastuga-api.test";
+import avatarNoneUrl from "@/assets/product-none.png";
+const serverBaseUrl = inject("serverBaseUrl");
 
 const props = defineProps({
   product: {
@@ -11,35 +10,35 @@ const props = defineProps({
   },
   errors: {
     type: Object,
-    required: false
+    required: false,
   },
-})
+});
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["Add", "cancel"]);
 
-const editingProduct = ref(props.product)
+const editingProduct = ref(props.product);
 
 watch(
   () => props.product,
   (newProduct) => {
-    editingProduct.value = newProduct
+    editingProduct.value = newProduct;
   },
   { immediate: true }
-)
+);
 
 const photoFullUrl = computed(() => {
   return editingProduct.value.photo_url
     ? serverBaseUrl + "/storage/products/" + editingProduct.value.photo_url
-    : avatarNoneUrl
-})
+    : avatarNoneUrl;
+});
 
-const save = () => {
-  emit("save", editingProduct.value);
-}
+const Add = () => {
+  emit("Add", editingProduct.value);
+};
 
 const cancel = () => {
   emit("cancel", editingProduct.value);
-}
+};
 </script>
 
 <template>
@@ -58,9 +57,12 @@ const cancel = () => {
             required
             v-model="editingProduct.name"
           />
-          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="name"
+          ></field-error-message>
         </div>
-         <div class="mb-3">
+        <div class="mb-3">
           <label for="inputPrice" class="form-label">Price</label>
           <input
             type="text"
@@ -70,34 +72,73 @@ const cancel = () => {
             required
             v-model="editingProduct.price"
           />
-          <field-error-message :errors="errors" fieldName="price"></field-error-message>
+          <field-error-message
+            :errors="errors"
+            fieldName="price"
+          ></field-error-message>
+        </div>
+        <div class="mb-2">
+          <label for="description" class="form-label">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            id="description"
+            placeholder="Description"
+            required
+            v-model="editingProduct.description"
+          />
+          <field-error-message
+            :errors="errors"
+            fieldName="price"
+          ></field-error-message>
+        </div>
+        <div class="mb-2">
+          <label for="description" class="form-label">Custom</label>
+          <input
+            type="text"
+            class="form-control"
+            id="custo"
+            placeholder="Custom"
+            required
+            v-model="editingProduct.custom"
+          />
+          <field-error-message
+            :errors="errors"
+            fieldName="price"
+          ></field-error-message>
         </div>
         <div class="mb-3">
-            <label for="type">Type:</label>
-            <select id="type" name="type"  v-model="editingProduct.type">
-              <option value="hot dish">Hot Dish</option>
-              <option value="cold dish">Cold Dish</option>
-              <option value="drink">Drink</option>
-              <option value="dessert">Dessert</option>
-            </select>
-          <field-error-message :errors="errors" fieldName="type"></field-error-message>
+          <label for="type">Type:</label>
+          <select id="type" name="type" v-model="editingProduct.type">
+            <option value="hot dish">Hot Dish</option>
+            <option value="cold dish">Cold Dish</option>
+            <option value="drink">Drink</option>
+            <option value="dessert">Dessert</option>
+          </select>
+          <field-error-message
+            :errors="errors"
+            fieldName="type"
+          ></field-error-message>
         </div>
-       
       </div>
       <div class="w-25">
         <div class="mb-3">
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
-            <input type="file" id="actual-btn" hidden/>
-              <label for="actual-btn" id="label">Choose File</label>
+            <input type="file" id="actual-btn" hidden />
+            <label for="actual-btn" id="label">Choose File</label>
           </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary px-5" @click="add">
+        Add
+      </button>
+      <button type="button" class="btn btn-light px-5" @click="cancel">
+        Cancel
+      </button>
     </div>
   </form>
 </template>
@@ -114,6 +155,5 @@ const cancel = () => {
   border-radius: 0.3rem;
   cursor: pointer;
   margin-top: 1rem;
-
 }
 </style>

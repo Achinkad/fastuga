@@ -3,15 +3,14 @@ import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
-const workInProgressProjects = ref([]);
-const serverBaseUrl = "http://fastuga-api.test";
+
+const serverBaseUrl = "http://fastuga-api";
 
 onMounted(() => {
   const userId = 1
   axios.get(serverBaseUrl + "/api/users/" + userId)
     .then((response) => {
       console.log(response);
-      workInProgressProjects.value = response.data.data;
     })
     .catch((error) => {
       console.log(error);
@@ -107,7 +106,7 @@ onMounted(() => {
                 <i class="bi bi-egg-fried"></i>
                 Products
               </router-link>
-              <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
+              <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new product">
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
@@ -120,7 +119,22 @@ onMounted(() => {
             </li>
 
           </ul>
-
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>My Orders</span>
+            <router-link class="link-secondary" :to="{ name: 'CurrentOrder' }" aria-label="Add a new order">
+              <i class="bi bi-xs bi-plus-circle"></i>
+            </router-link>
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item" v-for="order in orders" :key="order.id">
+              <router-link class="nav-link w-100 me-3"
+                :class="{ active: $route.name == 'CurrentOrder' && $route.params.id == order.id }"
+                :to="{ name: 'CurrentOrder', params: { id: order.id } }">
+                <i class="bi bi-file-ruled"></i>
+                {{ order.id }}
+              </router-link>
+            </li>
+          </ul>
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
