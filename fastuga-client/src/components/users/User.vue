@@ -8,7 +8,8 @@
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
+
 
   const props = defineProps({
       id: {
