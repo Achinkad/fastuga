@@ -136,12 +136,6 @@ const deleteClick = (order) => {
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="toogleClick(order)" v-if="showCompletedButton">
-              <i class="bi bi-xs" :class="{
-                'bi-square': !order.completed,
-                'bi-check2-square': order.completed,
-              }"></i>
-            </button>
 
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>

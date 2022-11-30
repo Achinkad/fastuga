@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
+use App\Models\User;
+
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -13,6 +15,15 @@ class OrderController extends Controller
     public function index()
     {
         return OrderResource::collection(Order::paginate(30));
+    }
+    public function getTasksOfUser(Request $request, Order $order)
+    {
+        //TaskResource::$format = 'detailed';
+        if (!$request->has('include_assigned')) {
+            return OrderResource::collection($user->orders->sortByDesc('id'));
+        } else {
+            return OrderResource::collection($user->orders->merge($user->assigedOrders)->sortByDesc('id'));
+        }
     }
 
     public function store(StoreOrderRequest $request)

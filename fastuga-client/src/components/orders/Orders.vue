@@ -9,6 +9,7 @@ const router = useRouter()
 const serverBaseUrl ="http://fastuga-api.test";
 const pagination = ref({})
 
+// funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
   axios.get(serverBaseUrl+'/api/orders?page='+page)
     .then((response) => {
@@ -20,29 +21,52 @@ const loadOrders = (page = 1) => {
       console.log(error)
     })
 }
-/* Prefiro esta versao da funcao, no entanto tem que se discutir isto.
-const loadOrders = () => {
+
+//funcao a implementar com filtros para historicos de negocio
+/*
+const loadOrders = (page = 1) => {
     if(userStore.userType == 'EM'){
-      axios.get('/api/orders')
+      axios.get('/api/orders?page='+page)
       .then((response) => {
         orders.value = response.data.data
+        pagination.value = response.data
       })
       .catch((error) => {
         console.log(error)
       })
-    }else{
-    axios.get('/api/orders/user/' + userStore.userId)
+    if(userStore.userType == 'ED'){
+      axios.get('/api/delivery/'+ userStore.userId+'/orders?page='+page)
       .then((response) => {
         orders.value = response.data.data
+        pagination.value = response.data
       })
       .catch((error) => {
         console.log(error)
       })
     }
-  }
-    */
+      /*
+    axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
+      .then((response) => {
+        orders.value = response.data.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      //
 
-
+    }
+}
+*/
+//funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API
+const loadHistoricOrders = (page = 1) => {
+    axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
+      .then((response) => {
+        orders.value = response.data.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+}
 
 const addOrder = () => {
   router.push({ name: 'NewOrder' })
@@ -72,6 +96,9 @@ const props = defineProps({
 
 const orders = ref([])
 const filterByStatus = ref("-1")
+
+
+//filtros terao de ser removidos conforme a comunicação com o professor
 
 const filteredOrders = computed(() => {
   return orders.value.filter((o) =>
@@ -111,6 +138,8 @@ const totalOrders = computed(() => {
 
 onMounted(() => {
   loadOrders()
+  //loadHistoricOrders()
+  
 })
 </script>
 
@@ -132,18 +161,32 @@ onMounted(() => {
         <option value="R">Ready Orders</option>
         <option value="D">Delivered Orders</option>
         <option value="C">Canceled Orders</option>
-
-
       </select>
       <div class="mx-0 mt-2">
         <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
       </div>
-
     </div>
 
-
   </div>
+  <!--
+    <div v-else class="mb-3 d-flex justify-content-between flex-wrap">
+    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+      <label for="selectCompleted" class="form-label">Filter by status:</label>
+      <select class="form-select" id="selectCompleted" v-model="filterByStatus">
+        <option value="-1">Any</option>
+        <option value="P">Preparing Orders</option>
+        <option value="R">Ready Orders</option>
+      </select>
+      <div class="mx-0 mt-2">
+        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
+            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
+      </div>
+    </div>
+    </div>
+    
+-->
+
 
 
   <order-table
@@ -154,9 +197,19 @@ onMounted(() => {
     @deleted="deletedOrder"
   ></order-table>
 
+
+<!--A prop OnlyCurrentOrders esta a devolver o historico de orders do utilizador logado(myOrders)-->
+
+  <div v-if="!onlyCurrentOrders">
+    <hr>
+    <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+    <hr>
+  </div>
+  <div v-else>
   <hr>
-  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadHistoricOrders" :limit="5"></Bootstrap5Pagination>
   <hr>
+  </div>
 </template>
 
 
