@@ -3,7 +3,7 @@ import { ref, watch, computed } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl ="http://fastuga-api.test";
 
 const props = defineProps({
   order: {
@@ -137,16 +137,6 @@ const productPhotoFullUrl = (product) => {
           <field-error-message :errors="errors" fieldName="date"></field-error-message>
         </div>
         
-    <div class="mb-3">
-      <label for="inputNotes" class="form-label">Notes</label>
-      <textarea
-        class="form-control"
-        id="inputNotes"
-        rows="4"
-        v-model="editingOrder.notes"
-      ></textarea>
-      <field-error-message :errors="errors" fieldName="notes"></field-error-message>
-    </div>
 
     <div class="mb-3" v-if="editingOrder.customer_id!=null">
           
@@ -164,20 +154,32 @@ const productPhotoFullUrl = (product) => {
           <br>
            <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
           <span>{{editingOrder.user.name}}</span>
-          
-         
-         
+            
     </div>
 
     <div class="mb-3" v-if="editingOrder.order_item!=null">
           
-          <label for="inputDeliveredBy" class="form-label" >Products: </label>
+          <label for="inputProducts" class="form-label" >Products: </label>
           <br>
           <div v-for="n in editingOrder.order_item.length">
-          <img :src="productPhotoFullUrl(editingOrder.order_item[n-1].product)" class="rounded-circle img_photo" />
+            <img :src="productPhotoFullUrl(editingOrder.order_item[n-1].product)" class="rounded-circle img_photo" />
             <span>{{editingOrder.order_item[n-1].product.name}}</span>
+              <br>
+             <div v-if="editingOrder.order_item[n-1].notes!=null"> 
+               <label for="inputNotes" class="form-label" >Notes: </label>
+                <textarea
+                  class="form-control"
+                  id="inputNotes"
+                  rows="2"
+                 
+                  v-model="editingOrder.order_item[n-1].notes"
+                ></textarea>
+                 </div> 
+                <hr>
+      </div>
+      <field-error-message :errors="errors" fieldName="notes"></field-error-message>
           
-          </div>
+
     </div>
 
 

@@ -6,14 +6,15 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl ="http://fastuga-api.test";
 const pagination = ref({})
 
 const loadOrders = (page = 1) => {
-  axios.get(serverBaseUrl+'/api/orders')
+  axios.get(serverBaseUrl+'/api/orders?page='+page)
     .then((response) => {
       orders.value = response.data.data
       pagination.value = response.data
+      
     })
     .catch((error) => {
       console.log(error)

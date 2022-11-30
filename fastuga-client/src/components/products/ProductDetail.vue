@@ -82,6 +82,17 @@ const cancel = () => {
             </select>
           <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
+
+        <div class="mb-3">
+      <label for="inputDescription" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="inputDescription"
+        rows="4"
+        v-model="editingProduct.description"
+      ></textarea>
+      <field-error-message :errors="errors" fieldName="notes"></field-error-message>
+    </div>
        
       </div>
       <div class="w-25">
@@ -89,8 +100,7 @@ const cancel = () => {
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
-            <input type="file" id="actual-btn" hidden/>
-              <label for="actual-btn" id="label">Choose File</label>
+              <input type="file" name="upload">
           </div>
         </div>
       </div>
