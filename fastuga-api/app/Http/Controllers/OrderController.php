@@ -12,10 +12,23 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return OrderResource::collection(Order::paginate(30));
+        
+        $status=$request->query('status','');
+        $qry=Order::query();
+        if($status!="-1"){
+
+            $qry->where('status',$status);
+            return $qry->paginate(30);
+        }
+        else{
+            return $qry->paginate(30);
+        }
+     
+       
     }
+
     public function getTasksOfUser(Request $request, Order $order)
     {
         //TaskResource::$format = 'detailed';

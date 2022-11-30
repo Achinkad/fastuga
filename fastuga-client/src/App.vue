@@ -4,13 +4,13 @@ import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
 const workInProgressProjects = ref([]);
-const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = "http://fastuga-api.test";
 
 onMounted(() => {
   const userId = 1
   axios.get(serverBaseUrl + "/api/users/" + userId)
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       workInProgressProjects.value = response.data.data;
     })
     .catch((error) => {

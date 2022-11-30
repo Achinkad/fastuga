@@ -1,26 +1,43 @@
 <script setup>
-import { ref, computed, onMounted, inject } from 'vue'
+import { ref, computed, onMounted, inject,watch } from 'vue'
 import { useRouter } from 'vue-router'
 import OrderTable from "./OrderTable.vue"
-import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+
+import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
 const serverBaseUrl ="http://fastuga-api.test";
 const pagination = ref({})
 
+//variável usada no filtro
+var value_status=ref("-1");
+
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
-  axios.get(serverBaseUrl+'/api/orders?page='+page)
+
+  axios.get(serverBaseUrl+'/api/orders?page='+page,{
+    params:{
+      status: value_status.value
+      }
+      
+  })
     .then((response) => {
       orders.value = response.data.data
-      pagination.value = response.data
+      pagination.value = response.data     
       
     })
     .catch((error) => {
       console.log(error)
     })
 }
+
+//WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
+watch(value_status,() =>{
+  console.log(value_status.value)
+  loadOrders()
+}) 
+
 
 //funcao a implementar com filtros para historicos de negocio
 /*
@@ -84,7 +101,7 @@ const deletedOrder = (deletedOrder) => {
 }
 
 const props = defineProps({
-  ordersTittle: {
+  ordersTitle: {
     type: String,
     default: 'Order',
   },
@@ -95,29 +112,9 @@ const props = defineProps({
 })
 
 const orders = ref([])
-const filterByStatus = ref("-1")
 
-
-//filtros terao de ser removidos conforme a comunicação com o professor
-
-const filteredOrders = computed(() => {
-  return orders.value.filter((o) =>
-    (props.onlyCurrentOrders && o.status=='P')
-    ||
-    (props.onlyCurrentOrders && o.status=='R')
-    ||
-    (!props.onlyCurrentOrders && (
-
-      (filterByStatus.value == "-1"
-        || filterByStatus.value == "P" && o.status =='P'
-        || filterByStatus.value == "D" && o.status =='D'
-        || filterByStatus.value == "R" && o.status =='R'
-        || filterByStatus.value == "C" && o.status =='C'
-
-      ))))
-})
-
-
+//TALVEZ TIRAR,OU MELHORAR, NÃO FAZ SENTIDO O TOTAL APARECER 30
+/*
 const totalOrders = computed(() => {
     return orders.value.reduce((c,o) =>
     (props.onlyCurrentOrders && o.status=='P')
@@ -126,14 +123,16 @@ const totalOrders = computed(() => {
     ||
     (!props.onlyCurrentOrders && (
 
-      (filterByStatus.value == "-1"
-        || filterByStatus.value == "P" && o.status =='P'
-        || filterByStatus.value == "D" && o.status =='D'
-        || filterByStatus.value == "R" && o.status =='R'
-        || filterByStatus.value == "C" && o.status =='C'
+      (value_status.value == "-1"
+        || value_status.value == "P" && o.status =='P'
+        || value_status.value == "D" && o.status =='D'
+        || value_status.value == "R" && o.status =='R'
+        || value_status.value == "C" && o.status =='C'
 
       ))) ? c + 1 : c, 0)
 })
+*/
+
 
 
 onMounted(() => {
@@ -148,15 +147,17 @@ onMounted(() => {
   <div class="mx-2">
     <h3 class="mt-4">{{ ordersTitle }}</h3>
   </div>
+  <!--
   <div class="mx-2 total-filtro">
     <h5 class="mt-4">Total: {{ totalOrders }}</h5>
   </div>
+  -->
   <hr>
   <div v-if="!onlyCurrentOrders" class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCompleted" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectCompleted" v-model="filterByStatus">
-        <option value="-1">Any</option>
+      <select class="form-select" id="selectCompleted" v-model="value_status">
+        <option value="-1" selected>Any</option>
         <option value="P">Preparing Orders</option>
         <option value="R">Ready Orders</option>
         <option value="D">Delivered Orders</option>
@@ -190,9 +191,8 @@ onMounted(() => {
 
 
   <order-table
-    :orders="filteredOrders"
+    :orders="orders"
     :showId="true"
-    :showOwner="false"
     @edit="editOrder"
     @deleted="deletedOrder"
   ></order-table>
@@ -201,12 +201,12 @@ onMounted(() => {
 <!--A prop OnlyCurrentOrders esta a devolver o historico de orders do utilizador logado(myOrders)-->
 
   <div v-if="!onlyCurrentOrders">
-    <hr>
+    
     <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
     <hr>
   </div>
   <div v-else>
-  <hr>
+  
   <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadHistoricOrders" :limit="5"></Bootstrap5Pagination>
   <hr>
   </div>

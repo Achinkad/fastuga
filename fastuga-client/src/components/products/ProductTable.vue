@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = "http://fastuga-api.test";
 
 const props = defineProps({
   products: {
@@ -34,7 +34,7 @@ const deleteConfirmationDialog = ref(null)
 
 const productToDeleteDescription = computed(() => {
   return productToDelete.value
-    ? `#${productToDelete.value.id} (${productToDelete.value.description})`
+    ? `#${productToDelete.value.id} (${productToDelete.value.name})`
     : ""
 })
 
@@ -72,7 +72,7 @@ const deleteClick = (product) => {
 
 <template>
   <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the order ${taskToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+    :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
     <thead>
