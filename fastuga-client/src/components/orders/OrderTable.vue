@@ -15,7 +15,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showTicketId: {
+  showStatus: {
     type: Boolean,
     default: true,
   },
@@ -32,11 +32,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showDate: {
-    type: Boolean,
-    default: true,
-  },
-  showTotalPaidPoints: {
+   showTicketNumber: {
     type: Boolean,
     default: true,
   },
@@ -121,36 +117,22 @@ const deleteClick = (order) => {
     <thead>
       <tr>
         <th v-if="showId">ID</th>
-        <th v-if="showTicketId">Ticket</th>
-        <th v-if="showTotalPaidPoints">Total Paid</th>
-        <th v-if="showDate">Date</th>
         <th v-if="showStatus">Status</th>
-
-
-      
+        <th v-if="showPrice">Total Paid/Total Price</th>
+        <th v-if="showTicketNumber">Ticket Number</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="order in editingOrders" :key="order.id">
         <td v-if="showId">{{ order.id }}</td>
-        <td v-if="showTicketId">{{ order.ticket_number }}</td>
-        <td v-if="showTotalPaidPoints">{{order.total_paid_with_points}}</td>
-        <td v-if="showDate">{{order.date}}</td>
         <td v-if="showStatus">
-          <div v-if="order.status=='P'">
-              Preparing
-          </div>
-          <div v-else-if="order.status=='R'">
-               Ready
-          </div>
-          <div v-else-if="order.status=='D'">
-              Delivered
-          </div>
-          <div v-else>
-              Canceled
-          </div>
+         <span v-if="order.status=='P'">Preparing</span>
+         <span v-if="order.status=='R'">Ready</span>
+         <span v-if="order.status=='D'">Delivered</span>
+         <span v-if="order.status=='C'">Cancelled</span>
         </td>
-        
+        <td v-if="showPrice">{{ order.total_paid }}€/{{order.total_price}}€</td>
+        <td v-if="showTicketNumber">{{ order.ticket_number}}</td>
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
