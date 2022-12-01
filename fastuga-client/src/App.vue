@@ -1,23 +1,29 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted, inject } from "vue";
+import {RouterLink, RouterView } from 'vue-router'
+import { ref, inject } from "vue";
+import { useUserStore } from './stores/user.js'
+const userStore = useUserStore()
 
 const axios = inject("axios");
 const toast = inject("toast")
-const workInProgressProjects = ref([]);
-const serverBaseUrl = "http://fastuga-api";
+const buttonSidebarExpand = ref(null)
 
-onMounted(() => {
-  const userId = 1
-  axios.get(serverBaseUrl+"/api/users/" + userId)
-    .then((response) => {
-      //console.log(response);
-      workInProgressProjects.value = response.data.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-})
+const logout = async () => {
+  try {
+    await axios.post('logout')
+    toast.success('User has logged out of the application.')
+    delete axios.defaults.headers.common.Authorization
+    userStore.clearUser()
+  } catch (error) {
+    toast.error('There was a problem logging out of the application!')
+  }
+}
+
+const clickMenuOption = () => {
+  if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
+    buttonSidebarExpand.value.click()
+  }
+}
 </script>
 
 <template>
@@ -40,17 +46,18 @@ onMounted(() => {
               Register
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-              <i class="bi bi-box-arrow-in-right"></i>
-              Login
-            </router-link>
-          </li>
+        <li class="nav-item" v-show="!userStore.user">
+          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+            @click="clickMenuOption">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Login
+          </router-link>
+        </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
-              <span class="avatar-text">User Name</span>
+              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
+              <span class="avatar-text">{{ userStore.user?.name ?? 'Anonymous' }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
@@ -143,7 +150,7 @@ onMounted(() => {
                   data-bs-toggle="dropdown" aria-expanded="false">
                   <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img"
                     alt="avatar image" />
-                  <span class="avatar-text">User Name</span>
+                  <span class="avatar-text">{{ userStore.user?.name ?? 'Anonymous' }}</span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
                   <li>

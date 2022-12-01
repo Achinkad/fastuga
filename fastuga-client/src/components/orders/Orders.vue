@@ -174,7 +174,7 @@ onMounted(() => {
   <div v-else class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCompleted" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectCompleted" v-model="loadHistoricOrders">
+      <select class="form-select" id="selectCompleted" v-model="value_status">
         <option value="-1" selected>Any</option>
         <option value="P">Preparing Orders</option>
         <option value="R">Ready Orders</option>
