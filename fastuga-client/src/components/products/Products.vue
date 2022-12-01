@@ -20,7 +20,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   })
 
   const loadProducts = (page = 1) => {
-    axios.get(serverBaseUrl+'/products?page='+page,{
+    axios.get(serverBaseUrl +'/api/products?page='+page,{
     params:{
       type: value_type.value
       }

@@ -45,7 +45,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
-        axios.post(serverBaseUrl+'/order', order.value)
+        axios.post(serverBaseUrl +'/api/order', order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -61,7 +61,7 @@ const serverBaseUrl = inject("serverBaseUrl")
             }
           })
       } else {
-        axios.put(serverBaseUrl+'/order/' + props.id, order.value)
+        axios.put(serverBaseUrl +'/api/order/' + props.id, order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
