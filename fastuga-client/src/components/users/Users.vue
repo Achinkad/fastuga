@@ -11,7 +11,8 @@
   const users = ref([])
   const pagination = ref({})
 
-  const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
+
 
   var value_role=ref("-1");
 
@@ -20,7 +21,7 @@
   })
 
   const loadUsers = (page = 1) => {
-    axios.get(serverBaseUrl+'/api/users?page='+page,{
+    axios.get(serverBaseUrl+'/users?page='+page,{
     params:{
       type: value_role.value
       }

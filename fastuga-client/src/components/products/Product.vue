@@ -7,7 +7,7 @@
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
 
   const props = defineProps({
       id: {
@@ -32,7 +32,7 @@
         product.value = newProduct()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/api/products/' + id)
+        axios.get(serverBaseUrl+'/products/' + id)
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataAsString()
@@ -45,7 +45,7 @@
 
   const save = () => {
       errors.value = null
-      axios.put(serverBaseUrl+'/api/products/' + props.id, product.value)
+      axios.put(serverBaseUrl+'/products/' + props.id, product.value)
         .then((response) => {
           product.value = response.data.data
           originalValueStr = dataAsString()

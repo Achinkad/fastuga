@@ -2,7 +2,8 @@
 import { ref, watch, watchEffect, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
+
 
 const props = defineProps({
   products: {
@@ -52,7 +53,7 @@ const photoFullUrl = (product) => {
 };
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl + "/api/products/" + productToDelete.value.id)
+    .delete(serverBaseUrl + "/products/" + productToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Product " + productToDeleteDescription.value + " was deleted")

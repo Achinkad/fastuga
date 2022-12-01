@@ -5,7 +5,8 @@
   import { Bootstrap5Pagination } from 'laravel-vue-pagination';
   
   const router = useRouter()
-  const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
+
   const axios = inject('axios')
 
   const products = ref([])
@@ -19,7 +20,7 @@
   })
 
   const loadProducts = (page = 1) => {
-    axios.get(serverBaseUrl+'/api/products?page='+page,{
+    axios.get(serverBaseUrl+'/products?page='+page,{
     params:{
       type: value_type.value
       }

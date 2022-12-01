@@ -4,7 +4,7 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 const axios = inject("axios")
 const toast = inject("toast")
 
-const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl = inject("serverBaseUrl")
 
 const props = defineProps({
   orders: {
@@ -89,7 +89,7 @@ const editClick = (order) => {
 
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
+    .delete(serverBaseUrl + "/orders/" + orderToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
