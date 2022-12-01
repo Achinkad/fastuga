@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = "http://fastuga-api.test";
 
 const props = defineProps({
   product: {
@@ -43,7 +43,7 @@ const cancel = () => {
 </script>
 
 <template>
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
+  <form class="row g-3 needs-validation" @submit.prevent="save">
     <h3 class="mt-5 mb-3">Product #{{ editingProduct.id }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -74,7 +74,7 @@ const cancel = () => {
         </div>
         <div class="mb-3">
             <label for="type">Type:</label>
-            <select id="type" name="type"  v-model="editingProduct.type">
+            <select id="type" name="type"  v-model="editingProduct.type" required>
               <option value="hot dish">Hot Dish</option>
               <option value="cold dish">Cold Dish</option>
               <option value="drink">Drink</option>
@@ -82,6 +82,18 @@ const cancel = () => {
             </select>
           <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
+
+        <div class="mb-3">
+      <label for="inputDescription" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="inputDescription"
+        rows="4"
+        v-model="editingProduct.description"
+        required
+      ></textarea>
+      <field-error-message :errors="errors" fieldName="description"></field-error-message>
+    </div>
        
       </div>
       <div class="w-25">
@@ -89,8 +101,7 @@ const cancel = () => {
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
-            <input type="file" id="actual-btn" hidden/>
-              <label for="actual-btn" id="label">Choose File</label>
+              <input type="file" name="upload">
           </div>
         </div>
       </div>
