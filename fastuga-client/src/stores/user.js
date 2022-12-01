@@ -20,6 +20,9 @@ export const useUserStore = defineStore('user', () => {
     const userId = computed(() => {
         return user.value?.id ?? -1
     })
+    const userType = computed(() => {
+        return user.value?.type ?? -1
+    })
 
     async function loadUser () {
         try {

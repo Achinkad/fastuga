@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl ="http://fastuga-api.test";
+  const serverBaseUrl ="http://fastuga.test";
 
 const props = defineProps({
   user: {
@@ -74,7 +74,7 @@ const cancel = () => {
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
         
-         <div class="mb-3 px-1">
+         <div class="mb-3">
             <label for="type">Role:</label>
             <select id="type" name="type"  v-model="editingUser.type">
               <option value="EM">Manager</option>

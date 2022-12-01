@@ -3,7 +3,8 @@ import { ref, watch, watchEffect, computed, inject } from "vue"
 
 const axios = inject("axios")
 const toast = inject("toast")
-const serverBaseUrl = ine
+
+const serverBaseUrl ="http://fastuga.test";
 
 const props = defineProps({
   orders: {
@@ -14,15 +15,24 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showCompleted: {
+  showStatus: {
     type: Boolean,
     default: true,
+  },
+  showStatus: {
+    type: Boolean,
+    default: true,
+
   },
   showCustomer: {
     type: Boolean,
     default: true,
   },
   showPrice: {
+    type: Boolean,
+    default: true,
+  },
+   showTicketNumber: {
     type: Boolean,
     default: true,
   },
@@ -43,13 +53,13 @@ const props = defineProps({
 
 const emit = defineEmits(["completeToggled", "edit", "deleted"])
 
-const editingOrders = ref(props.ordersDay)
+const editingOrders = ref(props.orders)
 const orderToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
 const orderToDeleteDescription = computed(() => {
   return orderToDelete.value
-    ? `#${orderToDelete.value.id} (${orderToDelete.value.description})`
+    ? `#${orderToDelete.value.id} (${orderToDelete.value.id})`
     : ""
 })
 
@@ -60,7 +70,7 @@ watch(
   }
 )
 
-
+/*
 const toogleClick = (order) => {
   axios
     .patch(serverBaseUrl + "(api/orders/" + order.id + "/completed", { completed: !order.completed })
@@ -72,7 +82,7 @@ const toogleClick = (order) => {
       console.log(error)
     })
 }
-
+*/
 const editClick = (order) => {
   emit("edit", order)
 }
@@ -96,33 +106,38 @@ const deleteClick = (order) => {
 </script>
 
 <template>
-  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the order ${taskToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+    <confirmation-dialog
+    ref="deleteConfirmationDialog"
+    confirmationBtn="Delete order"
+    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`"
+    @confirmed="dialogConfirmedDelete"
+  >
   </confirmation-dialog>
   <table class="table">
     <thead>
       <tr>
         <th v-if="showId">ID</th>
-        <th class="text-center" v-if="showCompleted">Status</th>
+        <th v-if="showStatus">Status</th>
+        <th v-if="showPrice">Total Paid/Total Price</th>
+        <th v-if="showTicketNumber">Ticket Number</th>
+        <th v-if="showCompletedButton || showEditButton || showDeleteButton"></th>
 
       </tr>
     </thead>
     <tbody>
-      <tr v-for="order in orders" :key="order.id">
+      <tr v-for="order in editingOrders" :key="order.id">
         <td v-if="showId">{{ order.id }}</td>
-        <td class="text-center" v-if="showCompleted">
-          {{ order.completed ? "Done" : "Pending" }}
+        <td v-if="showStatus">
+         <span v-if="order.status=='P'">Preparing</span>
+         <span v-if="order.status=='R'">Ready</span>
+         <span v-if="order.status=='D'">Delivered</span>
+         <span v-if="order.status=='C'">Cancelled</span>
         </td>
-        <td v-if="showId">{{ order.id }}</td>
+        <td v-if="showPrice">{{ order.total_paid }}€/{{order.total_price}}€</td>
+        <td v-if="showTicketNumber">{{ order.ticket_number}}</td>
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="toogleClick(task)" v-if="showCompletedButton">
-              <i class="bi bi-xs" :class="{
-                'bi-square': !order.completed,
-                'bi-check2-square': order.completed,
-              }"></i>
-            </button>
 
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>

@@ -11,9 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::paginate(15));
+        $type=$request->query('type','');
+        $qry=User::query();
+        if($type!="-1"){
+
+            $qry->where('type',$type);
+            return $qry->paginate(15);
+        }
+        else{
+            return $qry->paginate(15);
+        }
     }
 
     public function store(StoreUserRequest $request)

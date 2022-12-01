@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
+import avatarNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl = "http://fastuga-api.test";
+const serverBaseUrl = "http://fastuga.test";
 
 const props = defineProps({
   product: {
@@ -43,7 +43,7 @@ const cancel = () => {
 </script>
 
 <template>
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
+  <form class="row g-3 needs-validation" @submit.prevent="save">
     <h3 class="mt-5 mb-3">Product #{{ editingProduct.id }}</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
@@ -60,24 +60,48 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
-
-        <div class="mb-3 px-1">
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+         <div class="mb-3">
+          <label for="inputPrice" class="form-label">Price</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputPrice"
+            placeholder="Product Price"
+            required
+            v-model="editingProduct.price"
+          />
+          <field-error-message :errors="errors" fieldName="price"></field-error-message>
         </div>
-        <div class="d-flex ms-1 mt-4 flex-wrap justify-content-between">
-          <div class="mb-3 me-3 flex-grow-1">
-          </div>
-          <div class="mb-3 ms-xs-3 flex-grow-1">
-
-            <field-error-message :errors="errors" fieldName="gender"></field-error-message>
-          </div>
+        <div class="mb-3">
+            <label for="type">Type:</label>
+            <select id="type" name="type"  v-model="editingProduct.type" required>
+              <option value="hot dish">Hot Dish</option>
+              <option value="cold dish">Cold Dish</option>
+              <option value="drink">Drink</option>
+              <option value="dessert">Dessert</option>
+            </select>
+          <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
+
+        <div class="mb-3">
+      <label for="inputDescription" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="inputDescription"
+        rows="4"
+        v-model="editingProduct.description"
+        required
+      ></textarea>
+      <field-error-message :errors="errors" fieldName="description"></field-error-message>
+    </div>
+       
       </div>
       <div class="w-25">
         <div class="mb-3">
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
+              <input type="file" name="upload">
           </div>
         </div>
       </div>
@@ -92,5 +116,15 @@ const cancel = () => {
 <style scoped>
 .total_hours {
   width: 26rem;
+}
+#label {
+  background-color: orange;
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+
 }
 </style>

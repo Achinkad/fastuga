@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
+use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,13 +15,24 @@ class ProductController extends Controller
     {
         $this->middleware('auth.manager', ['except' => [
             'index',
-            'show'
+            'show',
+            'store',
+            'update'
         ]]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::paginate(10));
+        $type=$request->query('type','');
+        $qry=Product::query();
+        if($type!="-1"){
+
+            $qry->where('type',$type);
+            return $qry->paginate(10);
+        }
+        else{
+            return $qry->paginate(10);
+        }
     }
 
     public function store(StoreProductRequest $request)

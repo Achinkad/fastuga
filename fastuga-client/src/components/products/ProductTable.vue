@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = "http://fastuga-api.test";
+const serverBaseUrl = "http://fastuga.test";
 
 const props = defineProps({
   products: {
@@ -34,7 +34,7 @@ const deleteConfirmationDialog = ref(null)
 
 const productToDeleteDescription = computed(() => {
   return productToDelete.value
-    ? `#${productToDelete.value.id} (${productToDelete.value.description})`
+    ? `#${productToDelete.value.id} (${productToDelete.value.name})`
     : ""
 })
 
@@ -72,7 +72,7 @@ const deleteClick = (product) => {
 
 <template>
   <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the order ${taskToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+    :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
     <thead>
@@ -80,7 +80,8 @@ const deleteClick = (product) => {
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
         <th class="align-middle">Name</th>
-
+        <th class="align-middle">Type</th>
+        <th class="align-middle">Price</th>
       </tr>
     </thead>
     <tbody>
@@ -90,6 +91,8 @@ const deleteClick = (product) => {
           <img :src="photoFullUrl(product)" class="rounded-circle img_photo" />
         </td>
         <td class="align-middle">{{ product.name }}</td>
+        <td class="align-middle">{{ product.type }}</td>
+        <td class="align-middle">{{ product.price }}€</td>
         <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
           <i class="bi bi-xs bi-x-square-fill"></i>
         </button>
