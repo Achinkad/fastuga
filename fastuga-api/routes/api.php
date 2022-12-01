@@ -24,8 +24,8 @@ Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block
 /* --- [API Routes] -> Orders --- */
 Route::get('users/{id}/orders', [OrderController::class, 'getOrdersOfUser']);
 Route::resource('orders', OrderController::class);
-Route::patch('orders/status/{id}', [OrderController::class, 'status']); // ->Change Order Status
-// -> Orders por utilizador
+Route::patch('orders/status/{id}', [OrderController::class, 'status']); // -> Change Order Status
+Route::get('orders/customer/{customer}', [OrderController::class, 'get_orders_customer']); // -> Get Orders From Customer
 
 /* --- [API Routes] -> Products --- */
 Route::resource('products', ProductController::class);

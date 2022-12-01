@@ -20,7 +20,7 @@ const logout = async () => {
 
 onMounted(() => {
   const userId = 1
-  axios.get(serverBaseUrl + "/api/users/" + userId)
+  axios.get(serverBaseUrl+"/users/" + userId)
     .then((response) => {
       //console.log(response);
       workInProgressProjects.value = response.data.data;
@@ -123,7 +123,7 @@ onMounted(() => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-      
+
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
                 <i class="bi bi-people"></i>
