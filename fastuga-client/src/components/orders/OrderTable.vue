@@ -108,8 +108,8 @@ const deleteClick = (order) => {
 <template>
     <confirmation-dialog
     ref="deleteConfirmationDialog"
-    confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the task ${orderToDeleteDescription}?`"
+    confirmationBtn="Delete order"
+    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`"
     @confirmed="dialogConfirmedDelete"
   >
   </confirmation-dialog>
@@ -120,6 +120,8 @@ const deleteClick = (order) => {
         <th v-if="showStatus">Status</th>
         <th v-if="showPrice">Total Paid/Total Price</th>
         <th v-if="showTicketNumber">Ticket Number</th>
+        <th v-if="showCompletedButton || showEditButton || showDeleteButton"></th>
+
       </tr>
     </thead>
     <tbody>
