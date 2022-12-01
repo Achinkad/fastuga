@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderItemController;
-
+use App\Http\Controllers\api\AuthController;
 
 
 
@@ -32,3 +32,7 @@ Route::resource('products', ProductController::class);
 
 /* --- [API Routes] -> Order Items --- */
 Route::resource('order-items', OrderItemController::class);
+
+/* --- [API Routes] -> Auth --- */
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
