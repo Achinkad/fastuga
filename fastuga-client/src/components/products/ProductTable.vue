@@ -53,7 +53,7 @@ const photoFullUrl = (product) => {
 };
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl + "/api/products/" + productToDelete.value.id)
+    .delete(serverBaseUrl + "/products/" + productToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Product " + productToDeleteDescription.value + " was deleted")

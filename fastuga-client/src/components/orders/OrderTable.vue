@@ -89,7 +89,7 @@ const editClick = (order) => {
 
 const dialogConfirmedDelete = () => {
   axios
-    .delete(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
+    .delete(serverBaseUrl + "/orders/" + orderToDelete.value.id)
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")

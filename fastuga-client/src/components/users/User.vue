@@ -36,7 +36,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/api/users/' + id)
+        axios.get(serverBaseUrl+'/users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()
@@ -49,7 +49,7 @@ const serverBaseUrl = inject("serverBaseUrl")
 
   const save = () => {
       errors.value = null
-      axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
+      axios.put(serverBaseUrl+'/users/' + props.id, user.value)
         .then((response) => {
           user.value = response.data.data
           originalValueStr = dataAsString()

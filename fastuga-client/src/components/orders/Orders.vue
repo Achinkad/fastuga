@@ -17,7 +17,7 @@ var value_status=ref("-1");
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
-  axios.get(serverBaseUrl+'/api/orders?page='+page,{
+  axios.get(serverBaseUrl+'/orders?page='+page,{
     params:{
       status: value_status.value
       }
@@ -77,7 +77,7 @@ const loadOrders = (page = 1) => {
 */
 //funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API
 const loadHistoricOrders = (page = 1) => {
-    axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
+    axios.get('/users/'+ userStore.userId +'/orders?page='+page)
       .then((response) => {
         orders.value = response.data.data
       })
