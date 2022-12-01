@@ -5,37 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
-use App\Models\Order;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\Order;
 use App\Models\Customer;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        
-        $status=$request->query('status','');
-        $qry=Order::query();
-        if($status!="-1"){
-
-            $qry->where('status',$status);
-            return $qry->paginate(30);
-        }
-        else{
-            return $qry->paginate(30);
-        }
-     
-       
+        $orders = $request->input('status') == -1 ? Order::paginate(20) : Order::where('status', $request->input('status'))->paginate(20);
+        return OrderResource::collection($orders);
     }
 
     public function getOrdersOfUser($id)
     {
-        $orders = Order::where('customer_id', $id)->paginate(30);
+        $orders = Order::where('customer_id', $id)->paginate(20);
         return OrderResource::collection($orders);
-    }        
+    }
 
     public function store(StoreOrderRequest $request)
     {
