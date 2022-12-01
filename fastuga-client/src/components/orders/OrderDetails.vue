@@ -3,7 +3,7 @@ import { ref, watch, computed } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl ="http://fastuga.test";
 
 const props = defineProps({
   order: {

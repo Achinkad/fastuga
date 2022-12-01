@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl = "http://fastuga-api.test";
+const serverBaseUrl = "http://fastuga.test";
 
 const props = defineProps({
   product: {

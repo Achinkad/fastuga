@@ -29,15 +29,11 @@ class OrderController extends Controller
        
     }
 
-    public function getTasksOfUser(Request $request, Order $order)
+    public function getOrdersOfUser($id)
     {
-        //TaskResource::$format = 'detailed';
-        if (!$request->has('include_assigned')) {
-            return OrderResource::collection($user->orders->sortByDesc('id'));
-        } else {
-            return OrderResource::collection($user->orders->merge($user->assigedOrders)->sortByDesc('id'));
-        }
-    }
+        $orders = Order::where('customer_id', $id)->paginate(30);
+        return OrderResource::collection($orders);
+    }        
 
     public function store(StoreOrderRequest $request)
     {

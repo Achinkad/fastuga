@@ -7,7 +7,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl ="http://fastuga.test";
 const pagination = ref({})
 
 //variável usada no filtro
@@ -167,6 +167,19 @@ onMounted(() => {
         <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
       </div>
+    </div>
+
+  </div>
+  <div v-else class="mb-3 d-flex justify-content-between flex-wrap">
+    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+      <label for="selectCompleted" class="form-label">Filter by status:</label>
+      <select class="form-select" id="selectCompleted" v-model="loadHistoricOrders">
+        <option value="-1" selected>Any</option>
+        <option value="P">Preparing Orders</option>
+        <option value="R">Ready Orders</option>
+        <option value="D">Delivered Orders</option>
+        <option value="C">Canceled Orders</option>
+      </select>
     </div>
 
   </div>
