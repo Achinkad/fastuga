@@ -108,8 +108,8 @@ const deleteClick = (order) => {
 <template>
     <confirmation-dialog
     ref="deleteConfirmationDialog"
-    confirmationBtn="Delete task"
-    :msg="`Do you really want to delete the task ${orderToDeleteDescription}?`"
+    confirmationBtn="Delete order"
+    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`"
     @confirmed="dialogConfirmedDelete"
   >
   </confirmation-dialog>
@@ -120,6 +120,8 @@ const deleteClick = (order) => {
         <th v-if="showStatus">Status</th>
         <th v-if="showPrice">Total Paid/Total Price</th>
         <th v-if="showTicketNumber">Ticket Number</th>
+        <th v-if="showCompletedButton || showEditButton || showDeleteButton"></th>
+
       </tr>
     </thead>
     <tbody>
@@ -136,12 +138,6 @@ const deleteClick = (order) => {
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-xs btn-light" @click="toogleClick(order)" v-if="showCompletedButton">
-              <i class="bi bi-xs" :class="{
-                'bi-square': !order.completed,
-                'bi-check2-square': order.completed,
-              }"></i>
-            </button>
 
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>

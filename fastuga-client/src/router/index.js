@@ -59,7 +59,7 @@ const router = createRouter({
       path: '/orders/current',
       name: 'CurrentOrder',
       component: Orders,
-      props: { onlyCurrentOrders: true, ordersTittle: 'Current Order' }
+      props: { onlyCurrentOrders: true, ordersTitle: 'Current Order' }
     },
     {
       path: '/order/new',

@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted, inject } from "vue";
 
 const axios = inject("axios");
+const toast = inject("toast")
 const workInProgressProjects = ref([]);
 const serverBaseUrl = "http://fastuga-api";
 
@@ -10,7 +11,7 @@ onMounted(() => {
   const userId = 1
   axios.get(serverBaseUrl + "/api/users/" + userId)
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       workInProgressProjects.value = response.data.data;
     })
     .catch((error) => {
@@ -63,7 +64,7 @@ onMounted(() => {
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#"><i class="bi bi-arrow-right"></i>Logout</a>
+                <a class="dropdown-item" @click.prevent="logout"><i class="bi bi-arrow-right"></i>Logout</a>
               </li>
             </ul>
           </li>
@@ -163,7 +164,7 @@ onMounted(() => {
                     <hr class="dropdown-divider" />
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" @click.prevent="logout">
                       <i class="bi bi-arrow-right"></i>Logout
                     </a>
                   </li>
