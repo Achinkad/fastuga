@@ -9,7 +9,7 @@ const serverBaseUrl = "http://fastuga-api";
 
 onMounted(() => {
   const userId = 1
-  axios.get(serverBaseUrl+"/users/" + userId)
+  axios.get(serverBaseUrl+"/api/users/" + userId)
     .then((response) => {
       //console.log(response);
       workInProgressProjects.value = response.data.data;
