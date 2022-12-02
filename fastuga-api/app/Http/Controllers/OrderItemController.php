@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderItemResource;
+use App\Http\Requests\StoreOrderItemRequest;
 use App\Models\OrderItem;
 
 class OrderItemController extends Controller
@@ -13,7 +14,7 @@ class OrderItemController extends Controller
         return OrderItemResource::collection(OrderItem::paginate(20));
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderItemRequest $request)
     {
         //
     }

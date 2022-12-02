@@ -13,16 +13,8 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $type=$request->query('type','');
-        $qry=User::query();
-        if($type!="-1"){
-
-            $qry->where('type',$type);
-            return $qry->paginate(15);
-        }
-        else{
-            return $qry->paginate(15);
-        }
+        $users = $request->has('type') ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
+        return UserResource::collection($users);
     }
 
     public function store(StoreUserRequest $request)

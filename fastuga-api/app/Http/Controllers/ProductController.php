@@ -23,16 +23,8 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $type=$request->query('type','');
-        $qry=Product::query();
-        if($type!="-1"){
-
-            $qry->where('type',$type);
-            return $qry->paginate(10);
-        }
-        else{
-            return $qry->paginate(10);
-        }
+        $products = $request->has('type') ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        return ProductResource::collection($products);
     }
 
     public function store(StoreProductRequest $request)
