@@ -13,9 +13,16 @@ class StoreOrderRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        if ($this->has('payment_type')) {
+            $this->merge(['payment_type' => strtoupper($this->payment_type)]);
+        }
+    }
+
     public function rules()
     {
-        return [
+        $rules = [
             'ticket_number' => 'sometimes|min:1|max:99',
             'status' => 'sometimes|in:P,R,D,C',
             'customer_id' => 'nullable',
@@ -25,11 +32,30 @@ class StoreOrderRequest extends FormRequest
             'points_gained' => 'required',
             'points_used_to_pay' => 'required',
             'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
-            'payment_reference' => 'nullable',
             'date' => 'required|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable'
         ];
+
+        switch ($this->request->get('payment_type')) {
+            case 'VISA':
+                $reference_rule = ['payment_reference' => ['required', 'regex:/^[1-9]\d{15}$/']];
+                break;
+
+            case 'PAYPAL':
+                $reference_rule = ['payment_reference' => 'required|email'];
+                break;
+
+            case 'MBWAY':
+                $reference_rule = ['payment_reference' => ['required', 'regex:/^[1-9]\d{8}$/']];
+                break;
+
+            default:
+                $reference_rule = ['payment_reference' => 'nullable'];
+                break;
+        }
+
+        return array_merge($rules, $reference_rule);
     }
 
     public function failedValidation(Validator $validator)
