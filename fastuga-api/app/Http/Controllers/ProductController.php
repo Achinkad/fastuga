@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,9 +21,10 @@ class ProductController extends Controller
         ]]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::paginate(10));
+        $products = $request->has('type') ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        return ProductResource::collection($products);
     }
 
     public function store(StoreProductRequest $request)

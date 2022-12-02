@@ -1,8 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted, inject } from "vue";
+import {RouterLink, RouterView } from 'vue-router'
+import { ref, inject } from "vue";
+import { useUserStore } from './stores/user.js'
+const userStore = useUserStore()
 
 const axios = inject("axios");
+<<<<<<< HEAD
 
 const serverBaseUrl = "http://fastuga-api";
 
@@ -16,6 +19,27 @@ onMounted(() => {
       console.log(error);
     })
 })
+=======
+const toast = inject("toast")
+const buttonSidebarExpand = ref(null)
+
+const logout = async () => {
+  try {
+    await axios.post('logout')
+    toast.success('User has logged out of the application.')
+    delete axios.defaults.headers.common.Authorization
+    userStore.clearUser()
+  } catch (error) {
+    toast.error('There was a problem logging out of the application!')
+  }
+}
+
+const clickMenuOption = () => {
+  if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
+    buttonSidebarExpand.value.click()
+  }
+}
+>>>>>>> 5d2b181abe27bc82604224e42c99c8ea5b4d851e
 </script>
 
 <template>
@@ -38,17 +62,18 @@ onMounted(() => {
               Register
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-              <i class="bi bi-box-arrow-in-right"></i>
-              Login
-            </router-link>
-          </li>
+        <li class="nav-item" v-show="!userStore.user">
+          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
+            @click="clickMenuOption">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Login
+          </router-link>
+        </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
-              <span class="avatar-text">User Name</span>
+              <img :src="userStore.userPhotoUrl" class="rounded-circle z-depth-0 avatar-img" alt="avatar image" />
+              <span class="avatar-text">{{ userStore.user?.name ?? 'Anonymous' }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               <li>
@@ -62,7 +87,7 @@ onMounted(() => {
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#"><i class="bi bi-arrow-right"></i>Logout</a>
+                <a class="dropdown-item" @click.prevent="logout"><i class="bi bi-arrow-right"></i>Logout</a>
               </li>
             </ul>
           </li>
@@ -110,7 +135,7 @@ onMounted(() => {
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
-      
+
             <li class="nav-item">
               <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
                 <i class="bi bi-people"></i>
@@ -156,7 +181,7 @@ onMounted(() => {
                   data-bs-toggle="dropdown" aria-expanded="false">
                   <img src="@/assets/avatar-exemplo-1.jpg" class="rounded-circle z-depth-0 avatar-img"
                     alt="avatar image" />
-                  <span class="avatar-text">User Name</span>
+                  <span class="avatar-text">{{ userStore.user?.name ?? 'Anonymous' }}</span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
                   <li>
@@ -177,7 +202,7 @@ onMounted(() => {
                     <hr class="dropdown-divider" />
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" @click.prevent="logout">
                       <i class="bi bi-arrow-right"></i>Logout
                     </a>
                   </li>

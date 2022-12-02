@@ -1,10 +1,11 @@
 <script setup>
   import { ref,inject } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../../stores/user.js'
-const router = useRouter()
-const toast = inject('toast')
-
+  import { useRouter } from 'vue-router'
+  import { useUserStore } from '../../stores/user.js'
+  const router = useRouter()
+  const axios = inject('axios')
+  const toast = inject('toast')
+const userStore = useUserStore() 
   const credentials = ref({
         username: '',
         password: ''
@@ -12,16 +13,16 @@ const toast = inject('toast')
 
   const emit = defineEmits(['login'])
 
-const login = async () => {
-  if (await userStore.login(credentials.value)) {
-    toast.success('User ' + userStore.user.name + ' has entered the application.')
-    emit('login')
-    router.back()
-  } else {
-    credentials.value.password = ''
-    toast.error('User credentials are invalid!')
-  }
-}
+ const login = async () => {
+ if (await userStore.login(credentials.value)) {
+ toast.success('User ' + userStore.user.name + ' has entered the application.')
+ emit('login')
+ router.back()
+ } else {
+ credentials.value.password = ''
+ toast.error('User credentials are invalid!')
+ }
+ }
 </script>
 
 <template>

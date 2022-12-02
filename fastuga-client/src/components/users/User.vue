@@ -2,13 +2,14 @@
   import { ref, watch, inject } from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
-  
-  
-  const router = useRouter()  
+
+
+  const router = useRouter()
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const serverBaseUrl = inject("serverBaseUrl")
+const serverBaseUrl = inject("serverBaseUrl")
+
 
   const props = defineProps({
       id: {
@@ -28,14 +29,14 @@
   }
 
   let originalValueStr = ''
-  const loadUser = (id) => {    
+  const loadUser = (id) => {
     originalValueStr = ''
       errors.value = null
       if (!id || (id < 0)) {
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/api/users/' + id)
+        axios.get(serverBaseUrl +'/api/users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()
@@ -90,7 +91,7 @@
     } else {
       next()
     }
-  })  
+  })
 
   const user = ref(newUser())
   const errors = ref(null)
@@ -101,7 +102,7 @@
     (newValue) => {
         loadUser(newValue)
       },
-    {immediate: true}  
+    {immediate: true}
     )
 
 </script>
@@ -113,7 +114,7 @@
     msg="Do you really want to leave? You have unsaved changes!"
     @confirmed="leaveConfirmed"
   >
-  </confirmation-dialog>  
+  </confirmation-dialog>
 
   <user-detail
     :user="user"

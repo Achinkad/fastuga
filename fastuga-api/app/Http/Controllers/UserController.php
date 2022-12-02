@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::paginate(15));
+        $users = $request->has('type') ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
+        return UserResource::collection($users);
     }
 
     public function store(StoreUserRequest $request)
@@ -44,6 +45,17 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    public function destroy($id) // -> Boolean Return
+    {
+        return DB::transaction(function () use ($id) {
+            $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
+            if ($user->customer) { $user->customer->delete(); }
+            return $user->delete();
+        });
+    }
+
+    /* --- Custom Routes --- */
+
     public function toogle($id) {
         /* --- Authorization --- */
         if (Auth()->user()->type() != "EM") { abort(403); }
@@ -52,14 +64,5 @@ class UserController extends Controller
         $user->blocked = $user->blocked == 1 ? 0 : 1;
         $user->save();
         return new UserResource($user);
-    }
-
-    public function destroy($id) // -> Boolean Return
-    {
-        return DB::transaction(function () use ($id) {
-            $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
-            if ($user->customer) { $user->customer->delete(); }
-            return $user->delete();
-        });
     }
 }

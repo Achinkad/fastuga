@@ -24,7 +24,7 @@ class Order extends Model
         'payment_reference',
         'date',
         'custom',
-        '$customer_id',
+        'customer_id',
         '$delivered_by'
     ];
 
