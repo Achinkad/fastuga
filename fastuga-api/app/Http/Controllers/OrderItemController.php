@@ -10,7 +10,7 @@ class OrderItemController extends Controller
 {
     public function index()
     {
-        return OrderItemResource::collection(OrderItem::all());
+        return OrderItemResource::collection(OrderItem::paginate(20));
     }
 
     public function store(Request $request)
@@ -18,9 +18,9 @@ class OrderItemController extends Controller
         //
     }
 
-    public function show($id)
+    public function show(OrderItem $order_item)
     {
-        return OrderItemResource::collection(OrderItem::where('id', $id)->get());
+        return new OrderItemResource($order_item);
     }
 
     public function update(Request $request, $id)
