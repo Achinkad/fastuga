@@ -24,8 +24,8 @@ Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block
 /* --- [API Routes] -> Orders --- */
 Route::resource('orders', OrderController::class);
 Route::patch('orders/status/{order}', [OrderController::class, 'status']); // -> Change Order Status
-Route::get('orders/customer/{customer}', [OrderController::class, 'get_orders_customer']); // -> Get Orders From Customer
-Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']); // FIXME: Already exists?
+Route::get('customers/{customer}/orders', [OrderController::class, 'get_orders_customer']); // -> Get Orders From Customer
+Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']); // FIXME: Already exists? Not the same thing as the above one?
 
 /* --- [API Routes] -> Products --- */
 Route::resource('products', ProductController::class);
