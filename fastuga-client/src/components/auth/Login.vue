@@ -5,7 +5,7 @@
   const router = useRouter()
   const axios = inject('axios')
   const toast = inject('toast')
-
+const userStore = useUserStore() 
   const credentials = ref({
         username: '',
         password: ''
@@ -13,20 +13,16 @@
 
   const emit = defineEmits(['login'])
 
-  const login = async () => {
-    try {
-      const response = await axios.post('login', credentials.value)
-      toast.success('User ' + credentials.value.username + ' has entered the application.')
-      axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
-      emit('login')
-      router.back()
-    }
-    catch(error) {
-      delete axios.defaults.headers.common.Authorization
-      credentials.value.password = ''
-      toast.error('User credentials are invalid!')
-    }
-}
+ const login = async () => {
+ if (await userStore.login(credentials.value)) {
+ toast.success('User ' + userStore.user.name + ' has entered the application.')
+ emit('login')
+ router.back()
+ } else {
+ credentials.value.password = ''
+ toast.error('User credentials are invalid!')
+ }
+ }
 </script>
 
 <template>

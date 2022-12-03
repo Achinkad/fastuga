@@ -7,7 +7,8 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl ="http://fastuga-api.test";
+const serverBaseUrl = inject("serverBaseUrl")
+
 const pagination = ref({})
 
 //variável usada no filtro
@@ -16,7 +17,7 @@ var value_status=ref("-1");
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
-  axios.get(serverBaseUrl+'/api/orders?page='+page,{
+  axios.get(serverBaseUrl +'/api/orders?page='+page,{
     params:{
       status: value_status.value
       }
@@ -76,7 +77,7 @@ const loadOrders = (page = 1) => {
 */
 //funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API
 const loadHistoricOrders = (page = 1) => {
-    axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
+  axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
       .then((response) => {
         orders.value = response.data.data
       })
@@ -173,7 +174,7 @@ onMounted(() => {
   <div v-else class="mb-3 d-flex justify-content-between flex-wrap">
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCompleted" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectCompleted" v-model="loadHistoricOrders">
+      <select class="form-select" id="selectCompleted" v-model="value_status">
         <option value="-1" selected>Any</option>
         <option value="P">Preparing Orders</option>
         <option value="R">Ready Orders</option>

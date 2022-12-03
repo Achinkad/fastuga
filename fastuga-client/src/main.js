@@ -6,14 +6,14 @@ import router from './router'
 import Toaster from "@meforma/vue-toaster";
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
-//import './assets/main.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "bootstrap"
 
 
 const app = createApp(App)
-const serverBaseUrl = 'http://fastuga.test'
+const serverBaseUrl = import.meta.env.VITE_API_URL;
+
 app.provide('axios', axios.create({
     baseURL: serverBaseUrl + '/api',
     headers: {

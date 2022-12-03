@@ -8,7 +8,8 @@
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const serverBaseUrl ="http://fastuga-apitest";
+const serverBaseUrl = inject("serverBaseUrl")
+
 
   const props = defineProps({
       id: {
@@ -35,7 +36,7 @@
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/api/users/' + id)
+        axios.get(serverBaseUrl +'/api/users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()
