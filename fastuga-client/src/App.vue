@@ -82,7 +82,7 @@ const clickMenuOption = () => {
 
   <div class="container-fluid">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block  sidebar collapse">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
@@ -216,5 +216,7 @@ const clickMenuOption = () => {
 
 #sidebarMenu {
   overflow-y: auto;
+  background-color: #EED8AE;
+  border: solid 1px;
 }
 </style>
