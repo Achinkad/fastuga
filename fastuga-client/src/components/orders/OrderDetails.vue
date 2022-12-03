@@ -1,10 +1,9 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { onMounted, ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
-
 const serverBaseUrl = inject("serverBaseUrl")
-
+const axios = inject('axios')
 const props = defineProps({
   order: {
     type: Object,
@@ -18,14 +17,13 @@ const props = defineProps({
     type: String,
     default: "insert",
   },
-  fixedProject: {
-    type: Number,
-    default: null,
-  },
+
 });
 
 const emit = defineEmits(["save", "cancel"]);
 
+const products = ref([])
+var value_type = ref("-1");
 const editingOrder = ref(props.order);
 
 watch(
@@ -33,8 +31,25 @@ watch(
   (newOrder) => {
     editingOrder.value = newOrder;
   }
-);
 
+);
+watch(value_type, () => {
+  console.log(value_type.value)
+  getProducts()
+})
+
+const getProducts = () => {
+  axios.get(serverBaseUrl + '/api/products', {
+
+  })
+    .then((response) => {
+      products.value = response.data.data
+      console.log(response.data.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
 const orderTittle = computed(() => {
   if (!editingOrder.value) {
@@ -60,6 +75,9 @@ const productPhotoFullUrl = (product) => {
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : productNoneUrl;
 };
+onMounted(() => {
+  getProducts()
+})
 </script>
 
 <template>
@@ -148,16 +166,21 @@ const productPhotoFullUrl = (product) => {
     </div>
 
     <div class="mb-3" v-if="editingOrder.order_item != null">
-
       <label for="inputDeliveredBy" class="form-label">Products: </label>
       <br>
-
       <div v-for="n in editingOrder.order_item.length">
         <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
         <span>{{ editingOrder.order_item[n - 1].product.name }}</span>
-
       </div>
     </div>
+    <TransitionGroup tag="ul" name="fade" class="container">
+
+      <div v-for="product in products" class="item" :key="product.id">
+        <span>{{ product.name }}</span>
+        <button @click="">x</button>
+    
+      </div>
+    </TransitionGroup>
 
 
     <div class="mb-3 d-flex justify-content-end">
@@ -175,5 +198,12 @@ const productPhotoFullUrl = (product) => {
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
+}
+.item {
+  width: 30%;
+  height: 35px;
+  background-color: #ffffff;
+  border: 1px solid rgb(151, 112, 4);
+  box-sizing: border-box;
 }
 </style>

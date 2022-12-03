@@ -18,7 +18,8 @@
         completed: false,
         total_price: 0,
         customer_id: null,
-        delivered_by: null
+        delivered_by: null,
+        order_items: [],
       }
   }
 
