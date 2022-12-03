@@ -24,9 +24,9 @@ class StoreOrderItemRequest extends FormRequest
     {
         return [
             'order_id' => 'required|exists:orders,id',
-            'order_local_number' => 'required',
+            'order_local_number' => 'sometimes',
             'product_id' => 'required|exists:products,id',
-            'status' => 'required|in:W,P,R',
+            'status' => 'sometimes|in:W,P,R',
             'price' => 'required',
             'preparation_by' => 'nullable',
             'notes' => 'nullable',
