@@ -26,7 +26,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = $request->has('type') ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        $products = $request->type!='all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
         return ProductResource::collection($products);
     }
 

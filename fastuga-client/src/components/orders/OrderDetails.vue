@@ -82,7 +82,8 @@ onMounted(() => {
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">{{ orderTittle }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name=='Order'">Editing Order #{{ editingOrder.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name=='NewOrder'">Adding New Order</h3>
     <hr />
 
     <div class="mb-3">
@@ -184,7 +185,8 @@ onMounted(() => {
 
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='NewOrder'">Add Order</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='Order'">Save Order</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>

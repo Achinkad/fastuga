@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = $request->has('type') ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
+        $users = $request->type!='all' ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
         return UserResource::collection($users);
     }
 

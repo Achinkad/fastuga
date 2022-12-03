@@ -3,6 +3,7 @@ import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
+var flag_photo=0
 
 const props = defineProps({
     product: {
@@ -12,12 +13,14 @@ const props = defineProps({
     errors: {
         type: Object,
         required: false
-    },
+    }
 })
 
 const emit = defineEmits(["save", "cancel","add"]);
 
 const editingProduct = ref(props.product)
+
+
 
 watch(
     () => props.product,
@@ -27,22 +30,22 @@ watch(
     { immediate: true }
 )
 
-const photoFullUrl = computed(() => {
-    return editingProduct.value.photo_url
-    ? serverBaseUrl + "api/storage/products/" + editingProduct.value.photo_url
-    : avatarNoneUrl
-})
+
 
 const handleUpload = (files) => {
     editingProduct.value.photo_url = files[0];
 }
+
 
 const save = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
     formData.append('price', editingProduct.value.price);
     formData.append('type', editingProduct.value.type);
-    formData.append('description', editingProduct.value.description);
+    if(editingProduct.value.description!=undefined){
+      formData.append('description', editingProduct.value.description);
+    }
+    
     formData.append('photo_url', editingProduct.value.photo_url);
 
     emit("save", formData);
@@ -53,7 +56,9 @@ const add = () => {
     formData.append('name', editingProduct.value.name);
     formData.append('price', editingProduct.value.price);
     formData.append('type', editingProduct.value.type);
+     if(editingProduct.value.description!=undefined){
     formData.append('description', editingProduct.value.description);
+     }
     formData.append('photo_url', editingProduct.value.photo_url);
 
     emit("add", formData);
@@ -62,6 +67,12 @@ const add = () => {
 const cancel = () => {
     emit("cancel", editingProduct.value);
 }
+
+const photoFullUrl = computed(() =>{
+
+  return editingProduct.value.photo_url ? serverBaseUrl + '/storage/products/' + editingProduct.value.photo_url : avatarNoneUrl
+  
+})
 
 
 </script>
@@ -125,8 +136,9 @@ const cancel = () => {
                 <div class="mb-3">
                     <label class="form-label">Photo</label>
                     <div class="form-control text-center">
-                        <img :src="photoFullUrl" class="w-100" />
-                        <input type="file" name='upload' @change="handleUpload($event.target.files)" required>
+                        <img :src="avatarNoneUrl" class="w-100" v-if="$route.name=='newProduct'"/>
+                        <img :src="photoFullUrl" class="w-100" v-if="$route.name=='Product'"/>
+                        <input type="file"  name='upload' @change="handleUpload($event.target.files)" required>
 
                     </div>
                 </div>

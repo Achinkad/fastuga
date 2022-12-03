@@ -9,6 +9,7 @@ const toast = inject('toast')
 
 const serverBaseUrl = inject("serverBaseUrl")
 
+
 const props = defineProps({
     id: {
         type: Number,
@@ -33,9 +34,10 @@ const loadProduct = (id) => {
         product.value = newProduct()
         originalValueStr = dataAsString()
     } else {
-        axios.get(serverBaseUrl +'products/' + id)
+        axios.get(serverBaseUrl +'/api/products/' + id)
         .then((response) => {
             product.value = response.data.data
+  
             originalValueStr = dataAsString()
         })
         .catch((error) => {
@@ -65,9 +67,8 @@ const save = (product_values) => {
 
 const add = (product_values) => {
     console.log("entrou na função ADD")
-    console.log(product_values.get("photo_url"))
+    console.log(product_values.get("description"))
 
-    errors.value = null
     axios.post(serverBaseUrl+'/api/products', product_values)
     .then((response) => {
         console.log("feito")
@@ -109,6 +110,8 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
+
+
 const product = ref(newProduct())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
@@ -120,6 +123,7 @@ watch(
     },
     {immediate: true}
 )
+
 
 </script>
 
