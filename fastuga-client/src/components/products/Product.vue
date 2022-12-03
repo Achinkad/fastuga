@@ -7,7 +7,7 @@
   const axios = inject('axios')
   const toast = inject('toast')
 
-  const serverBaseUrl ="http://fastuga.test";
+  const serverBaseUrl ="http://fastuga-api.test";
 
   const props = defineProps({
       id: {
@@ -43,14 +43,33 @@
       }
   }
 
-  const save = () => {
-      errors.value = null
-      axios.put(serverBaseUrl+'/api/products/' + props.id, product.value)
+  const save = (product_values) => {
+ console.log("entrou na função save")
+ //console.log(product_values.get("photo_url"))
+      axios.put(serverBaseUrl+'/api/products/' + props.id, product_values)
         .then((response) => {
           product.value = response.data.data
           originalValueStr = dataAsString()
           toast.success('Product #' + product.value.id + ' was updated successfully.')
-          router.back()
+        })
+        .catch((error) => {
+          if (error.response.status == 422) {
+              toast.error('Product #' + props.id + ' was not updated due to validation errors!')
+              errors.value = error.response.data.errors
+            } else {
+              toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
+            }
+        })
+  }
+
+  const add = (product_values) => {
+    console.log("entrou na função ADD")
+    //console.log(product_values.get("photo_url"))
+    
+      errors.value = null
+      axios.post(serverBaseUrl+'/api/products',product_values)
+        .then((response) => {
+         console.log("feito")
         })
         .catch((error) => {
           if (error.response.status == 422) {
@@ -117,5 +136,6 @@
     :errors="errors"
     @save="save"
     @cancel="cancel"
+    @add="add"
   ></product-detail>
 </template>

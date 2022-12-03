@@ -1,8 +1,15 @@
 <script setup>
 import { ref, watch, watchEffect, computed, inject } from "vue";
+import {useRouter} from 'vue-router'
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { getCurrentInstance } from 'vue';
 
-const serverBaseUrl = "http://fastuga.test";
+const router = useRouter()
+const serverBaseUrl = "http://fastuga-api.test";
+const axios = inject("axios");
+const toast = inject('toast')
+const componentKey = ref(0)
+
 
 const props = defineProps({
   products: {
@@ -28,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["edit", "deleted"]);
+const emit = defineEmits(["edit", "deleted","forceRerender"]);
 const productToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
@@ -56,29 +63,34 @@ const dialogConfirmedDelete = () => {
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Product " + productToDeleteDescription.value + " was deleted")
+      emit("forceRerender", response.data.data)
     })
     .catch((error) => {
       console.log(error)
     })
+      
 }
 const editClick = (product) => {
   emit("edit", product);
 };
 const deleteClick = (product) => {
   productToDelete.value = product
+
   deleteConfirmationDialog.value.show()
 }
+
 </script>
 
 <template>
+
   <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
     :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId" class="align-middle">#</th>
-        <th v-if="showPhoto" class="align-middle">Photo</th>
+        <th v-if="showId">ID</th>
+        <th v-if="showPhoto" >Photo</th>
         <th class="align-middle">Name</th>
         <th class="align-middle">Type</th>
         <th class="align-middle">Price</th>
@@ -103,6 +115,7 @@ const deleteClick = (product) => {
       </tr>
     </tbody>
   </table>
+
 </template>
 
 <style scoped>

@@ -4,7 +4,7 @@
 
   import OrderDetail from "./OrderDetails.vue"
 
-  const serverBaseUrl ="http://fastuga.test";
+  const serverBaseUrl ="http://fastuga-api.test";
 
   const router = useRouter()  
   const axios = inject('axios')

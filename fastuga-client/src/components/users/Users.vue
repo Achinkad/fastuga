@@ -11,7 +11,7 @@
   const users = ref([])
   const pagination = ref({})
 
-  const serverBaseUrl ="http://fastuga.test";
+  const serverBaseUrl ="http://fastuga-api.test";
 
   var value_role=ref("-1");
 

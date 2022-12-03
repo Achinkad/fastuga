@@ -2,7 +2,7 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
 
-const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = "http://fastuga-api.test";
 
 const props = defineProps({
   product: {
@@ -15,7 +15,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","add"]);
 
 const editingProduct = ref(props.product)
 
@@ -33,18 +33,43 @@ const photoFullUrl = computed(() => {
     : avatarNoneUrl
 })
 
+const handleUpload = (files) => {
+  editingProduct.value.photo_url = files[0];
+}
+
 const save = () => {
-  emit("save", editingProduct.value);
+   let formData = new FormData()
+      formData.append('name', editingProduct.value.name);
+      formData.append('price', editingProduct.value.price);
+      formData.append('type', editingProduct.value.type);
+      formData.append('description', editingProduct.value.description);
+      //formData.append('photo_url', editingProduct.value.photo_url);
+
+  emit("save", formData);
+}
+
+const add = () => {
+  let formData = new FormData()
+      formData.append('name', editingProduct.value.name);
+      formData.append('price', editingProduct.value.price);
+      formData.append('type', editingProduct.value.type);
+      formData.append('description', editingProduct.value.description);
+      //formData.append('photo_url', editingProduct.value.photo_url);
+
+  emit("add", formData);
 }
 
 const cancel = () => {
   emit("cancel", editingProduct.value);
 }
+
+
 </script>
 
 <template>
-  <form class="row g-3 needs-validation" @submit.prevent="save">
-    <h3 class="mt-5 mb-3">Product #{{ editingProduct.id }}</h3>
+  <form class="row g-3 needs-validation" enctype="multipart/form-data">
+    <h3 class="mt-5 mb-3" v-if="$route.name=='Product'">Editing Product #{{ editingProduct.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name=='newProduct'">Adding New Product</h3>
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -101,13 +126,15 @@ const cancel = () => {
           <label class="form-label">Photo</label>
           <div class="form-control text-center">
             <img :src="photoFullUrl" class="w-100" />
-              <input type="file" name="upload">
+              <input type="file" name='upload' @change="handleUpload($event.target.files)" required>
+              
           </div>
         </div>
       </div>
     </div>
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save">Save</button>
+      <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name=='newProduct'">Add Product</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='Product'">Save Product</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>

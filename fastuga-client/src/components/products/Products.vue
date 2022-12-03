@@ -5,11 +5,12 @@
   import { Bootstrap5Pagination } from 'laravel-vue-pagination';
   
   const router = useRouter()
-  const serverBaseUrl ="http://fastuga.test";
+  const serverBaseUrl ="http://fastuga-api.test";
   const axios = inject('axios')
 
   const products = ref([])
   const pagination = ref({})
+
 
 //variável usada no filtro
   var value_type=ref("-1");
@@ -46,12 +47,22 @@ const addProduct = () => {
 const editProduct = (product) => {
   router.push({ name: 'Product', params: { id: product.id } })
 }
-const deletedOrder = (deletedProduct) => {
+const deletedProduct = (deletedProduct) => {
+  //VER MAIS TARDE
+  /*
   let idx = orders.value.findIndex((t) => t.id === deletedProduct.id)
   if (idx >= 0) {
     orders.value.splice(idx, 1)
   }
+  */
 }
+
+const forceRerender = () => {
+  loadProducts()
+  console.log("reload")
+}
+
+
   onMounted (() => {
     loadProducts()
   })
@@ -77,8 +88,10 @@ const deletedOrder = (deletedProduct) => {
   <hr>
   <product-table
     :products="products"
-    :showId="false"
+    :showId="true"
     @edit="editProduct"
+    @forceRerender="forceRerender"
+    @deleted="deletedProduct"
   ></product-table>
   
   <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>

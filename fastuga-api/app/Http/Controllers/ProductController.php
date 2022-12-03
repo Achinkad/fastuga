@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Resources\ProductResource;
-use App\Http\Requests\StoreProductRequest;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductResource;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
 {
@@ -17,7 +19,8 @@ class ProductController extends Controller
             'index',
             'show',
             'store',
-            'update'
+            'update',
+            'destroy'
         ]]);
     }
 
@@ -68,7 +71,9 @@ class ProductController extends Controller
             // -> Stores the new photo
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName() . '.' . $photo->extension();
-            Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            $filesystem = Storage::disk('public');
+            $filesystem->putFileAs('products/', $photo, $photo_id);
+            //Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
             $product->photo_url = $photo_id;
         }
 
@@ -79,8 +84,10 @@ class ProductController extends Controller
     public function destroy($id) // -> Boolean Return
     {
         return DB::transaction(function () use ($id) {
-            $user = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
-            if ($product->order_item) { $product->order_item->detach(); }
+            $product = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
+            if ($product->order_item) {
+                $product->order_item->detach(); 
+            }
             return $product->delete();
         });
     }

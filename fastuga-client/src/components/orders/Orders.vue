@@ -7,7 +7,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl ="http://fastuga.test";
+const serverBaseUrl ="http://fastuga-api.test";
 const pagination = ref({})
 
 //variável usada no filtro
