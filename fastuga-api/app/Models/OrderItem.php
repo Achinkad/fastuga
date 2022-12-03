@@ -19,10 +19,10 @@ class OrderItem extends Model
         'price',
         'notes',
         'custom',
-        '$order_id',
-        '$order_local_number',
-        '$product_id',
-        '$preparation_by'
+        'order_id',
+        'order_local_number',
+        'product_id',
+        'preparation_by'
     ];
 
     public function product() {

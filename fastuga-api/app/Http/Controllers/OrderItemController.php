@@ -16,7 +16,15 @@ class OrderItemController extends Controller
 
     public function store(StoreOrderItemRequest $request)
     {
-        //
+        $order_item = new OrderItem;
+        $order_item->fill($request->validated());
+        $order_item->status = $order_item->product->type == "hot dish" ? "W" : "R";
+
+        // TODO: Assing Order Item to a Chef (Hot Dishes) -> Notificate a Chef (WebSockets)
+        // TODO: Assing a Ticket Order Local
+
+        $order_item->save();
+        return new OrderItemResource($order_item);
     }
 
     public function show(OrderItem $order_item)
@@ -24,7 +32,7 @@ class OrderItemController extends Controller
         return new OrderItemResource($order_item);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreOrderItemRequest $request, OrderItem $order_item)
     {
         //
     }
