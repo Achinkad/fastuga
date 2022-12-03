@@ -56,7 +56,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectRole" class="form-label">Filter by role:</label>
       <select class="form-select" id="selectRole" v-model="value_role">
-        <option value="-1" selected>Any</option>
+        <option value="all" selected>Any</option>
         <option value="C">Customers</option>
         <option value="EC">Employees Chef</option>
         <option value="ED">Employees Delivery</option>

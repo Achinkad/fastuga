@@ -4,7 +4,7 @@
   import ProductTable from "./ProductTable.vue"
   import { Bootstrap5Pagination } from 'laravel-vue-pagination';
   
-  const router = useRouter()
+const router = useRouter()
 const serverBaseUrl = inject("serverBaseUrl")
 
   const axios = inject('axios')
@@ -75,7 +75,7 @@ const forceRerender = () => {
   <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectType" class="form-label">Filter by type:</label>
       <select class="form-select" id="selectType" v-model="value_type">
-        <option value="-1" selected>Any</option>
+        <option value="all" selected>Any</option>
         <option value="hot dish">Hot Dishes</option>
         <option value="cold dish">Cold Dishes</option>
         <option value="drink">Drinks</option>

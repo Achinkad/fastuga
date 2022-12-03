@@ -32,7 +32,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         product.value = newProduct()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl +'/api/products/' + id)
+        axios.get(serverBaseUrl +'products/' + id)
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataAsString()

@@ -1,6 +1,6 @@
 <script setup>
 import {RouterLink, RouterView } from 'vue-router'
-import { ref, inject } from "vue";
+import { ref, inject,onMounted } from "vue";
 import { useUserStore } from './stores/user.js'
 const userStore = useUserStore()
 
@@ -8,7 +8,7 @@ const axios = inject("axios");
 const toast = inject("toast")
 const workInProgressProjects = ref([]);
 const buttonSidebarExpand = ref(null)
-//const serverBaseUrl = "http://fastuga.test";
+const serverBaseUrl = import.meta.env.VITE_API_URL;
 
 
 const logout = async () => {
@@ -24,7 +24,7 @@ const logout = async () => {
 
 onMounted(() => {
   const userId = 1
-  axios.get(serverBaseUrl+"/users/" + userId)
+  axios.get(serverBaseUrl+"/api/users/" + userId)
     .then((response) => {
       //console.log(response);
       workInProgressProjects.value = response.data.data;
@@ -56,8 +56,7 @@ onMounted(() => {
             </router-link>
           </li>
         <li class="nav-item" v-show="!userStore.user">
-          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
-            @click="clickMenuOption">
+          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
             <i class="bi bi-box-arrow-in-right"></i>
             Login
           </router-link>
