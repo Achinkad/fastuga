@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class StoreProductRequest extends FormRequest
+class StoreOrderItemRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,19 +15,21 @@ class StoreProductRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->has('type')) {
-            $this->merge(['type' => strtolower($this->type)]);
+        if ($this->has('status')) {
+            $this->merge(['status' => strtoupper($this->status)]);
         }
     }
 
     public function rules()
     {
         return [
-            'name' => 'required|unique:products|min:3|max:255',
-            'type' => 'required|in:hot dish,cold dish,drink,dessert',
-            'description' => 'required|max:255',
-            'photo_url' => 'sometimes',
+            'order_id' => 'required|exists:orders,id',
+            'order_local_number' => 'sometimes',
+            'product_id' => 'required|exists:products,id',
+            'status' => 'sometimes|in:W,P,R',
             'price' => 'required',
+            'preparation_by' => 'nullable',
+            'notes' => 'nullable',
             'custom' => 'nullable'
         ];
     }

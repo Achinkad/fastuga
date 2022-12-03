@@ -7,8 +7,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl = inject("serverBaseUrl")
-
+const serverBaseUrl =inject("serverBaseUrl");
 const pagination = ref({})
 
 //variável usada no filtro
@@ -158,7 +157,7 @@ onMounted(() => {
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCompleted" class="form-label">Filter by status:</label>
       <select class="form-select" id="selectCompleted" v-model="value_status">
-        <option value="-1" selected>Any</option>
+        <option value="all" selected>Any</option>
         <option value="P">Preparing Orders</option>
         <option value="R">Ready Orders</option>
         <option value="D">Delivered Orders</option>

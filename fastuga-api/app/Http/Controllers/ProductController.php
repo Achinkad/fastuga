@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Resources\ProductResource;
-use App\Http\Requests\StoreProductRequest;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ProductResource;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
 {
@@ -17,22 +19,15 @@ class ProductController extends Controller
             'index',
             'show',
             'store',
-            'update'
+            'update',
+            'destroy'
         ]]);
     }
 
     public function index(Request $request)
     {
-        $type=$request->query('type','');
-        $qry=Product::query();
-        if($type!="-1"){
-
-            $qry->where('type',$type);
-            return $qry->paginate(10);
-        }
-        else{
-            return $qry->paginate(10);
-        }
+        $products = $request->has('type') ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        return ProductResource::collection($products);
     }
 
     public function store(StoreProductRequest $request)
@@ -42,7 +37,7 @@ class ProductController extends Controller
         // -> Stores Product Photo
         if ($request->has('photo_url') & $request->file('photo_url')->isValid()) {
             $photo = $request->file('photo_url');
-            $photo_id = $photo->hashName() . '.' . $photo->extension();
+            $photo_id = $photo->hashName();
             Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
             $product->photo_url = $photo_id;
             $product->save();
@@ -68,7 +63,9 @@ class ProductController extends Controller
             // -> Stores the new photo
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName() . '.' . $photo->extension();
-            Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            $filesystem = Storage::disk('public');
+            $filesystem->putFileAs('products/', $photo, $photo_id);
+            //Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
             $product->photo_url = $photo_id;
         }
 
@@ -79,8 +76,10 @@ class ProductController extends Controller
     public function destroy($id) // -> Boolean Return
     {
         return DB::transaction(function () use ($id) {
-            $user = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
-            if ($product->order_item) { $product->order_item->detach(); }
+            $product = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
+            if ($product->order_item) {
+                $product->order_item->detach();
+            }
             return $product->delete();
         });
     }

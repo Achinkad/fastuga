@@ -1,12 +1,15 @@
 <script setup>
 import {RouterLink, RouterView } from 'vue-router'
-import { ref, inject } from "vue";
+import { ref, inject,onMounted } from "vue";
 import { useUserStore } from './stores/user.js'
 const userStore = useUserStore()
 
 const axios = inject("axios");
 const toast = inject("toast")
+const workInProgressProjects = ref([]);
 const buttonSidebarExpand = ref(null)
+const serverBaseUrl = import.meta.env.VITE_API_URL;
+
 
 const logout = async () => {
   try {
@@ -19,11 +22,17 @@ const logout = async () => {
   }
 }
 
-const clickMenuOption = () => {
-  if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
-    buttonSidebarExpand.value.click()
-  }
-}
+onMounted(() => {
+  const userId = 1
+  axios.get(serverBaseUrl+"/api/users/" + userId)
+    .then((response) => {
+      //console.log(response);
+      workInProgressProjects.value = response.data.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+})
 </script>
 
 <template>
@@ -47,8 +56,7 @@ const clickMenuOption = () => {
             </router-link>
           </li>
         <li class="nav-item" v-show="!userStore.user">
-          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
-            @click="clickMenuOption">
+          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
             <i class="bi bi-box-arrow-in-right"></i>
             Login
           </router-link>

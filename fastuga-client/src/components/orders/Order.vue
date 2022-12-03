@@ -4,8 +4,7 @@
 
   import OrderDetail from "./OrderDetails.vue"
 
-const serverBaseUrl = inject("serverBaseUrl")
-
+  const serverBaseUrl ="http://fastuga.test";
 
   const router = useRouter()  
   const axios = inject('axios')
@@ -31,7 +30,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/orders/' + id)
+        axios.get(serverBaseUrl+'/api/orders/' + id)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
