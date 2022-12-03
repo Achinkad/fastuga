@@ -14,7 +14,7 @@
 const serverBaseUrl = inject("serverBaseUrl")
 
 
-  var value_role=ref("-1");
+  var value_role=ref("all");
 
   const totalUsers = computed(() => {
     return users.value.length

@@ -11,7 +11,7 @@ const serverBaseUrl =inject("serverBaseUrl");
 const pagination = ref({})
 
 //variável usada no filtro
-var value_status=ref("-1");
+var value_status=ref("all");
 
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
@@ -101,10 +101,6 @@ const deletedOrder = (deletedOrder) => {
 }
 
 const props = defineProps({
-  ordersTitle: {
-    type: String,
-    default: 'Order',
-  },
   onlyCurrentOrders: {
     type: Boolean,
     default: false
@@ -145,7 +141,7 @@ onMounted(() => {
 <template>
 
   <div class="mx-2">
-    <h3 class="mt-4">{{ ordersTitle }}</h3>
+    <h3 class="mt-4">Orders</h3>
   </div>
   <!--
   <div class="mx-2 total-filtro">

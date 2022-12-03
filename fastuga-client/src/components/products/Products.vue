@@ -14,7 +14,7 @@ const pagination = ref({})
 
 
 //variável usada no filtro
-var value_type=ref("-1");
+var value_type=ref("all");
 
 const totalProducts = computed(() => {
     return products.value.length

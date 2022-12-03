@@ -15,7 +15,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $orders = $request->has('status') ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
+        $orders = $request->status!='all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
         return OrderResource::collection($orders);
     }
 
