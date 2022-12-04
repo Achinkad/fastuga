@@ -37,7 +37,7 @@ const loadProduct = (id) => {
         axios.get(serverBaseUrl +'/api/products/' + id)
         .then((response) => {
             product.value = response.data.data
-  
+          
             originalValueStr = dataAsString()
         })
         .catch((error) => {
@@ -49,6 +49,22 @@ const loadProduct = (id) => {
 const save = (product_values) => {
     console.log("entrou na função save")
     //console.log(product_values.get("photo_url"))
+ 
+    axios.post(serverBaseUrl+'/api/products/'+ props.id, product_values)
+    .then((response) => {
+        console.log("feito a foto")
+    })
+    .catch((error) => {
+        if (error.response.status == 422) {
+            toast.error('Product #' + props.id + ' was not updated due to validation errors!')
+            errors.value = error.response.data.errors
+        } else {
+            toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
+        }
+    })
+
+//##################################
+/*
     axios.put(serverBaseUrl+'/api/products/' + props.id, product_values)
     .then((response) => {
         product.value = response.data.data
@@ -63,6 +79,7 @@ const save = (product_values) => {
             toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
         }
     })
+    */
 }
 
 const add = (product_values) => {

@@ -14,14 +14,21 @@ class OrderItemController extends Controller
         return OrderItemResource::collection(OrderItem::paginate(20));
     }
 
+    // TODO: Assing Order Item to a Chef (Hot Dishes) -> Notificate a Chef (WebSockets)
     public function store(StoreOrderItemRequest $request)
     {
         $order_item = new OrderItem;
         $order_item->fill($request->validated());
+
+        /* --- Handle Status --- */
         $order_item->status = $order_item->product->type == "hot dish" ? "W" : "R";
 
-        // TODO: Assing Order Item to a Chef (Hot Dishes) -> Notificate a Chef (WebSockets)
-        // TODO: Assing a Ticket Order Local
+        /* --- Handle Order Local Number --- */
+        $latest_item = OrderItem::select('order_local_number')->latest('id')->where('order_id', $order_item->order_id)->first();
+        $order_item->order_local_number = $latest_item ? ++$latest_item->order_local_number : 1;
+
+        /* --- Handle Price --- */
+        $order_item->price = $order_item->product->price;
 
         $order_item->save();
         return new OrderItemResource($order_item);
@@ -34,7 +41,9 @@ class OrderItemController extends Controller
 
     public function update(StoreOrderItemRequest $request, OrderItem $order_item)
     {
-        //
+        $order_item->fill($request->validated());
+        $order_item->save();
+        return new OrderItemResource($order_item);
     }
 
     public function destroy($id)
