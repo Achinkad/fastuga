@@ -33,8 +33,8 @@ class CustomerController extends Controller
             // -> Stores Customer Photo
             if ($customer_request->has('photo_url')) {
                 $photo = $customer_request->file('photo_url');
-                $photo_id = $customer->id . '_' . $photo->hashName() . '.' . $photo->extension();
-                Storage::disk('public')->putFileAs('fotos/', $photo, $photo_id);
+                $photo_id = $customer->id . '_' . $photo->hashName();
+                Storage::putFileAs('public/fotos', $photo, $photo_id);
                 $customer->photo_url = $photo_id;
             }
 
@@ -66,8 +66,8 @@ class CustomerController extends Controller
                 }
                 // -> Stores the new photo
                 $photo = $customer_request->file('photo_url');
-                $photo_id = $customer->id . '_' . $photo->hashName() . '.' . $photo->extension();
-                Storage::disk('public')->putFileAs('fotos/', $photo, $photo_id);
+                $photo_id = $customer->id . '_' . $photo->hashName();
+                Storage::putFileAs('public/fotos', $photo, $photo_id);
                 $customer->photo_url = $photo_id;
             }
 

@@ -26,7 +26,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = $request->type!='all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        $products = $request->type != 'all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
         return ProductResource::collection($products);
     }
 
@@ -53,7 +53,6 @@ class ProductController extends Controller
 
     public function update(StoreProductRequest $request, Product $product)
     {
-        dd($request['photo_url']);
         $product->fill($request->validated());
 
         if ($request->has('photo_url')) {

@@ -33,7 +33,7 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class, 'order_id')->withTrashed();
     }
 
-    public function preparation_by() {
+    public function user() {
         return $this->belongsTo(User::class, 'preparation_by')->withTrashed();
     }
 }
