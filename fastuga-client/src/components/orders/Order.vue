@@ -31,6 +31,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
+        axios.get(serverBaseUrl+'/api/orders/' + id)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
