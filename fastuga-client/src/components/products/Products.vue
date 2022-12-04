@@ -20,7 +20,11 @@ const serverBaseUrl = inject("serverBaseUrl")
   })
 
   const loadProducts = (page = 1) => {
+<<<<<<< Updated upstream
     axios.get(serverBaseUrl +'/api/products?page='+page,{
+=======
+    axios.get(serverBaseUrl+'/api/products?page='+page,{
+>>>>>>> Stashed changes
     params:{
       type: value_type.value
       }

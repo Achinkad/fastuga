@@ -8,16 +8,17 @@ const axios = inject("axios");
 const toast = inject("toast")
 const buttonSidebarExpand = ref(null)
 
+
 const logout = async () => {
-  try {
-    await axios.post('logout')
-    toast.success('User has logged out of the application.')
-    delete axios.defaults.headers.common.Authorization
-    userStore.clearUser()
-  } catch (error) {
-    toast.error('There was a problem logging out of the application!')
+  if (await userStore.logout()) {
+    toast.success("User has logged out of the application.")
+    clickMenuOption()
+    router.push({name: 'home'})
+  } else {
+    toast.error("There was a problem logging out of the application!")
   }
 }
+
 
 const clickMenuOption = () => {
   if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {

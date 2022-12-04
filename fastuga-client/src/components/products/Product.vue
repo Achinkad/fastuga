@@ -32,7 +32,11 @@ const serverBaseUrl = inject("serverBaseUrl")
         product.value = newProduct()
         originalValueStr = dataAsString()
       } else {
+<<<<<<< Updated upstream
         axios.get(serverBaseUrl +'/api/products/' + id)
+=======
+        axios.get(serverBaseUrl+'/api/products/' + id)
+>>>>>>> Stashed changes
           .then((response) => {
             product.value = response.data.data
             originalValueStr = dataAsString()
@@ -45,7 +49,11 @@ const serverBaseUrl = inject("serverBaseUrl")
 
   const save = () => {
       errors.value = null
+<<<<<<< Updated upstream
     axios.put(serverBaseUrl +'/api/products/' + props.id, product.value)
+=======
+      axios.put(serverBaseUrl+'/api/products/' + props.id, product.value)
+>>>>>>> Stashed changes
         .then((response) => {
           product.value = response.data.data
           originalValueStr = dataAsString()

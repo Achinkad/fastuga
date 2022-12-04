@@ -17,7 +17,11 @@ var value_status=ref("-1");
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
+<<<<<<< Updated upstream
   axios.get(serverBaseUrl +'/api/orders?page='+page,{
+=======
+  axios.get(serverBaseUrl+'/api/orders?page='+page,{
+>>>>>>> Stashed changes
     params:{
       status: value_status.value
       }

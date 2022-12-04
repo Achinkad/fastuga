@@ -36,7 +36,11 @@ const serverBaseUrl = inject("serverBaseUrl")
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
+<<<<<<< Updated upstream
         axios.get(serverBaseUrl +'/api/users/' + id)
+=======
+        axios.get(serverBaseUrl+'/api/users/' + id)
+>>>>>>> Stashed changes
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()

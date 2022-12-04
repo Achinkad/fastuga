@@ -31,7 +31,6 @@ const serverBaseUrl = inject("serverBaseUrl")
         order.value = newOrder()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl+'/orders/' + id)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -45,7 +44,11 @@ const serverBaseUrl = inject("serverBaseUrl")
   const save = () => {
       errors.value = null
       if (operation.value == 'insert') {
+<<<<<<< Updated upstream
         axios.post(serverBaseUrl +'/api/order', order.value)
+=======
+        axios.post(serverBaseUrl+'/api/order', order.value)
+>>>>>>> Stashed changes
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()
@@ -61,7 +64,11 @@ const serverBaseUrl = inject("serverBaseUrl")
             }
           })
       } else {
+<<<<<<< Updated upstream
         axios.put(serverBaseUrl +'/api/order/' + props.id, order.value)
+=======
+        axios.put(serverBaseUrl+'/api/order/' + props.id, order.value)
+>>>>>>> Stashed changes
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()

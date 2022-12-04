@@ -4,7 +4,8 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 
 
 export const useUserStore = defineStore('user', () => {
-  
+    const toast = inject("toast")
+
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
     
@@ -20,13 +21,16 @@ export const useUserStore = defineStore('user', () => {
     const userId = computed(() => {
         return user.value?.id ?? -1
     })
+    const userName = computed(() => {
+        return user.value?.name ?? -1
+    })
     const userType = computed(() => {
         return user.value?.type ?? -1
     })
 
     async function loadUser () {
         try {
-            const response = await axios.get('users/me')
+            const response = await axios.get('user')
             user.value = response.data.data
         } catch (error) {
             clearUser () 
@@ -36,6 +40,7 @@ export const useUserStore = defineStore('user', () => {
     
     function clearUser () {
         delete axios.defaults.headers.common.Authorization
+        sessionStorage.removeItem('token')
         user.value = null
     }  
     
