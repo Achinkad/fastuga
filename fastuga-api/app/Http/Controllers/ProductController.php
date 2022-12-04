@@ -26,7 +26,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = $request->type!='all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
+        $products = $request->type != 'all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);
         return ProductResource::collection($products);
     }
 
@@ -38,7 +38,7 @@ class ProductController extends Controller
         if ($request->has('photo_url') & $request->file('photo_url')->isValid()) {
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName();
-            Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            Storage::putFileAs('public/products', $photo, $photo_id);
             $product->photo_url = $photo_id;
             $product->save();
         }
@@ -62,10 +62,8 @@ class ProductController extends Controller
             }
             // -> Stores the new photo
             $photo = $request->file('photo_url');
-            $photo_id = $photo->hashName() . '.' . $photo->extension();
-            $filesystem = Storage::disk('public');
-            $filesystem->putFileAs('products/', $photo, $photo_id);
-            //Storage::disk('public')->putFileAs('products/', $photo, $photo_id);
+            $photo_id = $photo->hashName();
+            Storage::putFileAs('public/products', $photo, $photo_id);
             $product->photo_url = $photo_id;
         }
 
@@ -77,9 +75,7 @@ class ProductController extends Controller
     {
         return DB::transaction(function () use ($id) {
             $product = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
-            if ($product->order_item) {
-                $product->order_item->detach();
-            }
+            if ($product->order_item) { $product->order_item->detach(); }
             return $product->delete();
         });
     }
