@@ -7,17 +7,16 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl = inject("serverBaseUrl")
-
+const serverBaseUrl =inject("serverBaseUrl");
 const pagination = ref({})
 
 //variável usada no filtro
-var value_status=ref("-1");
+var value_status=ref("all");
 
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
-  axios.get(serverBaseUrl +'/api/orders?page='+page,{
+  axios.get(serverBaseUrl+'/api/orders?page='+page,{
     params:{
       status: value_status.value
       }
@@ -102,10 +101,6 @@ const deletedOrder = (deletedOrder) => {
 };
 
 const props = defineProps({
-  ordersTitle: {
-    type: String,
-    default: "Order",
-  },
   onlyCurrentOrders: {
     type: Boolean,
     default: false,
@@ -145,7 +140,7 @@ onMounted(() => {
 
 <template>
   <div class="mx-2">
-    <h3 class="mt-4">{{ ordersTitle }}</h3>
+    <h3 class="mt-4">Orders</h3>
   </div>
   <!--
   <div class="mx-2 total-filtro">
@@ -157,7 +152,7 @@ onMounted(() => {
     <div class="mx-2 mt-2 flex-grow-1 filter-div">
       <label for="selectCompleted" class="form-label">Filter by status:</label>
       <select class="form-select" id="selectCompleted" v-model="value_status">
-        <option value="-1" selected>Any</option>
+        <option value="all" selected>Any</option>
         <option value="P">Preparing Orders</option>
         <option value="R">Ready Orders</option>
         <option value="D">Delivered Orders</option>

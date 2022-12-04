@@ -1,45 +1,33 @@
 <script setup>
 import {RouterLink, RouterView } from 'vue-router'
-import { ref, inject } from "vue";
+import { ref, inject,onMounted } from "vue";
 import { useUserStore } from './stores/user.js'
 const userStore = useUserStore()
 
 const axios = inject("axios");
-<<<<<<< HEAD
-
-const serverBaseUrl = "http://fastuga-api";
-
-onMounted(() => {
-  const userId = 1
-  axios.get(serverBaseUrl + "/api/users/" + userId)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-})
-=======
 const toast = inject("toast")
+const workInProgressProjects = ref([]);
 const buttonSidebarExpand = ref(null)
+const serverBaseUrl = import.meta.env.VITE_API_URL;
+
+
 
 const logout = async () => {
-  try {
-    await axios.post('logout')
-    toast.success('User has logged out of the application.')
-    delete axios.defaults.headers.common.Authorization
-    userStore.clearUser()
-  } catch (error) {
-    toast.error('There was a problem logging out of the application!')
+  if (await userStore.logout()) {
+    toast.success("User has logged out of the application.")
+    clickMenuOption()
+    router.push({name: 'home'})
+  } else {
+    toast.error("There was a problem logging out of the application!")
   }
 }
+
 
 const clickMenuOption = () => {
   if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
     buttonSidebarExpand.value.click()
   }
 }
->>>>>>> 5d2b181abe27bc82604224e42c99c8ea5b4d851e
 </script>
 
 <template>
@@ -63,8 +51,7 @@ const clickMenuOption = () => {
             </router-link>
           </li>
         <li class="nav-item" v-show="!userStore.user">
-          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }"
-            @click="clickMenuOption">
+          <router-link class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
             <i class="bi bi-box-arrow-in-right"></i>
             Login
           </router-link>
@@ -98,7 +85,7 @@ const clickMenuOption = () => {
 
   <div class="container-fluid">
     <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block  sidebar collapse">
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
@@ -247,5 +234,7 @@ const clickMenuOption = () => {
 
 #sidebarMenu {
   overflow-y: auto;
+  background-color: #EED8AE;
+  border: solid 1px;
 }
 </style>

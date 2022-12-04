@@ -22,7 +22,4 @@ class Product extends Model
         'custom'
     ];
 
-    public function order_item() {
-        return $this->hasMany(OrderItem::class, 'product_id');
-    }
 }

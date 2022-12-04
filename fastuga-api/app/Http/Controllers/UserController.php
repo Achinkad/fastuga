@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = $request->has('type') ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
+        $users = $request->type != 'all' ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
         return UserResource::collection($users);
     }
 
@@ -64,5 +64,11 @@ class UserController extends Controller
         $user->blocked = $user->blocked == 1 ? 0 : 1;
         $user->save();
         return new UserResource($user);
+    }
+
+    public function show_me(Request $request)
+    {
+        //dd($request);
+        return new UserResource($request->user());
     }
 }

@@ -19,10 +19,10 @@ class OrderItem extends Model
         'price',
         'notes',
         'custom',
-        '$order_id',
-        '$order_local_number',
-        '$product_id',
-        '$preparation_by'
+        'order_id',
+        'order_local_number',
+        'product_id',
+        'preparation_by'
     ];
 
     public function product() {
@@ -33,7 +33,7 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class, 'order_id')->withTrashed();
     }
 
-    public function preparation_by() {
+    public function user() {
         return $this->belongsTo(User::class, 'preparation_by')->withTrashed();
     }
 }
