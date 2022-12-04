@@ -27,8 +27,8 @@ class StoreProductRequest extends FormRequest
             'name' => ['required', 'min:3', 'max:255', Rule::unique('products')->ignore($this->product)],
             'type' => 'required|in:hot dish,cold dish,drink,dessert',
             'description' => 'required|max:255',
-            'photo_url' => 'sometimes',
-            'price' => 'required',
+            'photo_url' => 'sometimes|image',
+            'price' => 'required|numeric',
             'custom' => 'nullable'
         ];
     }
@@ -38,6 +38,6 @@ class StoreProductRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'data' => $validator->errors()
-        ], 400));
+        ], 422));
     }
 }

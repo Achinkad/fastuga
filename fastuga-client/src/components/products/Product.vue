@@ -44,25 +44,9 @@ const loadProduct = (id) => {
           })
       }
   }
-/*
-  const save = () => {
-      errors.value = null
-      axios.put(serverBaseUrl+'/api/products/' + props.id, product.value)
-    } else {
-        axios.get(serverBaseUrl +'/api/products/' + id)
-        .then((response) => {
-            product.value = response.data.data
-            originalValueStr = dataAsString()
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-}
-*/
+
 const save = (product_values) => {
     console.log("entrou na função save")
-    //console.log(product_values.get("photo_url"))
  
     axios.post(serverBaseUrl+'/api/products/'+ props.id, product_values)
     .then((response) => {
@@ -70,35 +54,19 @@ const save = (product_values) => {
     })
     .catch((error) => {
         if (error.response.status == 422) {
+            
             toast.error('Product #' + props.id + ' was not updated due to validation errors!')
-            errors.value = error.response.data.errors
+            errors.value = error.response.data.data
+            console.log(errors.value)
         } else {
             toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
         }
     })
 
-//##################################
-/*
-    axios.put(serverBaseUrl+'/api/products/' + props.id, product_values)
-    .then((response) => {
-        product.value = response.data.data
-        originalValueStr = dataAsString()
-        toast.success('Product #' + product.value.id + ' was updated successfully.')
-    })
-    .catch((error) => {
-        if (error.response.status == 422) {
-            toast.error('Product #' + props.id + ' was not updated due to validation errors!')
-            errors.value = error.response.data.errors
-        } else {
-            toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
-        }
-    })
-    */
 }
 
 const add = (product_values) => {
     console.log("entrou na função ADD")
-    console.log(product_values.get("description"))
 
     axios.post(serverBaseUrl+'/api/products', product_values)
     .then((response) => {
@@ -106,10 +74,12 @@ const add = (product_values) => {
     })
     .catch((error) => {
         if (error.response.status == 422) {
-            toast.error('Product #' + props.id + ' was not updated due to validation errors!')
-            errors.value = error.response.data.errors
+           
+            toast.error('Couldn\'t add the product due to validation errors!')
+            errors.value = error.response.data.data
+           // console.log(errors.value)
         } else {
-            toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
+            toast.error('Couldn\'t add the product due to unknown server error!')
         }
     })
 }
