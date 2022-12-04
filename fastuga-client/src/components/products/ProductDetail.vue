@@ -1,9 +1,10 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
+import axios from 'axios'
 
 const serverBaseUrl = inject("serverBaseUrl")
-var flag_photo=0
+var product_photo_intermediary=ref();
 
 const props = defineProps({
     product: {
@@ -13,7 +14,8 @@ const props = defineProps({
     errors: {
         type: Object,
         required: false
-    }
+    },
+
 })
 
 const emit = defineEmits(["save", "cancel","add"]);
@@ -21,19 +23,19 @@ const emit = defineEmits(["save", "cancel","add"]);
 const editingProduct = ref(props.product)
 
 
-
 watch(
+  
     () => props.product,
     (newProduct) => {
         editingProduct.value = newProduct
-    },
-    { immediate: true }
+    }
 )
 
 
 
 const handleUpload = (files) => {
-    editingProduct.value.photo_url = files[0];
+ product_photo_intermediary=files[0]
+    
 }
 
 
@@ -46,7 +48,8 @@ const save = () => {
       formData.append('description', editingProduct.value.description);
     }
     
-    formData.append('photo_url', editingProduct.value.photo_url);
+    formData.append('photo_url', product_photo_intermediary);
+    formData.append('_method', 'PUT');
 
     emit("save", formData);
 }
@@ -59,7 +62,7 @@ const add = () => {
      if(editingProduct.value.description!=undefined){
     formData.append('description', editingProduct.value.description);
      }
-    formData.append('photo_url', editingProduct.value.photo_url);
+    formData.append('photo_url', product_photo_intermediary);
 
     emit("add", formData);
 }
@@ -69,8 +72,8 @@ const cancel = () => {
 }
 
 const photoFullUrl = computed(() =>{
-
-  return editingProduct.value.photo_url ? serverBaseUrl + '/storage/products/' + editingProduct.value.photo_url : avatarNoneUrl
+    
+    return editingProduct.value.photo_url ? serverBaseUrl + '/storage/products/' + editingProduct.value.photo_url : avatarNoneUrl
   
 })
 
@@ -110,7 +113,7 @@ const photoFullUrl = computed(() =>{
                 </div>
                 <div class="mb-3">
                     <label for="type">Type:</label>
-                    <select id="type" name="type"  v-model="editingProduct.type" required>
+                    <select id="type" name="type" class="form-select" v-model="editingProduct.type" required>
                         <option value="hot dish">Hot Dish</option>
                         <option value="cold dish">Cold Dish</option>
                         <option value="drink">Drink</option>
@@ -135,12 +138,11 @@ const photoFullUrl = computed(() =>{
             <div class="w-25">
                 <div class="mb-3">
                     <label class="form-label">Photo</label>
-                    <div class="form-control text-center">
-                        <img :src="avatarNoneUrl" class="w-100" v-if="$route.name=='newProduct'"/>
-                        <img :src="photoFullUrl" class="w-100" v-if="$route.name=='Product'"/>
-                        <input type="file"  name='upload' @change="handleUpload($event.target.files)" required>
+                  
+                        <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name=='newProduct'"/>
+                        <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name=='Product'"/>
+                        <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)" required>
 
-                    </div>
                 </div>
             </div>
         </div>
