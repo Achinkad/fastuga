@@ -1,6 +1,14 @@
 <script setup>
 import { ref, watch, watchEffect, computed, inject } from "vue";
+import {useRouter} from 'vue-router'
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { getCurrentInstance } from 'vue';
+
+const router = useRouter()
+
+const axios = inject("axios");
+const toast = inject('toast')
+const componentKey = ref(0)
 
 const serverBaseUrl = inject("serverBaseUrl")
 
@@ -29,7 +37,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["edit", "deleted"]);
+const emit = defineEmits(["edit", "deleted","forceRerender"]);
 const productToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
@@ -57,29 +65,34 @@ const dialogConfirmedDelete = () => {
     .then((response) => {
       emit("deleted", response.data.data)
       toast.info("Product " + productToDeleteDescription.value + " was deleted")
+      emit("forceRerender", response.data.data)
     })
     .catch((error) => {
       console.log(error)
     })
+      
 }
 const editClick = (product) => {
   emit("edit", product);
 };
 const deleteClick = (product) => {
   productToDelete.value = product
+
   deleteConfirmationDialog.value.show()
 }
+
 </script>
 
 <template>
+
   <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
     :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId" class="align-middle">#</th>
-        <th v-if="showPhoto" class="align-middle">Photo</th>
+        <th v-if="showId">ID</th>
+        <th v-if="showPhoto" >Photo</th>
         <th class="align-middle">Name</th>
         <th class="align-middle">Type</th>
         <th class="align-middle">Price</th>
@@ -94,16 +107,18 @@ const deleteClick = (product) => {
         <td class="align-middle">{{ product.name }}</td>
         <td class="align-middle">{{ product.type }}</td>
         <td class="align-middle">{{ product.price }}€</td>
-        <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
-          <i class="bi bi-xs bi-x-square-fill"></i>
-        </button>
-        <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
-          <i class="bi bi-xs bi-pencil"></i>
-        </button>
-
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
+            <i class="bi bi-trash3"></i>
+          </button>
+          <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
       </tr>
     </tbody>
   </table>
+
 </template>
 
 <style scoped>
