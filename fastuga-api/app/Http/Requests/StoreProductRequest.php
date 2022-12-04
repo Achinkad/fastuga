@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
 class StoreProductRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:products|min:3|max:255',
+            'name' => ['required', 'min:3', 'max:255', Rule::unique('products')->ignore($this->product)],
             'type' => 'required|in:hot dish,cold dish,drink,dessert',
             'description' => 'required|max:255',
             'photo_url' => 'sometimes',
