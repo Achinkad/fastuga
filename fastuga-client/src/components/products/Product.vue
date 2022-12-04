@@ -33,11 +33,26 @@ const loadProduct = (id) => {
     if (!id || (id < 0)) {
         product.value = newProduct()
         originalValueStr = dataAsString()
+
+      } else {
+        axios.get(serverBaseUrl+'/api/products/' + id)
+          .then((response) => {
+            product.value = response.data.data
+            originalValueStr = dataAsString()
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+  }
+/*
+  const save = () => {
+      errors.value = null
+      axios.put(serverBaseUrl+'/api/products/' + props.id, product.value)
     } else {
         axios.get(serverBaseUrl +'/api/products/' + id)
         .then((response) => {
             product.value = response.data.data
-          
             originalValueStr = dataAsString()
         })
         .catch((error) => {
@@ -45,7 +60,7 @@ const loadProduct = (id) => {
         })
     }
 }
-
+*/
 const save = (product_values) => {
     console.log("entrou na função save")
     //console.log(product_values.get("photo_url"))

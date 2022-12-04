@@ -11,28 +11,23 @@ const buttonSidebarExpand = ref(null)
 const serverBaseUrl = import.meta.env.VITE_API_URL;
 
 
+
 const logout = async () => {
-  try {
-    await axios.post('logout')
-    toast.success('User has logged out of the application.')
-    delete axios.defaults.headers.common.Authorization
-    userStore.clearUser()
-  } catch (error) {
-    toast.error('There was a problem logging out of the application!')
+  if (await userStore.logout()) {
+    toast.success("User has logged out of the application.")
+    clickMenuOption()
+    router.push({name: 'home'})
+  } else {
+    toast.error("There was a problem logging out of the application!")
   }
 }
 
-onMounted(() => {
-  const userId = 1
-  axios.get(serverBaseUrl+"/api/users/" + userId)
-    .then((response) => {
-      //console.log(response);
-      workInProgressProjects.value = response.data.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-})
+
+const clickMenuOption = () => {
+  if (window.getComputedStyle(buttonSidebarExpand.value).display !== "none") {
+    buttonSidebarExpand.value.click()
+  }
+}
 </script>
 
 <template>

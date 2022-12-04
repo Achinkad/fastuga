@@ -5,7 +5,8 @@
   const router = useRouter()
   const axios = inject('axios')
   const toast = inject('toast')
-const userStore = useUserStore() 
+  const userStore = useUserStore()
+
   const credentials = ref({
         username: '',
         password: ''
@@ -14,14 +15,14 @@ const userStore = useUserStore()
   const emit = defineEmits(['login'])
 
  const login = async () => {
- if (await userStore.login(credentials.value)) {
- toast.success('User ' + userStore.user.name + ' has entered the application.')
- emit('login')
- router.back()
- } else {
- credentials.value.password = ''
- toast.error('User credentials are invalid!')
- }
+  if (await userStore.login(credentials.value)) {
+    toast.success('User ' + userStore.user.name + ' has entered the application.')
+    emit('login')
+    router.back()
+  } else {
+    credentials.value.password = ''
+    toast.error('User credentials are invalid!')
+  }
  }
 </script>
 
@@ -37,8 +38,8 @@ const userStore = useUserStore()
       <div class="mb-3">
         <label
           for="inputUsername"
-          class="form-label"
-        >Username</label>
+          class="form-label">
+          Username</label>
         <input
           type="text"
           class="form-control"

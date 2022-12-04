@@ -36,7 +36,7 @@ const serverBaseUrl = inject("serverBaseUrl")
         user.value = newUser()
         originalValueStr = dataAsString()
       } else {
-        axios.get(serverBaseUrl +'/api/users/' + id)
+        axios.get(serverBaseUrl+'/api/users/' + id)
           .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()

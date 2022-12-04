@@ -16,7 +16,7 @@ var value_status=ref("all");
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
-  axios.get(serverBaseUrl +'/api/orders?page='+page,{
+  axios.get(serverBaseUrl+'/api/orders?page='+page,{
     params:{
       status: value_status.value
       }

@@ -20,21 +20,22 @@ const totalProducts = computed(() => {
     return products.value.length
 })
 
-const loadProducts = (page = 1) => {
+  const loadProducts = (page = 1) => {
     axios.get(serverBaseUrl +'/api/products?page='+page,{
-        params:{
-            type: value_type.value
-        }
 
-    })
-    .then((response) => {
-        products.value = response.data.data
-        pagination.value=response.data
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-}
+    params:{
+      type: value_type.value
+      }
+      
+  })
+        .then((response) => {
+          products.value = response.data.data
+          pagination.value=response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
 
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_TYPE(valor do filtro)
 watch(value_type,() =>{

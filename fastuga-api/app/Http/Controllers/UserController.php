@@ -65,4 +65,10 @@ class UserController extends Controller
         $user->save();
         return new UserResource($user);
     }
+
+    public function show_me(Request $request)
+    {
+        //dd($request);
+        return new UserResource($request->user());
+    }
 }

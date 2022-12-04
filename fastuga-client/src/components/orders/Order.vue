@@ -62,7 +62,7 @@
             }
           })
       } else {
-        axios.put(serverBaseUrl +'/api/order/' + props.id, order.value)
+        axios.put(serverBaseUrl+'/api/order/' + props.id, order.value)
           .then((response) => {
             order.value = response.data.data
             originalValueStr = dataAsString()

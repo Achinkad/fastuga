@@ -21,7 +21,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   })
 
   const loadUsers = (page = 1) => {
-    axios.get(serverBaseUrl +'/api/users?page='+page,{
+    axios.get(serverBaseUrl+'/api/users?page='+page,{
     params:{
       type: value_role.value
       }
