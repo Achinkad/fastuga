@@ -21,7 +21,8 @@ const newProduct = () => {
     return {
         id: null,
         name: '',
-        photo_url: null
+        photo_url: null,
+        description:''
     }
 }
 
