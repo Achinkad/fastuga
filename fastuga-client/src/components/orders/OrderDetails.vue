@@ -78,13 +78,7 @@ const productPhotoFullUrl = (product) => {
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : productNoneUrl;
 };
-const addProduct = (product) => {
-  editingOrder.order_item += product
-};
 
-const deleteProduct = (product) => {
-  editingOrder.order_item -= product
-};
 
 onMounted(() => {
   getProducts()
@@ -185,6 +179,8 @@ onMounted(() => {
         <br>
         <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
         <span class="item" >{{ editingOrder.order_item[n - 1].product.name }}</span>
+        <button type="button" class="bi bi-plus" @click="addProduct(product)"></button>
+        <button type="button" class="bi bi-dash" @click="deleteProduct(product)"></button>
       </div>
     </div>
     <!-- TransitionGroup Info-->
@@ -195,7 +191,7 @@ onMounted(() => {
           <span class="item"> {{product.name}}</span>
           <button type="button" class="bi bi-plus"  @click="addProduct(product)"></button>
           <button   type="button" class="bi bi-dash" @click="deleteProduct(product)"></button>
-          <h3>{{ value }}</h3>
+     
         </div>
     </div>
 
