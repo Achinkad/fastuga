@@ -138,13 +138,14 @@ const deleteClick = (order) => {
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-
-            <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
-              <i class="bi bi-xs bi-pencil"></i>
-            </button>
+          
             <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
-              <i class="bi bi-xs bi-x-square-fill"></i>
+              <i class="bi bi-trash3"></i>
             </button>
+            <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
+              <i class="bi bi-pencil"></i>
+            </button>
+            
           </div>
         </td>
       </tr>

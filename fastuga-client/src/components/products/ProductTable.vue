@@ -107,13 +107,14 @@ const deleteClick = (product) => {
         <td class="align-middle">{{ product.name }}</td>
         <td class="align-middle">{{ product.type }}</td>
         <td class="align-middle">{{ product.price }}€</td>
-        <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
-          <i class="bi bi-xs bi-x-square-fill"></i>
-        </button>
-        <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
-          <i class="bi bi-xs bi-pencil"></i>
-        </button>
-
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
+            <i class="bi bi-trash3"></i>
+          </button>
+          <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </div>
       </tr>
     </tbody>
   </table>
