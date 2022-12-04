@@ -19,8 +19,22 @@ const props = defineProps({
   },
 
 });
+const newOrderItem = () => {
+  return {
+    id: null,
+    status: null,
+    price: 0,
+    notes: "",
+    custom: "",
+    order_id: null,
+    order_local_number: 0,
+    product_id: null,
+    product: [
+    ],
+  }
+}
 
-const emit = defineEmits(["save", "cancel","addProduct","removeProduct"]);
+const emit = defineEmits(["save", "cancel"]);
 
 const products = ref([])
 var value_type = ref("all");
@@ -63,6 +77,24 @@ const orderTittle = computed(() => {
 
 const save = () => {
   emit("save", editingOrder.value);
+  console.log(editingOrder.value)
+};
+const addProduct = (product) => {
+  const orderItem = ref(newOrderItem())
+  orderItem.value.product.push(product)
+  editingOrder.value.order_item.push(orderItem.value)
+  console.log(editingOrder.value)
+};
+const deleteProduct = (product) => {
+  if (editingOrder.value.order_item.length > 0) {
+    editingOrder.value.order_item.forEach((value, index) => {
+      if (value.product.id === product.id) {
+        editingOrder.value.order_item.pop()
+      }
+    })
+  }
+  console.log("No items to delete")
+  console.log(editingOrder.value)
 };
 
 const cancel = () => {
@@ -79,7 +111,7 @@ const productPhotoFullUrl = (product) => {
     : productNoneUrl;
 };
 
-
+const count = ref(0)
 onMounted(() => {
   getProducts()
 })
@@ -171,30 +203,36 @@ onMounted(() => {
 
 
     </div>
-
-    <div class="mb-3" id="box" v-if="editingOrder.order_item != null">
+    <div id="box">
       <label for="inputDeliveredBy" class="form-label">Products: </label>
-      <br>
-      <div v-for="n in editingOrder.order_item.length" >
+      <div class="mb-3" v-if="editingOrder.order_item != null">
+
         <br>
-        <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
-        <span class="item" >{{ editingOrder.order_item[n - 1].product.name }}</span>
-        <button type="button" class="bi bi-plus" @click="addProduct(product)"></button>
-        <button type="button" class="bi bi-dash" @click="deleteProduct(product)"></button>
+        <div v-for="n in editingOrder.order_item.length">
+          <br>
+          <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
+          <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
+          <button type="button" class="bi bi-plus"
+            @click="addProduct(editingOrder.order_item[n - 1].product); count++"></button>
+          <button type="button" class="bi bi-dash"
+            @click="deleteProduct(editingOrder.order_item[n - 1].product); count--"></button>
+          <p>Count is: {{ count }}</p>
+        </div>
+      </div>
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <div class="mb-3" v-if="(editingOrder.order_item.length == 0)">
+        <div v-for="product in products">
+          <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
+          <span class="item"> {{ product.name }}</span>
+          <button type="button" class="bi bi-plus" @click="addProduct(product); count++"></button>
+          <button type="button" class="bi bi-dash" @click="deleteProduct(product); count--"></button>
+          <p>Count is: {{ count }}</p>
+
+        </div>
       </div>
     </div>
-    <!-- TransitionGroup Info-->
-  
-    <div id="box" v-if="editingOrder.order_item == null">
-        <div v-for ="product in products" >
-          <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
-          <span class="item"> {{product.name}}</span>
-          <button type="button" class="bi bi-plus"  @click="addProduct(product)"></button>
-          <button   type="button" class="bi bi-dash" @click="deleteProduct(product)"></button>
-     
-        </div>
-    </div>
-
 
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">Add
@@ -209,6 +247,7 @@ onMounted(() => {
 .checkCompleted {
   min-height: 2.375rem;
 }
+
 #box {
   background-color: rgb(255, 255, 255);
   width: max-content;
@@ -223,11 +262,13 @@ onMounted(() => {
   font-size: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  
+
 }
+
 .form-label {
-    font-size: 20px;
+  font-size: 20px;
 }
+
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
