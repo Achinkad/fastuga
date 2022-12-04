@@ -20,10 +20,10 @@ const props = defineProps({
 
 });
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","addProduct","removeProduct"]);
 
 const products = ref([])
-var value_type = ref("-1");
+var value_type = ref("all");
 const editingOrder = ref(props.order);
 
 watch(
@@ -40,11 +40,14 @@ watch(value_type, () => {
 
 const getProducts = () => {
   axios.get(serverBaseUrl + '/api/products', {
+    params: {
+      type: value_type.value
+    }
 
   })
     .then((response) => {
       products.value = response.data.data
-      console.log(response.data.data)
+      console.log(products.value)
     })
     .catch((error) => {
       console.log(error)
@@ -75,15 +78,24 @@ const productPhotoFullUrl = (product) => {
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : productNoneUrl;
 };
+const addProduct = (product) => {
+  editingOrder.order_item += product
+};
+
+const deleteProduct = (product) => {
+  editingOrder.order_item -= product
+};
+
 onMounted(() => {
   getProducts()
 })
+
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name=='Order'">Editing Order #{{ editingOrder.id }}</h3>
-    <h3 class="mt-5 mb-3" v-if="$route.name=='NewOrder'">Adding New Order</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">Editing Order #{{ editingOrder.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
     <hr />
 
     <div class="mb-3">
@@ -166,27 +178,32 @@ onMounted(() => {
 
     </div>
 
-    <div class="mb-3" v-if="editingOrder.order_item != null">
+    <div class="mb-3" id="box" v-if="editingOrder.order_item != null">
       <label for="inputDeliveredBy" class="form-label">Products: </label>
       <br>
-      <div v-for="n in editingOrder.order_item.length">
+      <div v-for="n in editingOrder.order_item.length" >
+        <br>
         <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
-        <span>{{ editingOrder.order_item[n - 1].product.name }}</span>
+        <span class="item" >{{ editingOrder.order_item[n - 1].product.name }}</span>
       </div>
     </div>
-    <TransitionGroup tag="ul" name="fade" class="container">
-
-      <div v-for="product in products" class="item" :key="product.id">
-        <span>{{ product.name }}</span>
-        <button @click="">x</button>
-    
-      </div>
-    </TransitionGroup>
+    <!-- TransitionGroup Info-->
+  
+    <div id="box" v-if="editingOrder.order_item == null">
+        <div v-for ="product in products" >
+          <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
+          <span class="item"> {{product.name}}</span>
+          <button type="button" class="bi bi-plus"  @click="addProduct(product)"></button>
+          <button   type="button" class="bi bi-dash" @click="deleteProduct(product)"></button>
+          <h3>{{ value }}</h3>
+        </div>
+    </div>
 
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='NewOrder'">Add Order</button>
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='Order'">Save Order</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">Add
+        Order</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">Save Order</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
@@ -196,16 +213,27 @@ onMounted(() => {
 .checkCompleted {
   min-height: 2.375rem;
 }
+#box {
+  background-color: rgb(255, 255, 255);
+  width: max-content;
+  border: 1px solid orange;
 
+  border-radius: 25px;
+}
+
+.item {
+  width: 100%;
+  height: 30px;
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  
+}
+.form-label {
+    font-size: 20px;
+}
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
-}
-.item {
-  width: 30%;
-  height: 35px;
-  background-color: #ffffff;
-  border: 1px solid rgb(151, 112, 4);
-  box-sizing: border-box;
 }
 </style>
