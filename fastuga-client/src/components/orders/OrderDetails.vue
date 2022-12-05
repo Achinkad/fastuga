@@ -27,7 +27,7 @@ const newOrderItem = () => {
     id: null,
     status: "R",
     price: 0,
-    notes:null,
+    notes: null,
     custom: null,
     order_id: 0,
     order_local_number: 0,
@@ -37,7 +37,7 @@ const newOrderItem = () => {
   };
 };
 
-const emit = defineEmits(["save", "cancel","add"]);
+const emit = defineEmits(["save", "cancel", "add"]);
 const products = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
@@ -54,7 +54,7 @@ watch(value_type, () => {
 });
 
 const getProducts = (page = 1) => {
-  axios.get(serverBaseUrl + '/api/products?page='+page, {
+  axios.get(serverBaseUrl + '/api/products?page=' + page, {
     params: {
       type: value_type.value
     }
@@ -62,7 +62,7 @@ const getProducts = (page = 1) => {
   })
     .then((response) => {
       products.value = response.data.data
-      paginationNewOrder.value=response.data
+      paginationNewOrder.value = response.data
       console.log(products.value)
     })
     .catch((error) => {
@@ -79,42 +79,42 @@ const save = () => {
 const addProduct = (product) => {
   const orderItem = ref(newOrderItem());
   const size = editingOrder.value.order_item.length
-  if(product.type === "hot dish"){
+  if (product.type === "hot dish") {
     orderItem.value.status = "P"
   }
-  
+
   orderItem.value.product_id = product.id;
-  orderItem.value.order_local_number = size +1
-  orderItem.value.id = size +1
-  
+  orderItem.value.order_local_number = size + 1
+  orderItem.value.id = size + 1
+
   orderItem.value.order_id = editingOrder.value.id
   orderItem.value.price = product.price
   orderItem.value.product = product;
   editingOrder.value.order_item.push(orderItem.value);
   console.log(editingOrder.value);
-  
+
 };
 
-const deleteProduct = (product,position) => {
+const deleteProduct = (product, position) => {
 
   console.log(editingOrder.value.order_item)
-  editingOrder.value.order_item.splice(position-1,1)
-  
+  editingOrder.value.order_item.splice(position - 1, 1)
+
   console.log("No items to delete")
   console.log(editingOrder.value)
 
 };
 
-const deleteProductInAdd = (product) =>{
-var flag=0
+const deleteProductInAdd = (product) => {
+  var flag = 0
 
-  editingOrder.value.order_item.forEach((value,index) =>{
-    if(value.product.id===product.id){
-      if(flag==0){
-        editingOrder.value.order_item.splice(index,1)
-        flag=1
+  editingOrder.value.order_item.forEach((value, index) => {
+    if (value.product.id === product.id) {
+      if (flag == 0) {
+        editingOrder.value.order_item.splice(index, 1)
+        flag = 1
       }
-      
+
     }
 
   })
@@ -130,15 +130,15 @@ const totalPrice = () => {
   console.log(total)
   return total.toFixed(2);
 };
-const countProduct = (product) =>{
+const countProduct = (product) => {
   let count = 0
- editingOrder.value.order_item.forEach(order =>{
-    if(order.product.id==product.id){
+  editingOrder.value.order_item.forEach(order => {
+    if (order.product.id == product.id) {
       count++
     }
- })
- //console.log(count)
- return count
+  })
+  //console.log(count)
+  return count
 }
 const cancel = () => {
   emit("cancel", editingOrder.value);
@@ -158,109 +158,119 @@ const productPhotoFullUrl = (product) => {
 onMounted(() => {
   getProducts();
   console.log(editingOrder.value)
-  
+
 });
 </script>
 
 <template>
+
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
-      Editing Order #{{ editingOrder.id }}
-    </h3>
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
-    <hr  style="color:beige"/>
-    <div class="mb-3">
-      <label for="payment_type">Payment Type</label>
-      <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type">
-        <option value="VISA">Visa</option>
-        <option value="PAYPAL">PayPal</option>
-        <option value="MBWAY">MBWay</option>
-      </select>
-      <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+    <div class ="box_form">
+      <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
+        Editing Order #{{ editingOrder.id }}
+      </h3>
+      <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
+      <hr style="color:beige" />
+      <div class="mb-3">
+        <label for="payment_type">Payment Type</label>
+        <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type">
+          <option value="VISA">Visa</option>
+          <option value="PAYPAL">PayPal</option>
+          <option value="MBWAY">MBWay</option>
+        </select>
+        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+      </div>
+
+      <div class="mb-3">
+        <label for="inputPaymentReference" class="form-label">Payment Reference</label>
+        <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference" required
+          v-model="editingOrder.payment_reference" />
+        <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
+      </div>
+
+     <!-- DATA 
+       <div class="mb-3">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" v-model="editingOrder.date" />
+        <field-error-message :errors="errors" fieldName="date"></field-error-message>
+      </div> -->
+
+      <div class="mb-3" v-if="editingOrder.customer_id != null">
+        <label for="inputCustomer" class="form-label">Customer Name: </label>
+        <br />
+        <img :src="userPhotoFullUrl(editingOrder.customer.user)"  class="rounded-circle img_photo" />
+        <span style="padding-left: 10px;" >{{ editingOrder.customer.user.name }}</span>
+      </div>
+      <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
+      <div class="mb-3" v-if="editingOrder.delivered_by != null">
+        <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
+        <br />
+        <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
+        <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label for="inputPaymentReference" class="form-label">Payment Reference</label>
-      <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference" required
-        v-model="editingOrder.payment_reference" />
-      <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
-    </div>
 
-    <div class="mb-3">
-      <label for="date">Date</label>
-      <input type="date" id="date" name="date" v-model="editingOrder.date" />
-      <field-error-message :errors="errors" fieldName="date"></field-error-message>
-    </div>
 
-    <div class="mb-3" v-if="editingOrder.customer_id != null">
-      <label for="inputCustomer" class="form-label">Customer Name: </label>
-      <br />
-      <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
-      <span>{{ editingOrder.customer.user.name }}</span>
-    </div>
-    <span> Total Price: {{totalPrice()}} €</span>
-    <div class="mb-3" v-if="editingOrder.delivered_by != null">
-      <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
-      <br />
-      <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
-      <span>{{ editingOrder.user.name }}</span>
-    </div>
-    
-      
+    <div class="container">
+      <div class="row">
 
-  <div class="container">
-    <div class="row">
-    
-      <div class="col-md child">  
-      <label class="form-label"  style="font-size: xx-large;" >Products In the Order: </label>
+        <div class="col-md child">
+          <label class="form-label" style="font-size: xx-large;color:white;">Products In the Order: </label>
           <div v-for="n in editingOrder.order_item.length">
             <br>
             <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
             <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
             <button type="button" class="bi bi-plus" id="add"
-              @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)" v-if="editingOrder.status!='C'"></button>
+              @click="addProduct(editingOrder.order_item[n - 1].product); countProduct(editingOrder.order_item[n - 1].product)"
+              v-if="editingOrder.status != 'C'"></button>
             <button type="button" class="bi bi-dash" id="add"
-              @click="deleteProduct(editingOrder.order_item[n - 1].product,n)" v-if="editingOrder.status!='C'"></button>
-              <span  id ="badge" class="badge bg-secondary">{{ countProduct(editingOrder.order_item[n - 1].product) }}</span>
-           
-             <div>
-               <label for="inputNotes" class="form-label">Notes</label>
-               <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n-1].notes"></textarea>
-               <field-error-message :errors="errors" fieldName="notes"></field-error-message>
-             </div>
-          </div>
-      </div>
+              @click="deleteProduct(editingOrder.order_item[n - 1].product, n)" v-if="editingOrder.status != 'C'"></button>
+            <span id="badge" class="badge bg-secondary">{{ countProduct(editingOrder.order_item[n - 1].product)
+            }}</span>
 
-      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
-     
-    <div class="col-md twin "  v-if="editingOrder.status!='C'">
-       <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
-       <br>
-       <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5"></Bootstrap5Pagination>
-     <select class="form-select" id="selectType" v-model="value_type">
+            <div>
+              <label for="inputNotes" style="color:white" class="form-label">Notes</label>
+              <textarea class="form-control" id="inputNotes" rows="1"
+                v-model="editingOrder.order_item[n - 1].notes"></textarea>
+              <field-error-message :errors="errors" fieldName="notes"></field-error-message>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+
+        <div class="col-md twin " v-if="editingOrder.status != 'C'">
+          <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
+          <br>
+          <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5">
+          </Bootstrap5Pagination>
+          <select class="form-select" id="selectType" v-model="value_type">
             <option value="all" selected>Any</option>
             <option value="hot dish">Hot Dishes</option>
             <option value="cold dish">Cold Dishes</option>
             <option value="drink">Drinks</option>
             <option value="dessert">Desserts</option>
-        </select>
-      <div class="mb-3">
-        <div v-for="n in products.length">
-          <br>
-          <img :src="productPhotoFullUrl(products[n-1])" class="rounded-circle img_photo" />
-          <span class="item"> {{ products[n-1].name }}</span>
-          <button type="button" class="bi bi-plus" id="add" @click="addProduct(products[n-1]);countProduct(products[n-1])"></button>
-          <button type="button" class="bi bi-dash" id="add" @click="deleteProductInAdd(products[n-1]);countProduct(products[n-1])"></button>
-          <hr id="hr"/>
-          
-          
+          </select>
+          <div class="mb-3">
+            <div v-for="n in products.length">
+              <br>
+              <img :src="productPhotoFullUrl(products[n - 1])" class="rounded-circle img_photo" />
+              <span class="item"> {{ products[n - 1].name }}</span>
+              <button type="button" class="bi bi-plus" id="add"
+                @click="addProduct(products[n - 1]); countProduct(products[n - 1])"></button>
+              <button type="button" class="bi bi-dash" id="add"
+                @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
+              <hr id="hr" />
+
+
+            </div>
+          </div>
+
+
         </div>
       </div>
-      
- 
-      </div>
     </div>
-  </div>
 
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">
@@ -280,43 +290,51 @@ onMounted(() => {
 .checkCompleted {
   min-height: 2.375rem;
 }
+.box_form{
+  border: 3px solid #dc9c37ed;
+  border-radius: 25px;
+}
 .child {
   display: flex;
   border: 3px solid #dc9c37ed;
   padding: 1rem 1rem;
   vertical-align: middle;
   border-radius: 25px;
-  margin:10px;
+  margin: 40px;
   flex-direction: column;
   height: 100%;
   flex-grow: 1;
-  background-image: url();
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)), url(@/assets/italian.jpg);
+  background-size: cover;
+  background-position-x: center;
 }
-#hr{
-  color:white;
+
+#hr {
+  color: white;
 
 }
+
 .twin {
   display: flex;
   border: 3px solid #dc9c37ed;
   padding: 1rem 1rem;
   vertical-align: middle;
   border-radius: 25px;
-  margin:10px;
+  margin: 40px;
   flex-direction: column;
   height: 100%;
   flex-grow: 1;
-  background-image: linear-gradient(
-      rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.6)
-    ), url(@/assets/italian.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)), url(@/assets/italian.jpg);
   background-size: cover;
-background-position-x: center;
+  background-position-x: center;
 }
- #badge{
+
+#badge {
   font-size: medium;
- } 
- 
+}
+
 
 
 .item {
@@ -326,17 +344,19 @@ background-position-x: center;
   padding-left: 10px;
   padding-right: 20px;
   color: beige;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: large;
 }
 
 .form-label {
   font-size: 20px;
 }
-#add{
+
+#add {
   margin: 2px;
   float: right;
 }
+
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
