@@ -31,7 +31,7 @@ const newOrderItem = () => {
     custom: null,
     order_id: 0,
     order_local_number: 0,
-    product_id: 0,
+    product_id: null,
     product: null,
   };
 };
@@ -68,48 +68,62 @@ const getProducts = (page = 1) => {
       console.log(error);
     });
 };
-const chunkedProducts = computed(() => {
 
 const save = () => {
   emit("save", editingOrder.value);
   console.log(editingOrder.value);
 };
+
+
 const addProduct = (product) => {
   const orderItem = ref(newOrderItem());
   const size = editingOrder.value.order_item.length
   if(product.type === "hot dish"){
     orderItem.value.status = "P"
   }
+  
   orderItem.value.product_id = product.id;
   orderItem.value.order_local_number = size +1
   orderItem.value.id = size +1
+  
   orderItem.value.order_id = editingOrder.value.id
   orderItem.value.price = product.price
   orderItem.value.product = product;
   editingOrder.value.order_item.push(orderItem.value);
   console.log(editingOrder.value);
-};
-const deleteProduct = (product) => {
   
-  if (editingOrder.value.order_item.length > 0) {
-    editingOrder.value.order_item.forEach((value, index) => {
-      if (value.product.id === product.id) {
+};
 
-        editingOrder.value.order_item.splice(index,1)
-        countProduct(product)
-      }
-    });
-  }
+const deleteProduct = (product,position) => {
+
+  console.log(editingOrder.value.order_item)
+  editingOrder.value.order_item.splice(position-1,1)
   
   console.log("No items to delete")
   console.log(editingOrder.value)
 
 };
 
+const deleteProductInAdd = (product) =>{
+var flag=0
+
+  editingOrder.value.order_item.forEach((value,index) =>{
+    if(value.product.id===product.id){
+      if(flag==0){
+        editingOrder.value.order_item.splice(index,1)
+        flag=1
+      }
+      
+    }
+
+  })
+}
+
+
 const totalPrice = () => {
   var total = 0;
   editingOrder.value.order_item.forEach((value) => {
-    console.log(value.price)
+    //console.log(value.price)
     total += parseFloat(value.price)
   });
   console.log(total)
@@ -142,7 +156,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
-
+  
 });
 </script>
 
@@ -176,12 +190,6 @@ onMounted(() => {
       <field-error-message :errors="errors" fieldName="date"></field-error-message>
     </div>
 
-    <div class="mb-3">
-      <label for="inputNotes" class="form-label">Notes</label>
-      <textarea class="form-control" id="inputNotes" rows="4" v-model="editingOrder.notes"></textarea>
-      <field-error-message :errors="errors" fieldName="notes"></field-error-message>
-    </div>
-
     <div class="mb-3" v-if="editingOrder.customer_id != null">
       <label for="inputCustomer" class="form-label">Customer Name: </label>
       <br />
@@ -201,23 +209,28 @@ onMounted(() => {
   <div class="container">
     <div class="row">
     
-      <div class="col-md child" v-if="$route.name == 'Order'">  
+      <div class="col-md child">  
       <label class="form-label">Products In the Order: </label>
           <div v-for="n in editingOrder.order_item.length">
             <br>
             <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
             <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
             <button type="button" class="bi bi-plus"
-              @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)"></button>
+              @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)" v-if="editingOrder.status!='C'"></button>
             <button type="button" class="bi bi-dash"
-              @click="deleteProduct(editingOrder.order_item[n - 1].product)"></button>
+              @click="deleteProduct(editingOrder.order_item[n - 1].product,n)" v-if="editingOrder.status!='C'"></button>
             <p>Count is: {{ countProduct(editingOrder.order_item[n - 1].product) }}</p>
+             <div class="mb-3">
+               <label for="inputNotes" class="form-label">Notes</label>
+               <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n-1].notes"></textarea>
+               <field-error-message :errors="errors" fieldName="notes"></field-error-message>
+             </div>
           </div>
       </div>
 
       <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
     
-    <div class="col-md child">
+    <div class="col-md child" v-if="editingOrder.status!='C'">
        <label class="form-label">All Products: </label>
      <select class="form-select" id="selectType" v-model="value_type">
             <option value="all" selected>Any</option>
@@ -227,12 +240,12 @@ onMounted(() => {
             <option value="dessert">Desserts</option>
         </select>
       <div class="mb-3">
-        <div v-for="product in products">
-          <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
-          <span class="item"> {{ product.name }}</span>
-          <button type="button" class="bi bi-plus" @click="addProduct(product);countProduct(product)"></button>
-          <button type="button" class="bi bi-dash" @click="deleteProduct(product);countProduct(product)"></button>
-          <p>Count is: {{ countProduct(product) }}</p>
+        <div v-for="n in products.length">
+          <img :src="productPhotoFullUrl(products[n-1])" class="rounded-circle img_photo" />
+          <span class="item"> {{ products[n-1].name }}</span>
+          <button type="button" class="bi bi-plus" @click="addProduct(products[n-1]);countProduct(products[n-1])"></button>
+          <button type="button" class="bi bi-dash" @click="deleteProductInAdd(products[n-1]);countProduct(products[n-1])"></button>
+          <p>Count is: {{ countProduct(products[n-1]) }}</p>
 
         </div>
       </div>
