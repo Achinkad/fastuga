@@ -2,13 +2,15 @@
 import { ref, watch, inject } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useUserStore } from '../../stores/user.js'
 import axios from 'axios'
 
+const userStore = useUserStore()
 const router = useRouter()
 const toast = inject('toast')
-
 const serverBaseUrl = inject("serverBaseUrl")
 
+axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
 
 const props = defineProps({
     id: {
@@ -64,7 +66,7 @@ const loadProduct = (id) => {
 const save = (product_values) => {
     console.log("entrou na função save")
     //console.log(product_values.get("photo_url"))
- 
+
     axios.post(serverBaseUrl+'/api/products/'+ props.id, product_values)
     .then((response) => {
         console.log("feito a foto")
@@ -98,9 +100,6 @@ const save = (product_values) => {
 }
 
 const add = (product_values) => {
-    console.log("entrou na função ADD")
-    console.log(product_values.get("description"))
-
     axios.post(serverBaseUrl+'/api/products', product_values)
     .then((response) => {
         console.log("feito")

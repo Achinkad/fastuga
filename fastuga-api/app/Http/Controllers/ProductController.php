@@ -17,10 +17,7 @@ class ProductController extends Controller
     {
         $this->middleware('auth.manager', ['except' => [
             'index',
-            'show',
-            'store',
-            'update',
-            'destroy'
+            'show'
         ]]);
     }
 
