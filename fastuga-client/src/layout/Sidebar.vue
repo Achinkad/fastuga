@@ -61,7 +61,7 @@
     width: 280px;
     position: fixed;
     top: 0;
-    color: #fff;
+    color: #dc9c37;
     text-decoration: none !important;
     font-size: 1.125rem;
     font-weight: 800;
@@ -81,10 +81,12 @@ ul {
     cursor: default;
     font-size: .6875rem;
     text-transform: uppercase;
-    color: #7e8d9f;
+    color: #dc9c37;
     font-weight: 700;
 }
-
+.sidebar .nav-link:hover {
+    color: #dc9c37;
+}
 .nav-link {
     display: block;
     padding: 10px 20px;

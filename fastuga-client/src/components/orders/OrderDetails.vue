@@ -168,7 +168,7 @@ onMounted(() => {
       Editing Order #{{ editingOrder.id }}
     </h3>
     <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
-    <hr />
+    <hr  style="color:beige"/>
     <div class="mb-3">
       <label for="payment_type">Payment Type</label>
       <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type">
@@ -212,7 +212,7 @@ onMounted(() => {
     <div class="row">
     
       <div class="col-md child">  
-      <label class="form-label">Products In the Order: </label>
+      <label class="form-label"  style="font-size: xx-large;" >Products In the Order: </label>
           <div v-for="n in editingOrder.order_item.length">
             <br>
             <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
@@ -221,8 +221,9 @@ onMounted(() => {
               @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)" v-if="editingOrder.status!='C'"></button>
             <button type="button" class="bi bi-dash" id="add"
               @click="deleteProduct(editingOrder.order_item[n - 1].product,n)" v-if="editingOrder.status!='C'"></button>
-            <p>Count is: {{ countProduct(editingOrder.order_item[n - 1].product) }}</p>
-             <div class="mb-3">
+              <span  id ="badge" class="badge bg-secondary">{{ countProduct(editingOrder.order_item[n - 1].product) }}</span>
+           
+             <div>
                <label for="inputNotes" class="form-label">Notes</label>
                <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n-1].notes"></textarea>
                <field-error-message :errors="errors" fieldName="notes"></field-error-message>
@@ -231,10 +232,11 @@ onMounted(() => {
       </div>
 
       <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
-    
-    <div class="col-md child" v-if="editingOrder.status!='C'">
-       <label class="form-label">All Products: </label>
+     
+    <div class="col-md twin "  v-if="editingOrder.status!='C'">
+       <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
        <br>
+       <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5"></Bootstrap5Pagination>
      <select class="form-select" id="selectType" v-model="value_type">
             <option value="all" selected>Any</option>
             <option value="hot dish">Hot Dishes</option>
@@ -244,15 +246,17 @@ onMounted(() => {
         </select>
       <div class="mb-3">
         <div v-for="n in products.length">
+          <br>
           <img :src="productPhotoFullUrl(products[n-1])" class="rounded-circle img_photo" />
           <span class="item"> {{ products[n-1].name }}</span>
           <button type="button" class="bi bi-plus" id="add" @click="addProduct(products[n-1]);countProduct(products[n-1])"></button>
           <button type="button" class="bi bi-dash" id="add" @click="deleteProductInAdd(products[n-1]);countProduct(products[n-1])"></button>
-          <p>Count is: {{ countProduct(products[n-1]) }}</p>
-
+          <hr id="hr"/>
+          
+          
         </div>
       </div>
-      <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5"></Bootstrap5Pagination>
+      
  
       </div>
     </div>
@@ -277,27 +281,60 @@ onMounted(() => {
   min-height: 2.375rem;
 }
 .child {
-  display: inline;
-  border: 1px solid red;
+  display: flex;
+  border: 3px solid #dc9c37ed;
   padding: 1rem 1rem;
   vertical-align: middle;
   border-radius: 25px;
   margin:10px;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  background-image: url();
+}
+#hr{
+  color:white;
 
 }
+.twin {
+  display: flex;
+  border: 3px solid #dc9c37ed;
+  padding: 1rem 1rem;
+  vertical-align: middle;
+  border-radius: 25px;
+  margin:10px;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ), url(@/assets/italian.jpg);
+  background-size: cover;
+background-position-x: center;
+}
+ #badge{
+  font-size: medium;
+ } 
+ 
+
+
 .item {
   width: max-content;
   height: 30px;
   font-size: 20px;
   padding-left: 10px;
   padding-right: 20px;
+  color: beige;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: large;
 }
 
 .form-label {
   font-size: 20px;
 }
 #add{
-  margin: auto;
+  margin: 2px;
   float: right;
 }
 .img_photo {
