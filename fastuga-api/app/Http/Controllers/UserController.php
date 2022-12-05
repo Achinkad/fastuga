@@ -70,4 +70,13 @@ class UserController extends Controller
     {
         return new UserResource($request->user());
     }
+
+    public function new_password(Request $request, User $user) {
+        
+        $user = User::where(['id' => $user->id], ['deleted_at' => null])->firstOrFail();
+        $password_hashed = Hash::make($request->input('password'));
+        $user->password = $password_hashed;
+        $user->save();
+        return new UserResource($user);
+    }
 }
