@@ -1,16 +1,54 @@
 <script setup>
-  import { ref } from 'vue'
-  
+  import { ref, inject} from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useUserStore } from '../../stores/user.js'
+  const router = useRouter()
+  const axios = inject('axios')
+  const toast = inject('toast')
+  const userStore = useUserStore()
+  const serverBaseUrl = inject("serverBaseUrl")
+
+
+
   const passwords = ref({
-        current_password: '',
+        //current_password: '',
         password: '',
         password_confirm: ''
     })
 
   const emit = defineEmits(['changedPassword'])
 
+
+  //let originalValueStr = ''
+
+
+  const editPassword = () => {
+    if (passwords.value.password==passwords.value.password_confirm){
+    axios.patch(serverBaseUrl + '/api/users/'+ userStore.user.id +'/change_password', {
+        password: passwords.value.password
+      })
+      .then((response) => {
+        //order.value = response.data.data
+        //originalValueStr = dataAsString()
+        toast.success('password was updated successfully.')
+        router.back()
+      })
+      .catch((error) => {
+        if (error.response.status == 422) {
+          toast.error('user password was not updated due to validation errors!')
+          errors.value = error.response.data.errors
+        } else {
+          toast.error('user password was not updated due to unknown server error!')
+        }
+      })
+    }else{
+      toast.error("The passwords aren't matching")
+    }
+  }
+
   const changePassword = () => {
       // FALTA FAZER O LOGIN
+      editPassword()
       emit('changedPassword')
   }
 </script>
@@ -26,28 +64,13 @@
     <div class="mb-3">
       <div class="mb-3">
         <label
-          for="inputCurrentPassword"
-          class="form-label"
-        >Current Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="inputCurrentPassword"
-          required
-          v-model="passwords.current_password"
-        >
-      </div>
-    </div>
-    <div class="mb-3">
-      <div class="mb-3">
-        <label
-          for="inputPassword"
+          for="inputNewPassword"
           class="form-label"
         >New Password</label>
         <input
           type="password"
           class="form-control"
-          id="inputPassword"
+          id="inputNewPassword"
           required
           v-model="passwords.password"
         >

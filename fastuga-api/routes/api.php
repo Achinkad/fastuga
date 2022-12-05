@@ -17,6 +17,7 @@ Route::resource('customers', CustomerController::class);
 Route::resource('users', UserController::class);
 Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block / Unblock User
 Route::get('user', [UserController::class, 'show_me'])->middleware('auth:api');
+Route::patch('users/{user}/change_password', [UserController::class, 'new_password']); // -> Block / Unblock User
 
 /* --- [API Routes] -> Orders --- */
 Route::resource('orders', OrderController::class);
