@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onMounted, inject } from 'vue'
+import { ref, watch, computed, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 import OrderDetail from "./OrderDetails.vue"
@@ -61,9 +61,9 @@ const save = () => {
           toast.error('order was not created due to unknown server error!')
         }
       })
-  } 
-  
-  
+  }
+
+
   const add = () => {
     axios.post(serverBaseUrl + '/api/order/' + props.id, order.value)
       .then((response) => {

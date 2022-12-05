@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, inject,watch } from 'vue'
+import { ref, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import OrderTable from "./OrderTable.vue"
 
@@ -7,25 +7,25 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl =inject("serverBaseUrl");
+const serverBaseUrl = inject("serverBaseUrl");
 const pagination = ref({})
 
 //variável usada no filtro
-var value_status=ref("all");
+var value_status = ref("all");
 
 // funcao provisoria enquanto as rotas nao estao definidas
 const loadOrders = (page = 1) => {
 
-  axios.get(serverBaseUrl+'/api/orders?page='+page,{
-    params:{
+  axios.get(serverBaseUrl + '/api/orders?page=' + page, {
+    params: {
       status: value_status.value
-      }
-      
+    }
+
   })
     .then((response) => {
       orders.value = response.data.data
-      pagination.value = response.data     
-      
+      pagination.value = response.data
+
     })
     .catch((error) => {
       console.log(error)
@@ -33,10 +33,10 @@ const loadOrders = (page = 1) => {
 }
 
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
-watch(value_status,() =>{
+watch(value_status, () => {
   console.log(value_status.value)
   loadOrders()
-}) 
+})
 
 
 //funcao a implementar com filtros para historicos de negocio
@@ -76,13 +76,13 @@ const loadOrders = (page = 1) => {
 */
 //funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API
 const loadHistoricOrders = (page = 1) => {
-  axios.get('/api/users/'+ userStore.userId +'/orders?page='+page)
-      .then((response) => {
-        orders.value = response.data.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+  axios.get('/api/users/' + userStore.userId + '/orders?page=' + page)
+    .then((response) => {
+      orders.value = response.data.data
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 
 const addOrder = () => {
@@ -134,7 +134,7 @@ const totalOrders = computed(() => {
 onMounted(() => {
   loadOrders()
   //loadHistoricOrders()
-  
+
 })
 </script>
 
@@ -203,25 +203,21 @@ onMounted(() => {
 
 
 
-  <order-table
-    :orders="orders"
-    :showId="true"
-    @edit="editOrder"
-    @deleted="deletedOrder"
-  ></order-table>
+  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder"></order-table>
 
 
-<!--A prop OnlyCurrentOrders esta a devolver o historico de orders do utilizador logado(myOrders)-->
+  <!--A prop OnlyCurrentOrders esta a devolver o historico de orders do utilizador logado(myOrders)-->
 
   <div v-if="!onlyCurrentOrders">
-    
+
     <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
     <hr>
   </div>
   <div v-else>
-  
-  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadHistoricOrders" :limit="5"></Bootstrap5Pagination>
-  <hr>
+
+    <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadHistoricOrders" :limit="5">
+    </Bootstrap5Pagination>
+    <hr>
   </div>
 </template>
 

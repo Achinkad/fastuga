@@ -32,7 +32,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-   showTicketNumber: {
+  showTicketNumber: {
     type: Boolean,
     default: true,
   },
@@ -106,12 +106,8 @@ const deleteClick = (order) => {
 </script>
 
 <template>
-    <confirmation-dialog
-    ref="deleteConfirmationDialog"
-    confirmationBtn="Delete order"
-    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`"
-    @confirmed="dialogConfirmedDelete"
-  >
+  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete order"
+    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
     <thead>
@@ -128,24 +124,24 @@ const deleteClick = (order) => {
       <tr v-for="order in editingOrders" :key="order.id">
         <td v-if="showId">{{ order.id }}</td>
         <td v-if="showStatus">
-         <span v-if="order.status=='P'">Preparing</span>
-         <span v-if="order.status=='R'">Ready</span>
-         <span v-if="order.status=='D'">Delivered</span>
-         <span v-if="order.status=='C'">Cancelled</span>
+          <span v-if="order.status == 'P'">Preparing</span>
+          <span v-if="order.status == 'R'">Ready</span>
+          <span v-if="order.status == 'D'">Delivered</span>
+          <span v-if="order.status == 'C'">Cancelled</span>
         </td>
-        <td v-if="showPrice">{{ order.total_paid }}€/{{order.total_price}}€</td>
-        <td v-if="showTicketNumber">{{ order.ticket_number}}</td>
+        <td v-if="showPrice">{{ order.total_paid }}€/{{ order.total_price }}€</td>
+        <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
 
         <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
           <div class="d-flex justify-content-end">
-          
+
             <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
               <i class="bi bi-trash3"></i>
             </button>
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
               <i class="bi bi-pencil"></i>
             </button>
-            
+
           </div>
         </td>
       </tr>

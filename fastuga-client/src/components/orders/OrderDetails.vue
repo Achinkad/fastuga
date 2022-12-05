@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, computed, inject } from "vue";
+import { onMounted, ref, watch, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -165,7 +165,7 @@ onMounted(() => {
 <template>
 
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <div class ="box_form">
+    <div class="box_form">
       <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
         Editing Order #{{ editingOrder.id }}
       </h3>
@@ -188,7 +188,7 @@ onMounted(() => {
         <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
       </div>
 
-     <!-- DATA 
+      <!-- DATA 
        <div class="mb-3">
         <label for="date">Date</label>
         <input type="date" id="date" name="date" v-model="editingOrder.date" />
@@ -198,8 +198,8 @@ onMounted(() => {
       <div class="mb-3" v-if="editingOrder.customer_id != null">
         <label for="inputCustomer" class="form-label">Customer Name: </label>
         <br />
-        <img :src="userPhotoFullUrl(editingOrder.customer.user)"  class="rounded-circle img_photo" />
-        <span style="padding-left: 10px;" >{{ editingOrder.customer.user.name }}</span>
+        <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
+        <span style="padding-left: 10px;">{{ editingOrder.customer.user.name }}</span>
       </div>
       <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
       <div class="mb-3" v-if="editingOrder.delivered_by != null">
@@ -225,7 +225,8 @@ onMounted(() => {
               @click="addProduct(editingOrder.order_item[n - 1].product); countProduct(editingOrder.order_item[n - 1].product)"
               v-if="editingOrder.status != 'C'"></button>
             <button type="button" class="bi bi-dash" id="add"
-              @click="deleteProduct(editingOrder.order_item[n - 1].product, n)" v-if="editingOrder.status != 'C'"></button>
+              @click="deleteProduct(editingOrder.order_item[n - 1].product, n)"
+              v-if="editingOrder.status != 'C'"></button>
             <span id="badge" class="badge bg-secondary">{{ countProduct(editingOrder.order_item[n - 1].product)
             }}</span>
 
@@ -290,10 +291,12 @@ onMounted(() => {
 .checkCompleted {
   min-height: 2.375rem;
 }
-.box_form{
+
+.box_form {
   border: 3px solid #dc9c37ed;
   border-radius: 25px;
 }
+
 .child {
   display: flex;
   border: 3px solid #dc9c37ed;

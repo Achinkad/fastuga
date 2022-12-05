@@ -1,14 +1,13 @@
 <script setup>
 import { ref, watch, watchEffect, computed, inject } from "vue";
-import {useRouter} from 'vue-router'
 import avatarNoneUrl from '@/assets/avatar-none.png'
-import { getCurrentInstance } from 'vue';
 
-const router = useRouter()
+
+
 
 const axios = inject("axios");
 const toast = inject('toast')
-const componentKey = ref(0)
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 
@@ -36,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["edit", "deleted","forceRerender"]);
+const emit = defineEmits(["edit", "deleted", "forceRerender"]);
 const productToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
 
@@ -91,7 +90,7 @@ const deleteClick = (product) => {
     <thead>
       <tr>
         <th v-if="showId">ID</th>
-        <th v-if="showPhoto" >Photo</th>
+        <th v-if="showPhoto">Photo</th>
         <th class="align-middle">Name</th>
       </tr>
     </thead>

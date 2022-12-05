@@ -7,19 +7,22 @@
             <ul class="nav flex-column">
                 <li class="nav-item nav-item-title">Pages</li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }" :to="{ name: 'Dashboard' }">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
+                        :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house"></i>
                         Dashboard
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }" :to="{ name: 'CurrentOrder' }">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }"
+                        :to="{ name: 'CurrentOrder' }">
                         <i class="bi bi-list-stars"></i>
                         My Orders
                     </router-link>
                 </li>
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }" :to="{ name: 'Orders' }">
+                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
+                        :to="{ name: 'Orders' }">
                         <i class="bi bi-bag-plus-fill"></i>
                         Orders
                     </router-link>
@@ -28,7 +31,8 @@
                     </router-link>
                 </li>
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }" :to="{ name: 'Products' }">
+                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
+                        :to="{ name: 'Products' }">
                         <i class="bi bi-egg-fried"></i>
                         Products
                     </router-link>
@@ -84,9 +88,11 @@ ul {
     color: #dc9c37;
     font-weight: 700;
 }
+
 .sidebar .nav-link:hover {
     color: #dc9c37;
 }
+
 .nav-link {
     display: block;
     padding: 10px 20px;

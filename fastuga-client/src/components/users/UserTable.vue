@@ -71,11 +71,7 @@ const editClick = (user) => {
         </td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-xs btn-light"
-              @click="editClick(user)"
-              v-if="showEditButton"
-            >
+            <button class="btn btn-xs btn-light" @click="editClick(user)" v-if="showEditButton">
               <i class="bi bi-xs bi-pencil"></i>
             </button>
           </div>

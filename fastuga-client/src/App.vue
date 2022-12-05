@@ -1,15 +1,10 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, inject,onMounted } from "vue";
-import { useUserStore } from './stores/user.js'
+import { RouterView } from 'vue-router'
+
 import Navbar from "@/layout/Navbar.vue";
 import Sidebar from "@/layout/Sidebar.vue";
 
-const axios = inject("axios");
-const toast = inject("toast")
-const workInProgressProjects = ref([]);
-const buttonSidebarExpand = ref(null)
-const serverBaseUrl = import.meta.env.VITE_API_URL;
+
 </script>
 
 <template>
