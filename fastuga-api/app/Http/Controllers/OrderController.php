@@ -74,7 +74,7 @@ class OrderController extends Controller
 
     /* --- Custom Routes --- */
 
-    public function status(Request $request, Order $order) // -> Change Order Status
+    public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
         $request->validate(['status' => 'required|in:P,R,D,C']);
 

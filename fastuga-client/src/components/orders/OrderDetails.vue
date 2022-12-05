@@ -1,10 +1,9 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { onMounted, ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
-
 const serverBaseUrl = inject("serverBaseUrl")
-
+const axios = inject('axios')
 const props = defineProps({
   order: {
     type: Object,
@@ -18,14 +17,27 @@ const props = defineProps({
     type: String,
     default: "insert",
   },
-  fixedProject: {
-    type: Number,
-    default: null,
-  },
+
 });
+const newOrderItem = () => {
+  return {
+    id: null,
+    status: null,
+    price: 0,
+    notes: "",
+    custom: "",
+    order_id: null,
+    order_local_number: 0,
+    product_id: null,
+    product: [
+    ],
+  }
+}
 
 const emit = defineEmits(["save", "cancel"]);
 
+const products = ref([])
+var value_type = ref("all");
 const editingOrder = ref(props.order);
 
 watch(
@@ -33,10 +45,56 @@ watch(
   (newOrder) => {
     editingOrder.value = newOrder;
   }
+
 );
+watch(value_type, () => {
+  console.log(value_type.value)
+  getProducts()
+})
+
+const getProducts = () => {
+  axios.get(serverBaseUrl + '/api/products', {
+    params: {
+      type: value_type.value
+    }
+
+  })
+    .then((response) => {
+      products.value = response.data.data
+      console.log(products.value)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const orderTittle = computed(() => {
+  if (!editingOrder.value) {
+    return "";
+  }
+  return props.operationType == "insert" ? "New Order" : "Order #" + editingOrder.value.id;
+});
 
 const save = () => {
   emit("save", editingOrder.value);
+  console.log(editingOrder.value)
+};
+const addProduct = (product) => {
+  const orderItem = ref(newOrderItem())
+  orderItem.value.product.push(product)
+  editingOrder.value.order_item.push(orderItem.value)
+  console.log(editingOrder.value)
+};
+const deleteProduct = (product) => {
+  if (editingOrder.value.order_item.length > 0) {
+    editingOrder.value.order_item.forEach((value, index) => {
+      if (value.product.id === product.id) {
+        editingOrder.value.order_item.pop()
+      }
+    })
+  }
+  console.log("No items to delete")
+  console.log(editingOrder.value)
 };
 
 const cancel = () => {
@@ -52,12 +110,18 @@ const productPhotoFullUrl = (product) => {
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : productNoneUrl;
 };
+
+const count = ref(0)
+onMounted(() => {
+  getProducts()
+})
+
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name=='Order'">Editing Order #{{ editingOrder.id }}</h3>
-    <h3 class="mt-5 mb-3" v-if="$route.name=='NewOrder'">Adding New Order</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">Editing Order #{{ editingOrder.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
     <hr />
 
     <div class="mb-3">
@@ -139,23 +203,41 @@ const productPhotoFullUrl = (product) => {
 
 
     </div>
-
-    <div class="mb-3" v-if="editingOrder.order_item != null">
-
+    <div id="box">
       <label for="inputDeliveredBy" class="form-label">Products: </label>
-      <br>
+      <div class="mb-3" v-if="editingOrder.order_item != null">
 
-      <div v-for="n in editingOrder.order_item.length">
-        <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
-        <span>{{ editingOrder.order_item[n - 1].product.name }}</span>
+        <br>
+        <div v-for="n in editingOrder.order_item.length">
+          <br>
+          <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
+          <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
+          <button type="button" class="bi bi-plus"
+            @click="addProduct(editingOrder.order_item[n - 1].product); count++"></button>
+          <button type="button" class="bi bi-dash"
+            @click="deleteProduct(editingOrder.order_item[n - 1].product); count--"></button>
+          <p>Count is: {{ count }}</p>
+        </div>
+      </div>
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+      <div class="mb-3" v-if="(editingOrder.order_item.length == 0)">
+        <div v-for="product in products">
+          <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
+          <span class="item"> {{ product.name }}</span>
+          <button type="button" class="bi bi-plus" @click="addProduct(product); count++"></button>
+          <button type="button" class="bi bi-dash" @click="deleteProduct(product); count--"></button>
+          <p>Count is: {{ count }}</p>
 
+        </div>
       </div>
     </div>
 
-
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='NewOrder'">Add Order</button>
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='Order'">Save Order</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">Add
+        Order</button>
+      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">Save Order</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
@@ -164,6 +246,27 @@ const productPhotoFullUrl = (product) => {
 <style scoped>
 .checkCompleted {
   min-height: 2.375rem;
+}
+
+#box {
+  background-color: rgb(255, 255, 255);
+  width: max-content;
+  border: 1px solid orange;
+
+  border-radius: 25px;
+}
+
+.item {
+  width: 100%;
+  height: 30px;
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+}
+
+.form-label {
+  font-size: 20px;
 }
 
 .img_photo {
