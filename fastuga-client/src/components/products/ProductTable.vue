@@ -12,7 +12,6 @@ const componentKey = ref(0)
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-
 const props = defineProps({
   products: {
     type: Array,
@@ -70,7 +69,7 @@ const dialogConfirmedDelete = () => {
     .catch((error) => {
       console.log(error)
     })
-      
+
 }
 const editClick = (product) => {
   emit("edit", product);
@@ -94,8 +93,6 @@ const deleteClick = (product) => {
         <th v-if="showId">ID</th>
         <th v-if="showPhoto" >Photo</th>
         <th class="align-middle">Name</th>
-        <th class="align-middle">Type</th>
-        <th class="align-middle">Price</th>
       </tr>
     </thead>
     <tbody>
