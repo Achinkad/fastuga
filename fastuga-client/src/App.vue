@@ -137,16 +137,7 @@ const clickMenuOption = () => {
               <i class="bi bi-xs bi-plus-circle"></i>
             </router-link>
           </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item" v-for="order in orders" :key="order.id">
-              <router-link class="nav-link w-100 me-3"
-                :class="{ active: $route.name == 'CurrentOrder' && $route.params.id == order.id }"
-                :to="{ name: 'CurrentOrder', params: { id: order.id } }">
-                <i class="bi bi-file-ruled"></i>
-                {{ order.id }}
-              </router-link>
-            </li>
-          </ul>
+          
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>
