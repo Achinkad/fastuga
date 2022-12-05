@@ -308,6 +308,7 @@ onMounted(() => {
       rgba(0, 0, 0, 0.6)), url(@/assets/italian.jpg);
   background-size: cover;
   background-position-x: center;
+  background-attachment: fixed;
 }
 
 #hr {
