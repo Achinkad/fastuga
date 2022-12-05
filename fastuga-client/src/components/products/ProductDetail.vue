@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
-import axios from 'axios'
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 var product_photo_intermediary = undefined

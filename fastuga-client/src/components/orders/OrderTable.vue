@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, watchEffect, computed, inject } from "vue"
+import { ref, watch, computed, inject } from "vue"
 
 const axios = inject("axios")
 const toast = inject("toast")

@@ -63,7 +63,6 @@ const getProducts = (page = 1) => {
     .then((response) => {
       products.value = response.data.data
       paginationNewOrder.value = response.data
-      console.log(products.value)
     })
     .catch((error) => {
       console.log(error);
@@ -127,7 +126,6 @@ const totalPrice = () => {
     //console.log(value.price)
     total += parseFloat(value.price)
   });
-  console.log(total)
   return total.toFixed(2);
 };
 const countProduct = (product) => {
