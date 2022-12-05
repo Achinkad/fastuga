@@ -4,7 +4,7 @@ import avatarNoneUrl from '@/assets/product-none.png'
 import axios from 'axios'
 
 const serverBaseUrl = inject("serverBaseUrl")
-var product_photo_intermediary=ref();
+var product_photo_intermediary=undefined
 
 const props = defineProps({
     product: {
@@ -34,21 +34,29 @@ watch(
 
 
 const handleUpload = (files) => {
- product_photo_intermediary=files[0]
-    
+    product_photo_intermediary=files[0]
+
 }
 
 
 const save = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
-    formData.append('price', editingProduct.value.price);
+
+    if(editingProduct.value.price!=undefined){
+        formData.append('price', editingProduct.value.price);
+    }
+
     formData.append('type', editingProduct.value.type);
+
     if(editingProduct.value.description!=undefined){
       formData.append('description', editingProduct.value.description);
     }
-    
-    formData.append('photo_url', product_photo_intermediary);
+
+    if(product_photo_intermediary!=undefined){
+        formData.append('photo_url', product_photo_intermediary);
+    }
+      
     formData.append('_method', 'PUT');
 
     emit("save", formData);
@@ -57,13 +65,22 @@ const save = () => {
 const add = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
-    formData.append('price', editingProduct.value.price);
-    formData.append('type', editingProduct.value.type);
-     if(editingProduct.value.description!=undefined){
-    formData.append('description', editingProduct.value.description);
-     }
-    formData.append('photo_url', product_photo_intermediary);
 
+     if(editingProduct.value.price!=undefined){
+        formData.append('price', editingProduct.value.price);
+     }
+
+    formData.append('type', editingProduct.value.type);
+
+     if(editingProduct.value.description!=undefined){
+        formData.append('description', editingProduct.value.description);
+     }
+
+    if(product_photo_intermediary!=undefined){
+        formData.append('photo_url', product_photo_intermediary);
+    }
+   
+   
     emit("add", formData);
 }
 
@@ -142,7 +159,7 @@ const photoFullUrl = computed(() =>{
                         <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name=='newProduct'"/>
                         <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name=='Product'"/>
                         <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)" required>
-
+                        <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
             </div>
         </div>
