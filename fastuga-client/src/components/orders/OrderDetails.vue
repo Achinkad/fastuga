@@ -37,7 +37,7 @@ const newOrderItem = () => {
   };
 };
 
-const emit = defineEmits(["save", "cancel"]);
+const emit = defineEmits(["save", "cancel","add"]);
 const products = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
@@ -157,6 +157,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
+  console.log(editingOrder.value)
   
 });
 </script>
@@ -216,9 +217,9 @@ onMounted(() => {
             <br>
             <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
             <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
-            <button type="button" class="bi bi-plus"
+            <button type="button" class="bi bi-plus" id="add"
               @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)" v-if="editingOrder.status!='C'"></button>
-            <button type="button" class="bi bi-dash"
+            <button type="button" class="bi bi-dash" id="add"
               @click="deleteProduct(editingOrder.order_item[n - 1].product,n)" v-if="editingOrder.status!='C'"></button>
             <p>Count is: {{ countProduct(editingOrder.order_item[n - 1].product) }}</p>
              <div class="mb-3">
@@ -233,6 +234,7 @@ onMounted(() => {
     
     <div class="col-md child" v-if="editingOrder.status!='C'">
        <label class="form-label">All Products: </label>
+       <br>
      <select class="form-select" id="selectType" v-model="value_type">
             <option value="all" selected>Any</option>
             <option value="hot dish">Hot Dishes</option>
@@ -244,8 +246,8 @@ onMounted(() => {
         <div v-for="n in products.length">
           <img :src="productPhotoFullUrl(products[n-1])" class="rounded-circle img_photo" />
           <span class="item"> {{ products[n-1].name }}</span>
-          <button type="button" class="bi bi-plus" @click="addProduct(products[n-1]);countProduct(products[n-1])"></button>
-          <button type="button" class="bi bi-dash" @click="deleteProductInAdd(products[n-1]);countProduct(products[n-1])"></button>
+          <button type="button" class="bi bi-plus" id="add" @click="addProduct(products[n-1]);countProduct(products[n-1])"></button>
+          <button type="button" class="bi bi-dash" id="add" @click="deleteProductInAdd(products[n-1]);countProduct(products[n-1])"></button>
           <p>Count is: {{ countProduct(products[n-1]) }}</p>
 
         </div>
@@ -275,11 +277,13 @@ onMounted(() => {
   min-height: 2.375rem;
 }
 .child {
-  display: inline-block;
+  display: inline;
   border: 1px solid red;
   padding: 1rem 1rem;
   vertical-align: middle;
   border-radius: 25px;
+  margin:10px;
+
 }
 .item {
   width: max-content;
@@ -292,7 +296,10 @@ onMounted(() => {
 .form-label {
   font-size: 20px;
 }
-
+#add{
+  margin: auto;
+  float: right;
+}
 .img_photo {
   width: 3.2rem;
   height: 3.2rem;
