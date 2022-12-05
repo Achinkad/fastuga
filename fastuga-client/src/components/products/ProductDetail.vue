@@ -153,9 +153,8 @@ const photoFullUrl = computed(() =>{
 
             </div>
             <div class="w-25">
+            <label class="form-label">Photo</label>
                 <div class="mb-3">
-                    <label class="form-label">Photo</label>
-                  
                         <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name=='newProduct'"/>
                         <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name=='Product'"/>
                         <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)" required>

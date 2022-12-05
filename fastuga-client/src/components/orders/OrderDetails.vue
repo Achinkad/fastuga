@@ -2,8 +2,12 @@
 import { onMounted, ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
+const paginationNewOrder = ref({})
+
+
 const props = defineProps({
   order: {
     type: Object,
@@ -29,8 +33,7 @@ const newOrderItem = () => {
     order_id: null,
     order_local_number: 0,
     product_id: null,
-    product: [
-    ],
+    product: null,
   }
 }
 
@@ -50,10 +53,11 @@ watch(
 watch(value_type, () => {
   console.log(value_type.value)
   getProducts()
+  
 })
 
-const getProducts = () => {
-  axios.get(serverBaseUrl + '/api/products', {
+const getProducts = (page = 1) => {
+  axios.get(serverBaseUrl + '/api/products?page='+page, {
     params: {
       type: value_type.value
     }
@@ -61,6 +65,7 @@ const getProducts = () => {
   })
     .then((response) => {
       products.value = response.data.data
+      paginationNewOrder.value=response.data
       console.log(products.value)
     })
     .catch((error) => {
@@ -68,34 +73,46 @@ const getProducts = () => {
     })
 }
 
-const orderTittle = computed(() => {
-  if (!editingOrder.value) {
-    return "";
-  }
-  return props.operationType == "insert" ? "New Order" : "Order #" + editingOrder.value.id;
-});
-
 const save = () => {
   emit("save", editingOrder.value);
   console.log(editingOrder.value)
 };
 const addProduct = (product) => {
   const orderItem = ref(newOrderItem())
-  orderItem.value.product.push(product)
+
+  orderItem.value.product=product
   editingOrder.value.order_item.push(orderItem.value)
-  console.log(editingOrder.value)
+
+  console.log(editingOrder.value.order_item)
+
 };
 const deleteProduct = (product) => {
+  
   if (editingOrder.value.order_item.length > 0) {
     editingOrder.value.order_item.forEach((value, index) => {
       if (value.product.id === product.id) {
-        editingOrder.value.order_item.pop()
+
+        editingOrder.value.order_item.splice(index,1)
+        countProduct(product)
       }
     })
   }
+  
   console.log("No items to delete")
   console.log(editingOrder.value)
+
 };
+
+const countProduct = (product) =>{
+  let count = 0
+ editingOrder.value.order_item.forEach(order =>{
+    if(order.product.id==product.id){
+      count++
+    }
+ })
+ //console.log(count)
+ return count
+}
 
 const cancel = () => {
   emit("cancel", editingOrder.value);
@@ -111,7 +128,7 @@ const productPhotoFullUrl = (product) => {
     : productNoneUrl;
 };
 
-const count = ref(0)
+
 onMounted(() => {
   getProducts()
 })
@@ -203,36 +220,52 @@ onMounted(() => {
 
 
     </div>
-    <div id="box">
-      <label for="inputDeliveredBy" class="form-label">Products: </label>
-      <div class="mb-3" v-if="editingOrder.order_item != null">
+    
+      
 
-        <br>
-        <div v-for="n in editingOrder.order_item.length">
-          <br>
-          <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
-          <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
-          <button type="button" class="bi bi-plus"
-            @click="addProduct(editingOrder.order_item[n - 1].product); count++"></button>
-          <button type="button" class="bi bi-dash"
-            @click="deleteProduct(editingOrder.order_item[n - 1].product); count--"></button>
-          <p>Count is: {{ count }}</p>
-        </div>
+  <div class="container">
+    <div class="row">
+    
+      <div class="col-md child" v-if="$route.name == 'Order'">  
+      <label class="form-label">Products In the Order: </label>
+          <div v-for="n in editingOrder.order_item.length">
+            <br>
+            <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo" />
+            <span class="item">{{ editingOrder.order_item[n - 1].product.name }}</span>
+            <button type="button" class="bi bi-plus"
+              @click="addProduct(editingOrder.order_item[n - 1].product);countProduct(editingOrder.order_item[n - 1].product)"></button>
+            <button type="button" class="bi bi-dash"
+              @click="deleteProduct(editingOrder.order_item[n - 1].product)"></button>
+            <p>Count is: {{ countProduct(editingOrder.order_item[n - 1].product) }}</p>
+          </div>
       </div>
+
       <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
-      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
-      <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
-      <div class="mb-3" v-if="(editingOrder.order_item.length == 0)">
+    
+    <div class="col-md child">
+       <label class="form-label">All Products: </label>
+     <select class="form-select" id="selectType" v-model="value_type">
+            <option value="all" selected>Any</option>
+            <option value="hot dish">Hot Dishes</option>
+            <option value="cold dish">Cold Dishes</option>
+            <option value="drink">Drinks</option>
+            <option value="dessert">Desserts</option>
+        </select>
+      <div class="mb-3">
         <div v-for="product in products">
           <img :src="productPhotoFullUrl(product)" class="rounded-circle img_photo" />
           <span class="item"> {{ product.name }}</span>
-          <button type="button" class="bi bi-plus" @click="addProduct(product); count++"></button>
-          <button type="button" class="bi bi-dash" @click="deleteProduct(product); count--"></button>
-          <p>Count is: {{ count }}</p>
+          <button type="button" class="bi bi-plus" @click="addProduct(product);countProduct(product)"></button>
+          <button type="button" class="bi bi-dash" @click="deleteProduct(product);countProduct(product)"></button>
+          <p>Count is: {{ countProduct(product) }}</p>
 
         </div>
       </div>
+      <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5"></Bootstrap5Pagination>
+ 
+      </div>
     </div>
+  </div>
 
     <div class="mb-3 d-flex justify-content-end">
       <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">Add
@@ -247,15 +280,13 @@ onMounted(() => {
 .checkCompleted {
   min-height: 2.375rem;
 }
-
-#box {
-  background-color: rgb(255, 255, 255);
-  width: max-content;
-  border: 1px solid orange;
-
+.child {
+  display: inline-block;
+  border: 1px solid red;
+  padding: 1rem 1rem;
+  vertical-align: middle;
   border-radius: 25px;
 }
-
 .item {
   width: 100%;
   height: 30px;
