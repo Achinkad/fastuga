@@ -38,11 +38,11 @@ class ProductController extends Controller
             $photo_id = $photo->hashName();
             Storage::putFileAs('public/products', $photo, $photo_id);
             $product->photo_url = $photo_id;
-         
+
         }
         else{
             $product->photo_url="product-none.png";
-            
+
         }
         $product->save();
         return new ProductResource($product);

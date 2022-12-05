@@ -70,7 +70,7 @@ const dialogConfirmedDelete = () => {
     .catch((error) => {
       console.log(error)
     })
-      
+
 }
 const editClick = (product) => {
   emit("edit", product);

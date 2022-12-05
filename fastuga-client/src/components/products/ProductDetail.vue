@@ -24,7 +24,7 @@ const editingProduct = ref(props.product)
 
 
 watch(
-  
+
     () => props.product,
     (newProduct) => {
         editingProduct.value = newProduct
@@ -56,7 +56,7 @@ const save = () => {
     if(product_photo_intermediary!=undefined){
         formData.append('photo_url', product_photo_intermediary);
     }
-      
+
     formData.append('_method', 'PUT');
 
     emit("save", formData);
@@ -79,8 +79,8 @@ const add = () => {
     if(product_photo_intermediary!=undefined){
         formData.append('photo_url', product_photo_intermediary);
     }
-   
-   
+
+
     emit("add", formData);
 }
 
@@ -89,9 +89,9 @@ const cancel = () => {
 }
 
 const photoFullUrl = computed(() =>{
-    
+
     return editingProduct.value.photo_url ? serverBaseUrl + '/storage/products/' + editingProduct.value.photo_url : avatarNoneUrl
-  
+
 })
 
 
@@ -155,7 +155,7 @@ const photoFullUrl = computed(() =>{
             <div class="w-25">
                 <div class="mb-3">
                     <label class="form-label">Photo</label>
-                  
+
                         <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name=='newProduct'"/>
                         <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name=='Product'"/>
                         <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)" required>
