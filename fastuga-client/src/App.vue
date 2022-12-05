@@ -118,7 +118,7 @@ const clickMenuOption = () => {
                 <i class="bi bi-egg-fried"></i>
                 Products
               </router-link>
-              <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
+              <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new product">
                 <i class="bi bi-xs bi-plus-circle"></i>
               </router-link>
             </li>
@@ -131,7 +131,13 @@ const clickMenuOption = () => {
             </li>
 
           </ul>
-
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>My Orders</span>
+            <router-link class="link-secondary" :to="{ name: 'CurrentOrder' }" aria-label="Add a new order">
+              <i class="bi bi-xs bi-plus-circle"></i>
+            </router-link>
+          </h6>
+          
           <div class="d-block d-md-none">
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>User</span>

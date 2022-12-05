@@ -2,13 +2,15 @@
 import { ref, watch, inject } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useUserStore } from '../../stores/user.js'
 import axios from 'axios'
 
+const userStore = useUserStore()
 const router = useRouter()
 const toast = inject('toast')
-
 const serverBaseUrl = inject("serverBaseUrl")
 
+axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
 
 const props = defineProps({
     id: {
@@ -48,14 +50,14 @@ const loadProduct = (id) => {
 
 const save = (product_values) => {
     console.log("entrou na função save")
- 
+
     axios.post(serverBaseUrl+'/api/products/'+ props.id, product_values)
     .then((response) => {
         console.log("feito a foto")
     })
     .catch((error) => {
         if (error.response.status == 422) {
-            
+
             toast.error('Product #' + props.id + ' was not updated due to validation errors!')
             errors.value = error.response.data.data
             console.log(errors.value)
@@ -67,15 +69,13 @@ const save = (product_values) => {
 }
 
 const add = (product_values) => {
-    console.log("entrou na função ADD")
-
     axios.post(serverBaseUrl+'/api/products', product_values)
     .then((response) => {
         console.log("feito")
     })
     .catch((error) => {
         if (error.response.status == 422) {
-           
+
             toast.error('Couldn\'t add the product due to validation errors!')
             errors.value = error.response.data.data
            // console.log(errors.value)

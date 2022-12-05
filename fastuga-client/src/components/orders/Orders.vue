@@ -86,26 +86,26 @@ const loadHistoricOrders = (page = 1) => {
 }
 
 const addOrder = () => {
-  router.push({ name: 'NewOrder' })
-}
+  router.push({ name: "NewOrder" });
+};
 
 const editOrder = (order) => {
-  router.push({ name: 'Order', params: { id: order.id } })
-}
+  router.push({ name: "Order", params: { id: order.id } });
+};
 
 const deletedOrder = (deletedOrder) => {
   let idx = orders.value.findIndex((o) => o.id === deletedOrder.id)
   if (idx >= 0) {
-    orders.value.splice(idx, 1)
+    orders.value.splice(idx, 1);
   }
-}
+};
 
 const props = defineProps({
   onlyCurrentOrders: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 const orders = ref([])
 
@@ -139,7 +139,6 @@ onMounted(() => {
 </script>
 
 <template>
-
   <div class="mx-2">
     <h3 class="mt-4">Orders</h3>
   </div>
@@ -189,8 +188,13 @@ onMounted(() => {
         <option value="R">Ready Orders</option>
       </select>
       <div class="mx-0 mt-2">
-        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
-            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
+        <button
+          type="button"
+          class="btn btn-warning px-4 btn-addtask"
+          @click="addOrder"
+        >
+          <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
+        </button>
       </div>
     </div>
     </div>
@@ -220,7 +224,6 @@ onMounted(() => {
   <hr>
   </div>
 </template>
-
 
 <style scoped>
 .filter-div {

@@ -21,25 +21,23 @@ const props = defineProps({
     type: String,
     default: "insert",
   },
-
 });
 const newOrderItem = () => {
   return {
     id: null,
-    status: null,
+    status: "R",
     price: 0,
-    notes: "",
-    custom: "",
-    order_id: null,
+    notes:null,
+    custom: null,
+    order_id: 0,
     order_local_number: 0,
-    product_id: null,
+    product_id: 0,
     product: null,
-  }
-}
+  };
+};
 
 const emit = defineEmits(["save", "cancel"]);
-
-const products = ref([])
+const products = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
 
@@ -48,13 +46,11 @@ watch(
   (newOrder) => {
     editingOrder.value = newOrder;
   }
-
 );
 watch(value_type, () => {
-  console.log(value_type.value)
-  getProducts()
-  
-})
+  getProducts();
+  totalPrice();
+});
 
 const getProducts = (page = 1) => {
   axios.get(serverBaseUrl + '/api/products?page='+page, {
@@ -69,22 +65,29 @@ const getProducts = (page = 1) => {
       console.log(products.value)
     })
     .catch((error) => {
-      console.log(error)
-    })
-}
+      console.log(error);
+    });
+};
+const chunkedProducts = computed(() => {
 
 const save = () => {
   emit("save", editingOrder.value);
-  console.log(editingOrder.value)
+  console.log(editingOrder.value);
 };
 const addProduct = (product) => {
-  const orderItem = ref(newOrderItem())
-
-  orderItem.value.product=product
-  editingOrder.value.order_item.push(orderItem.value)
-
-  console.log(editingOrder.value.order_item)
-
+  const orderItem = ref(newOrderItem());
+  const size = editingOrder.value.order_item.length
+  if(product.type === "hot dish"){
+    orderItem.value.status = "P"
+  }
+  orderItem.value.product_id = product.id;
+  orderItem.value.order_local_number = size +1
+  orderItem.value.id = size +1
+  orderItem.value.order_id = editingOrder.value.id
+  orderItem.value.price = product.price
+  orderItem.value.product = product;
+  editingOrder.value.order_item.push(orderItem.value);
+  console.log(editingOrder.value);
 };
 const deleteProduct = (product) => {
   
@@ -95,7 +98,7 @@ const deleteProduct = (product) => {
         editingOrder.value.order_item.splice(index,1)
         countProduct(product)
       }
-    })
+    });
   }
   
   console.log("No items to delete")
@@ -103,6 +106,15 @@ const deleteProduct = (product) => {
 
 };
 
+const totalPrice = () => {
+  var total = 0;
+  editingOrder.value.order_item.forEach((value) => {
+    console.log(value.price)
+    total += parseFloat(value.price)
+  });
+  console.log(total)
+  return total.toFixed(2);
+};
 const countProduct = (product) =>{
   let count = 0
  editingOrder.value.order_item.forEach(order =>{
@@ -113,7 +125,6 @@ const countProduct = (product) =>{
  //console.log(count)
  return count
 }
-
 const cancel = () => {
   emit("cancel", editingOrder.value);
 };
@@ -130,47 +141,18 @@ const productPhotoFullUrl = (product) => {
 
 
 onMounted(() => {
-  getProducts()
-})
+  getProducts();
 
+});
 </script>
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">Editing Order #{{ editingOrder.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
+      Editing Order #{{ editingOrder.id }}
+    </h3>
     <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
     <hr />
-
-    <div class="mb-3">
-      <label for="inputTickerNumber">Ticket Number</label>
-      <input type="number" id="inputTicketNumber" name="ticket_number" min="1" max="99"
-        v-model="editingOrder.ticket_number">
-      <field-error-message :errors="errors" fieldName="ticket_number"></field-error-message>
-    </div>
-    <div class="mb-3">
-      <label for="status">Status</label>
-      <select id="status" name="status" v-model="editingOrder.status">
-        <option value="P">Preparing</option>
-        <option value="R">Ready</option>
-        <option value="D">Delivered</option>
-        <option value="C">Cancelled</option>
-      </select>
-      <field-error-message :errors="errors" fieldName="status"></field-error-message>
-    </div>
-
-    <div class="mb-3">
-      <label for="inputTotalPrice" class="form-label">Total Price</label>
-      <input type="text" class="form-control" id="inputTotalPrice" placeholder="Total Price of Order" required
-        v-model="editingOrder.total_price" />
-      <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
-    </div>
-    <div class="mb-3">
-      <label for="inputTotalPaid" class="form-label">Total Paid</label>
-      <input type="text" class="form-control" id="inputTotalPaid" placeholder="Total Price Paid" required
-        v-model="editingOrder.total_paid" />
-      <field-error-message :errors="errors" fieldName="total_paid"></field-error-message>
-    </div>
-
     <div class="mb-3">
       <label for="payment_type">Payment Type</label>
       <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type">
@@ -190,7 +172,7 @@ onMounted(() => {
 
     <div class="mb-3">
       <label for="date">Date</label>
-      <input type="date" id="date" name="date" v-model="editingOrder.date">
+      <input type="date" id="date" name="date" v-model="editingOrder.date" />
       <field-error-message :errors="errors" fieldName="date"></field-error-message>
     </div>
 
@@ -201,24 +183,17 @@ onMounted(() => {
     </div>
 
     <div class="mb-3" v-if="editingOrder.customer_id != null">
-
       <label for="inputCustomer" class="form-label">Customer Name: </label>
-      <br>
+      <br />
       <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
       <span>{{ editingOrder.customer.user.name }}</span>
-
-
     </div>
-
+    <span> Total Price: {{totalPrice()}} € </span>
     <div class="mb-3" v-if="editingOrder.delivered_by != null">
-
       <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
-      <br>
+      <br />
       <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
       <span>{{ editingOrder.user.name }}</span>
-
-
-
     </div>
     
       
@@ -268,10 +243,15 @@ onMounted(() => {
   </div>
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">Add
-        Order</button>
-      <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">Save Order</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">
+        Add Order
+      </button>
+      <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">
+        Save Order
+      </button>
+      <button type="button" class="btn btn-light px-5" @click="cancel">
+        Cancel
+      </button>
     </div>
   </form>
 </template>
@@ -288,12 +268,11 @@ onMounted(() => {
   border-radius: 25px;
 }
 .item {
-  width: 100%;
+  width: max-content;
   height: 30px;
   font-size: 20px;
-  padding-left: 20px;
+  padding-left: 10px;
   padding-right: 20px;
-
 }
 
 .form-label {
