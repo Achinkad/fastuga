@@ -30,6 +30,7 @@ const newOrderItem = () => {
     order_local_number: 0,
     product_id: 0,
     product: null,
+    preparation_by: 0
   };
 };
 
@@ -174,7 +175,7 @@ onMounted(() => {
       <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
       <span>{{ editingOrder.customer.user.name }}</span>
     </div>
-    <span> Total Price: {{totalPrice()}} € </span>
+    <span> Total Price: {{totalPrice()}} €</span>
     <div class="mb-3" v-if="editingOrder.delivered_by != null">
       <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
       <br />
