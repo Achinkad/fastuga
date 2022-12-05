@@ -68,7 +68,6 @@ class UserController extends Controller
 
     public function show_me(Request $request)
     {
-        //dd($request);
         return new UserResource($request->user());
     }
 }

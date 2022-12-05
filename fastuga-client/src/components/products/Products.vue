@@ -26,7 +26,7 @@ const totalProducts = computed(() => {
     params:{
       type: value_type.value
       }
-      
+
   })
         .then((response) => {
           products.value = response.data.data

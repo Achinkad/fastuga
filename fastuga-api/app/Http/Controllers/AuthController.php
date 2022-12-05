@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 class AuthController extends Controller
 {
     protected $passport_server_url, $passport_client_id, $passport_client_key;
