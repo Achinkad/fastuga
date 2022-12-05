@@ -25,7 +25,7 @@ Route::get('customers/{customer}/orders', [OrderController::class, 'get_orders_c
 Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']); // FIXME: Already exists? Not the same thing as the above one?
 
 /* --- [API Routes] -> Products --- */
-Route::resource('products', ProductController::class);
+Route::resource('products', ProductController::class)->middleware('auth:api');
 
 /* --- [API Routes] -> Order Items --- */
 Route::resource('order-items', OrderItemController::class);

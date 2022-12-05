@@ -9,6 +9,6 @@ class ManagerAuthorization
 {
     public function handle(Request $request, Closure $next)
     {
-        return Auth()->user()->type() == "EM" ? $next($request) : abort(403);
+        return Auth()->guard('api')->user()->type == "EM" ? $next($request) : abort(403);
     }
 }
