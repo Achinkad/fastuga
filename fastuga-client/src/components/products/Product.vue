@@ -2,10 +2,10 @@
 import { ref, watch, inject } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { useUserStore } from '../../stores/user.js'
+
 import axios from 'axios'
 
-const userStore = useUserStore()
+
 const router = useRouter()
 const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")

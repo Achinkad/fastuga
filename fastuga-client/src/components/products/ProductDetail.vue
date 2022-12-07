@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
-import axios from 'axios'
+
 
 const serverBaseUrl = inject("serverBaseUrl")
-var product_photo_intermediary=undefined
+var product_photo_intermediary = undefined
 
 const props = defineProps({
     product: {
@@ -18,7 +18,7 @@ const props = defineProps({
 
 })
 
-const emit = defineEmits(["save", "cancel","add"]);
+const emit = defineEmits(["save", "cancel", "add"]);
 
 const editingProduct = ref(props.product);
 
@@ -34,7 +34,7 @@ watch(
 
 
 const handleUpload = (files) => {
-    product_photo_intermediary=files[0]
+    product_photo_intermediary = files[0]
 
 }
 
@@ -43,17 +43,17 @@ const save = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
 
-    if(editingProduct.value.price!=undefined){
+    if (editingProduct.value.price != undefined) {
         formData.append('price', editingProduct.value.price);
     }
 
     formData.append('type', editingProduct.value.type);
 
-    if(editingProduct.value.description!=undefined){
-      formData.append('description', editingProduct.value.description);
+    if (editingProduct.value.description != undefined) {
+        formData.append('description', editingProduct.value.description);
     }
 
-    if(product_photo_intermediary!=undefined){
+    if (product_photo_intermediary != undefined) {
         formData.append('photo_url', product_photo_intermediary);
     }
 
@@ -66,17 +66,17 @@ const add = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
 
-     if(editingProduct.value.price!=undefined){
+    if (editingProduct.value.price != undefined) {
         formData.append('price', editingProduct.value.price);
-     }
+    }
 
     formData.append('type', editingProduct.value.type);
 
-     if(editingProduct.value.description!=undefined){
+    if (editingProduct.value.description != undefined) {
         formData.append('description', editingProduct.value.description);
-     }
+    }
 
-    if(product_photo_intermediary!=undefined){
+    if (product_photo_intermediary != undefined) {
         formData.append('photo_url', product_photo_intermediary);
     }
 
@@ -88,7 +88,7 @@ const cancel = () => {
     emit("cancel", editingProduct.value);
 }
 
-const photoFullUrl = computed(() =>{
+const photoFullUrl = computed(() => {
 
     return editingProduct.value.photo_url ? serverBaseUrl + '/storage/products/' + editingProduct.value.photo_url : avatarNoneUrl
 
@@ -99,33 +99,21 @@ const photoFullUrl = computed(() =>{
 
 <template>
     <form class="row g-3 needs-validation" enctype="multipart/form-data">
-        <h3 class="mt-5 mb-3" v-if="$route.name=='Product'">Editing Product #{{ editingProduct.id }}</h3>
-        <h3 class="mt-5 mb-3" v-if="$route.name=='newProduct'">Adding New Product</h3>
+        <h3 class="mt-5 mb-3" v-if="$route.name == 'Product'">Editing Product #{{ editingProduct.id }}</h3>
+        <h3 class="mt-5 mb-3" v-if="$route.name == 'newProduct'">Adding New Product</h3>
         <hr />
         <div class="d-flex flex-wrap justify-content-between">
             <div class="w-75 pe-4">
                 <div class="mb-3">
                     <label for="inputName" class="form-label">Name</label>
-                    <input
-                    type="text"
-                    class="form-control"
-                    id="inputName"
-                    placeholder="Product Name"
-                    required
-                    v-model="editingProduct.name"
-                    />
+                    <input type="text" class="form-control" id="inputName" placeholder="Product Name" required
+                        v-model="editingProduct.name" />
                     <field-error-message :errors="errors" fieldName="name"></field-error-message>
                 </div>
                 <div class="mb-3">
                     <label for="inputPrice" class="form-label">Price</label>
-                    <input
-                    type="text"
-                    class="form-control"
-                    id="inputPrice"
-                    placeholder="Product Price"
-                    required
-                    v-model="editingProduct.price"
-                    />
+                    <input type="text" class="form-control" id="inputPrice" placeholder="Product Price" required
+                        v-model="editingProduct.price" />
                     <field-error-message :errors="errors" fieldName="price"></field-error-message>
                 </div>
                 <div class="mb-3">
@@ -141,30 +129,28 @@ const photoFullUrl = computed(() =>{
 
                 <div class="mb-3">
                     <label for="inputDescription" class="form-label">Description</label>
-                    <textarea
-                    class="form-control"
-                    id="inputDescription"
-                    rows="4"
-                    v-model="editingProduct.description"
-                    required
-                    ></textarea>
+                    <textarea class="form-control" id="inputDescription" rows="4" v-model="editingProduct.description"
+                        required></textarea>
                     <field-error-message :errors="errors" fieldName="description"></field-error-message>
                 </div>
 
             </div>
             <div class="w-25">
-            <label class="form-label">Photo</label>
+                <label class="form-label">Photo</label>
                 <div class="mb-3">
-                        <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name=='newProduct'"/>
-                        <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name=='Product'"/>
-                        <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)" required>
-                        <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
+                    <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name == 'newProduct'" />
+                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'" />
+                    <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)"
+                        required>
+                    <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
             </div>
         </div>
         <div class="mb-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name=='newProduct'">Add Product</button>
-            <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name=='Product'">Save Product</button>
+            <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'newProduct'">Add
+                Product</button>
+            <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Product'">Save
+                Product</button>
             <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
         </div>
     </form>
@@ -174,6 +160,7 @@ const photoFullUrl = computed(() =>{
 .total_hours {
     width: 26rem;
 }
+
 #label {
     background-color: orange;
     color: white;

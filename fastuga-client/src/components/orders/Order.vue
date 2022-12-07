@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onMounted, inject } from 'vue'
+import { ref, watch, computed, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 import OrderDetail from "./OrderDetails.vue"
@@ -56,13 +56,16 @@ const save = () => {
       .catch((error) => {
         if (error.response.status == 422) {
           toast.error('order was not created due to validation errors!')
-          errors.value = error.response.data.errors
+          errors.value = error.response.data.data
         } else {
           toast.error('order was not created due to unknown server error!')
         }
       })
-  } else {
-    axios.put(serverBaseUrl + '/api/order/' + props.id, order.value)
+  }
+
+
+  const add = () => {
+    axios.post(serverBaseUrl + '/api/order/' + props.id, order.value)
       .then((response) => {
         order.value = response.data.data
         originalValueStr = dataAsString()
@@ -72,7 +75,7 @@ const save = () => {
       .catch((error) => {
         if (error.response.status == 422) {
           toast.error('order #' + props.id + ' was not updated due to validation errors!')
-          errors.value = error.response.data.errors
+          errors.value = error.response.data.data
         } else {
           toast.error('order #' + props.id + ' was not updated due to unknown server error!')
         }

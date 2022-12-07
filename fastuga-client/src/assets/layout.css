@@ -41,9 +41,7 @@ body {
     /* Scrollable contents if viewport is shorter than content. */
 }
 
-.sidebar .nav-link:hover {
-    color: #fff;
-}
+
 
 .sidebar .nav-link.active {
     font-weight: 500;

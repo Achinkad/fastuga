@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, inject,watch } from 'vue'
-import {useRouter} from 'vue-router'
+import { ref, computed, onMounted, inject, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import ProductTable from "./ProductTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
@@ -14,31 +14,31 @@ const pagination = ref({})
 
 
 //variável usada no filtro
-var value_type=ref("all");
+var value_type = ref("all");
 
 const totalProducts = computed(() => {
     return products.value.length
 })
 
-  const loadProducts = (page = 1) => {
-    axios.get(serverBaseUrl +'/api/products?page='+page,{
+const loadProducts = (page = 1) => {
+    axios.get(serverBaseUrl + '/api/products?page=' + page, {
 
-    params:{
-      type: value_type.value
-      }
+        params: {
+            type: value_type.value
+        }
 
-  })
+    })
         .then((response) => {
-          products.value = response.data.data
-          pagination.value=response.data
+            products.value = response.data.data
+            pagination.value = response.data
         })
         .catch((error) => {
-          console.log(error)
+            console.log(error)
         })
-    }
+}
 
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_TYPE(valor do filtro)
-watch(value_type,() =>{
+watch(value_type, () => {
     console.log(value_type.value)
     loadProducts()
 })
@@ -65,7 +65,7 @@ const forceRerender = () => {
 }
 
 
-onMounted (() => {
+onMounted(() => {
     loadProducts()
 })
 </script>
@@ -85,26 +85,22 @@ onMounted (() => {
         <div class="mx-0 mt-2">
             <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addProduct">
                 <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Product</button>
-            </div>
         </div>
-        <hr>
-        <product-table
-        :products="products"
-        :showId="true"
-        @edit="editProduct"
-        @forceRerender="forceRerender"
-        @deleted="deletedProduct"
-        ></product-table>
+    </div>
+    <hr>
+    <product-table :products="products" :showId="true" @edit="editProduct" @forceRerender="forceRerender"
+        @deleted="deletedProduct"></product-table>
 
-        <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
-        <hr>
-    </template>
+    <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
+    <hr>
+</template>
 
-    <style scoped>
-    .filter-div {
-        min-width: 12rem;
-    }
-    .total-filtro {
-        margin-top: 2.3rem;
-    }
-    </style>
+<style scoped>
+.filter-div {
+    min-width: 12rem;
+}
+
+.total-filtro {
+    margin-top: 2.3rem;
+}
+</style>
