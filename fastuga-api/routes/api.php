@@ -28,7 +28,6 @@ Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']); //
 Route::resource('products', ProductController::class)->middleware('auth:api');
 
 /* --- [API Routes] -> Order Items --- */
-Route::resource('order-items', OrderItemController::class);
 Route::patch('order-items/{order_item}/status', [OrderItemController::class, 'status']); // -> Change Order Item Status
 
 /* --- [API Routes] -> Auth --- */
