@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watch, inject } from 'vue'
+  import { ref, watch, inject, computed} from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
@@ -18,13 +18,17 @@ const serverBaseUrl = inject("serverBaseUrl")
       }
   })
 
+  const operation = computed(() => (!props.id || props.id < 0) ? 'insert' : 'update')
+
   const newUser = () => {
       return {
         id: null,
         name: '',
         email: '',
         type: 'C',
-        photo_url: null
+        photo_url: null,
+        blocked: 0,
+        password :'',
       }
   }
 
@@ -49,6 +53,23 @@ const serverBaseUrl = inject("serverBaseUrl")
 
   const save = () => {
       errors.value = null
+      if (operation.value == 'insert') {
+        axios.post(serverBaseUrl + '/api/users', user.value)
+        .then((response) => {
+        user.value = response.data.data
+        originalValueStr = dataAsString()
+        toast.success('user #' + user.value.id + ' was created successfully.')
+        router.back()
+      })
+      .catch((error) => {
+        if (error.response.status == 422) {
+          toast.error('order was not created due to validation errors!')
+          errors.value = error.response.data.errors
+        } else {
+          toast.error('order was not created due to unknown server error!')
+        }
+      })
+  } else{
       axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
         .then((response) => {
           user.value = response.data.data
@@ -64,6 +85,7 @@ const serverBaseUrl = inject("serverBaseUrl")
               toast.error('User #' + props.id + ' was not updated due to unknown server error!')
             }
         })
+      }
   }
 
   const cancel = () => {
@@ -97,6 +119,8 @@ const serverBaseUrl = inject("serverBaseUrl")
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
+
+
   watch(
     () => props.id,
     (newValue) => {
@@ -119,6 +143,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   <user-detail
     :user="user"
     :errors="errors"
+    :operationType="insert"
     @save="save"
     @cancel="cancel"
   ></user-detail>

@@ -76,6 +76,12 @@ const router = createRouter({
             props: { id: -1 }
         },
         {
+            path: '/users/new',
+            name: 'newUser',
+            component: User,
+            props: { id: -1 }
+        },
+        {
             path: '/dashboard',
             name: 'Dashboard',
             component: Dashboard

@@ -40,7 +40,9 @@ const serverBaseUrl = inject("serverBaseUrl")
   console.log(value_role.value)
   loadUsers()
 }) 
-
+  const addUser = () => {
+    router.push({ name: "newUser" });
+  };
   const editUser = (user) => {
     router.push({ name: 'User', params: { id: user.id } })
   }
@@ -62,12 +64,10 @@ const serverBaseUrl = inject("serverBaseUrl")
         <option value="ED">Employees Delivery</option>
         <option value="EM">Employees Manager</option>
       </select>
-      <!-- VAI SER PRECISO ADICIONAR O BOTÃO PARA ADICIONAR USERS, O MANAGER CONSEGUE CRIAR CONTAS PARA OS EMPREGADOS(MANAGERS(?),CHEFS E DELIVERY MAN)
       <div class="mx-0 mt-2">
-        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addProduct">
-        <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Product</button>
-        </div>
-        -->
+        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addUser"><i
+            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add User</button>
+      </div>
   </div>
   <user-table
     :users="users"

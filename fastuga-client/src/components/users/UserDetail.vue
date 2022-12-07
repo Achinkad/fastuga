@@ -2,6 +2,8 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
+const serverBaseUrl = inject("serverBaseUrl")
+
 
 const props = defineProps({
   user: {
@@ -12,7 +14,13 @@ const props = defineProps({
     type: Object,
     required: false
   },
+  operationType: {
+    type: String,
+    default: "insert",
+  },
 })
+
+
 
 const emit = defineEmits(["save", "cancel"]);
 
@@ -43,7 +51,9 @@ const cancel = () => {
 
 <template>
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3">User #{{ editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'User'">User #{{ editingUser.id }}</h3>
+    <h3 class="mt-5 mb-3" v-if="$route.name == 'newUser'">Adding New User</h3>
+    <hr />
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -72,14 +82,33 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-        
+        <div class="mb-3 px-1" v-if="$route.name == 'newUser'">
+          <label for="inputPassword" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            placeholder="Password"
+            required
+            v-model="editingUser.password"
+          />
+          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+        </div>
          <div class="mb-3">
             <label for="type">Role:</label>
             <select id="type" name="type"  v-model="editingUser.type">
               <option value="EM">Manager</option>
               <option value="EC">Chef</option>
               <option value="ED">Delivery</option>
-              <option value="C">Customer</option>
+            </select>
+          <field-error-message :errors="errors" fieldName="type"></field-error-message>
+        </div>
+
+        <div v-if="$route.name == 'User'" class="mb-3">
+            <label for="type">Blocked:</label>
+            <select id="type" name="type"  v-model="editingUser.blocked">
+              <option value="0">Unblocked</option>
+              <option value="1">Blocked</option>
             </select>
           <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
