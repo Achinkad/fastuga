@@ -13,7 +13,10 @@
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-
+const forceRerender = () => {
+    loadUsers()
+    console.log("reload")
+}
   var value_role=ref("all");
 
   const totalUsers = computed(() => {
@@ -73,6 +76,7 @@ const serverBaseUrl = inject("serverBaseUrl")
     :users="users"
     :showId="false"
     @edit="editUser"
+    @forceRerender="forceRerender"
   ></user-table>
   <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
   <hr>

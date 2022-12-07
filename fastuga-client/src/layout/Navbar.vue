@@ -56,6 +56,15 @@ const logout = async () => {
                                 <hr class="dropdown-divider" />
                             </li>
                             <li>
+                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                    :to="{ name: 'ChangeProfile' }">
+                                    Change Profile
+                                </router-link>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
                                 <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
                             </li>
                         </ul>

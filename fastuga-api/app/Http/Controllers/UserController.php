@@ -21,7 +21,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         /* --- Authorization --- */
-        if ($request['type'] != 'C' && Auth()->user()->type() != "EM") { abort(403); }
+        if ($request['type'] != 'C' && Auth()->guard('api')->user()->type != "EM") { abort(403); }
 
         $new_user = DB::transaction(function () use ($request) : User {
             $user = User::create($request->validated());
@@ -42,6 +42,17 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->fill($request->validated());
+        if ($request->has('photo_url')) {
+            // -> Check if a previous file exists and deletes it
+            if(Storage::disk('public')->exists($user->photo_url)) {
+                Storage::delete($user->photo_url);
+            }
+            // -> Stores the new photo
+            $photo = $request->file('photo_url');
+            $photo_id = $photo->hashName();
+            Storage::putFileAs('public/users', $photo, $photo_id);
+            $user->photo_url = $photo_id;
+        }
         $user->save();
         return new UserResource($user);
     }

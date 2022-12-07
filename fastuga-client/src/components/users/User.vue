@@ -22,13 +22,13 @@ const serverBaseUrl = inject("serverBaseUrl")
 
   const newUser = () => {
       return {
-        id: null,
         name: '',
         email: '',
         type: 'C',
         photo_url: null,
         blocked: 0,
         password :'',
+        custom : ''
       }
   }
 
@@ -50,11 +50,11 @@ const serverBaseUrl = inject("serverBaseUrl")
           })
       }
   }
+  const user = ref(newUser())
 
-  const save = () => {
-      errors.value = null
-      if (operation.value == 'insert') {
-        axios.post(serverBaseUrl + '/api/users', user.value)
+  const add = (user_values) => {
+    errors.value = null
+    axios.post(serverBaseUrl + '/api/users', user_values)
         .then((response) => {
         user.value = response.data.data
         originalValueStr = dataAsString()
@@ -69,12 +69,15 @@ const serverBaseUrl = inject("serverBaseUrl")
           toast.error('order was not created due to unknown server error!')
         }
       })
-  } else{
-      axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
+}
+
+  const save = (user_values) => {
+      errors.value = null
+      axios.post(serverBaseUrl+'/api/users/' + props.id, user_values)
         .then((response) => {
-          user.value = response.data.data
-          originalValueStr = dataAsString()
-          toast.success('User #' + user.value.id + ' was updated successfully.')
+          //user.value = response.data.data
+          //originalValueStr = dataAsString()
+          toast.success('User #' + props.id + ' was updated successfully.')
           router.back()
         })
         .catch((error) => {
@@ -86,7 +89,7 @@ const serverBaseUrl = inject("serverBaseUrl")
             }
         })
       }
-  }
+
 
   const cancel = () => {
     originalValueStr = dataAsString()
@@ -115,7 +118,7 @@ const serverBaseUrl = inject("serverBaseUrl")
     }
   })
 
-  const user = ref(newUser())
+  
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
 
@@ -145,6 +148,7 @@ const serverBaseUrl = inject("serverBaseUrl")
     :errors="errors"
     :operationType="insert"
     @save="save"
+    @add="add"
     @cancel="cancel"
   ></user-detail>
 </template>
