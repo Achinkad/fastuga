@@ -4,6 +4,21 @@
 
 body {
     font-size: .875rem;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    margin: 0;
+}
+
+.wrapper {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+
+main {
+    width: calc(100% - 280px) !important;
+    padding: .5rem 2rem !important;
 }
 
 .bi {
