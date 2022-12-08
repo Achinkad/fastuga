@@ -109,7 +109,7 @@ const deleteClick = (order) => {
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId">ID</th>
+        <th v-if="showId && userStore.user && userStore.user.type=='EM'">ID</th>
         <th v-if="showStatus">Status</th>
         <th v-if="showPrice">Total Paid/Total Price</th>
         <th v-if="showTicketNumber">Ticket Number</th>
@@ -119,7 +119,7 @@ const deleteClick = (order) => {
     </thead>
     <tbody>
       <tr v-for="order in editingOrders" :key="order.id">
-        <td v-if="showId">{{ order.id }}</td>
+        <td v-if="showId && userStore.user && userStore.user.type=='EM'">{{ order.id }}</td>
         <td v-if="showStatus">
           <span v-if="order.status == 'P'">Preparing</span>
           <span v-if="order.status == 'R'">Ready</span>

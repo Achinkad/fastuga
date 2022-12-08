@@ -56,7 +56,7 @@ const photoFullUrl = (product) => {
         <th v-if="showProductPhoto">Product Name</th>
         <th v-if="showStatus">Status</th>
         <th v-if="showNotes">Notes</th>
-        <!-- <th v-if="showDate">Date</th>-->
+        <th v-if="showDate">Date</th>
         <th v-if="showOrderId">Order_id</th>
 
       </tr>
@@ -69,7 +69,7 @@ const photoFullUrl = (product) => {
         <td v-if="showProductName">{{ order_item.product.name }}</td>
         <td v-if="showStatus">{{ order_item.status }}</td>
         <td v-if="showNotes">{{ order_item.notes }}</td>
-       <!--<td v-if="showNotes">{{ order_item.order.date }}</td>-->
+       <td v-if="showDate">###POR FAZER###</td>
         <td v-if="showOrderId">{{ order_item.order_id }}</td>
       </tr>
     </tbody>

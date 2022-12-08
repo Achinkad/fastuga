@@ -112,7 +112,4 @@ const photoFullUrl = () => {
         margin: auto 1rem;
     }
 
-    .dropdown-menu {
-        transform: translate(0px, 72px);
-    }
 </style>
