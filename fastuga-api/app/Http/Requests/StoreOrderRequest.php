@@ -34,7 +34,16 @@ class StoreOrderRequest extends FormRequest
             'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
             'date' => 'required|date',
             'delivered_by' => 'nullable',
-            'custom' => 'nullable'
+            'custom' => 'nullable',
+            'items' => 'required|array',
+            'items.*.order_id' => 'sometimes|exists:orders,id',
+            'items.*.order_local_number' => 'sometimes',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.status' => 'sometimes|in:W,P,R',
+            'items.*.price' => 'sometimes',
+            'items.*.preparation_by' => 'nullable',
+            'items.*.notes' => 'nullable',
+            'items.*.custom' => 'nullable'
         ];
 
         switch ($this->request->get('payment_type')) {

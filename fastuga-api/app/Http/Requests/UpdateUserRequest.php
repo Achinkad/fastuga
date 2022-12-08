@@ -5,31 +5,23 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
-class StoreOrderItemRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     public function authorize()
     {
         return true;
     }
 
-    protected function prepareForValidation()
-    {
-        if ($this->has('status')) {
-            $this->merge(['status' => strtoupper($this->status)]);
-        }
-    }
-
     public function rules()
     {
         return [
-            'order_id' => 'required|exists:orders,id',
-            'order_local_number' => 'sometimes',
-            'product_id' => 'required|exists:products,id',
-            'status' => 'sometimes|in:W,P,R',
-            'price' => 'sometimes',
-            'preparation_by' => 'nullable',
-            'notes' => 'nullable',
+            'name' => 'required',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($this->user)],
+            'type' => 'required|in:C,EC,ED,EM',
+            'blocked' => 'required|in:0,1',
+            'photo_url' => 'nullable',
             'custom' => 'nullable'
         ];
     }
@@ -40,5 +32,12 @@ class StoreOrderItemRequest extends FormRequest
             'success' => false,
             'data' => $validator->errors()
         ], 400));
+    }
+
+    public function messages()
+    {
+        return [
+            'email.unique' => 'The e-mail is already registered. Please, try choose another one.'
+        ];
     }
 }

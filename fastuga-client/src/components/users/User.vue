@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watch, inject } from 'vue'
+  import { ref, watch, inject, computed} from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
@@ -18,13 +18,17 @@ const serverBaseUrl = inject("serverBaseUrl")
       }
   })
 
+  const operation = computed(() => (!props.id || props.id < 0) ? 'insert' : 'update')
+
   const newUser = () => {
       return {
-        id: null,
         name: '',
         email: '',
         type: 'C',
-        photo_url: null
+        photo_url: null,
+        blocked: 0,
+        password :'',
+        custom : ''
       }
   }
 
@@ -46,14 +50,34 @@ const serverBaseUrl = inject("serverBaseUrl")
           })
       }
   }
+  const user = ref(newUser())
 
-  const save = () => {
-      errors.value = null
-      axios.put(serverBaseUrl+'/api/users/' + props.id, user.value)
+  const add = (user_values) => {
+    errors.value = null
+    axios.post(serverBaseUrl + '/api/users', user_values)
         .then((response) => {
-          user.value = response.data.data
-          originalValueStr = dataAsString()
-          toast.success('User #' + user.value.id + ' was updated successfully.')
+        user.value = response.data.data
+        originalValueStr = dataAsString()
+        toast.success('user #' + user.value.id + ' was created successfully.')
+        router.back()
+      })
+      .catch((error) => {
+        if (error.response.status == 422) {
+          toast.error('order was not created due to validation errors!')
+          errors.value = error.response.data.errors
+        } else {
+          toast.error('order was not created due to unknown server error!')
+        }
+      })
+}
+
+  const save = (user_values) => {
+      errors.value = null
+      axios.post(serverBaseUrl+'/api/users/' + props.id, user_values)
+        .then((response) => {
+          //user.value = response.data.data
+          //originalValueStr = dataAsString()
+          toast.success('User #' + props.id + ' was updated successfully.')
           router.back()
         })
         .catch((error) => {
@@ -64,7 +88,8 @@ const serverBaseUrl = inject("serverBaseUrl")
               toast.error('User #' + props.id + ' was not updated due to unknown server error!')
             }
         })
-  }
+      }
+
 
   const cancel = () => {
     originalValueStr = dataAsString()
@@ -93,9 +118,11 @@ const serverBaseUrl = inject("serverBaseUrl")
     }
   })
 
-  const user = ref(newUser())
+  
   const errors = ref(null)
   const confirmationLeaveDialog = ref(null)
+
+
 
   watch(
     () => props.id,
@@ -119,7 +146,9 @@ const serverBaseUrl = inject("serverBaseUrl")
   <user-detail
     :user="user"
     :errors="errors"
+    :operationType="insert"
     @save="save"
+    @add="add"
     @cancel="cancel"
   ></user-detail>
 </template>

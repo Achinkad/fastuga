@@ -91,19 +91,28 @@ const photoFullUrl = () => {
     height: 4.375rem;
 }
 
-.navbar.shadow {
-    box-shadow: 0 .5rem 2rem rgba(0, 0, 0, .1) !important;
-}
+    .navbar-nav {
+        position: relative;
+        right: 1rem;
+    }
+
+    .navbar.shadow {
+        box-shadow: 0 .5rem 2rem rgba(0, 0, 0, .1) !important;
+    }
 
 .navbar-brand {
     background-color: transparent !important;
     box-shadow: none !important;
 }
 
-.topbar-divider {
-    width: 0;
-    border-right: 1px solid #e3e6f0;
-    height: calc(4.375rem - 2rem);
-    margin: auto 1rem;
-}
+    .topbar-divider {
+        width: 0;
+        border-right: 1px solid #e3e6f0;
+        height: calc(4.375rem - 2rem);
+        margin: auto 1rem;
+    }
+
+    .dropdown-menu {
+        transform: translate(0px, 72px);
+    }
 </style>

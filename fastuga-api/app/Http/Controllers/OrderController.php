@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -28,8 +34,6 @@ class OrderController extends Controller
 
         $order = new Order;
         $order->fill($request->validated());
-        $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
-        $order->status = "P";
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
         $payment_response = Http::post('https://dad-202223-payments-api.vercel.app/api/payments', [
@@ -40,12 +44,22 @@ class OrderController extends Controller
 
         if ($payment_response->failed()) { return $payment_response->throw(); }
 
+        /* --- Ticket Number + Status --- */
+        $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
+        $order->status = "P";
+        $order->save();
+
         /* --- Handle Points System --- */
         if ($order->customer_id) {
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
             $order->customer->points += abs($points - $order->points_used_to_pay);
             $order->points_gained = $points;
             $order->customer->save();
+        }
+
+        /* --- Handle Order Items --- */
+        foreach ($request->input("items") as $order_item) {
+            $this->store_order_item($order_item, $order->id);
         }
 
         $order->save();
@@ -123,5 +137,30 @@ class OrderController extends Controller
             return OrderResource::collection($orders);
         }
        
+    }
+        $orders = Order::where('customer_id', $id)->paginate(20);
+        return OrderResource::collection($orders);
+    }
+
+    /* --- Custom Functions --- */
+
+    private function store_order_item($item, $order_id) // -> Stores Order Items for an Order
+    {
+        $order_item = new OrderItem;
+        $order_item->fill($item);
+
+        $order_item->order_id = $order_id;
+
+        /* --- Handle Status --- */
+        $order_item->status = $order_item->product->type == "hot dish" ? "W" : "R";
+
+        /* --- Handle Order Local Number --- */
+        $latest_item = OrderItem::select('order_local_number')->latest('id')->where('order_id', $order_item->order_id)->first();
+        $order_item->order_local_number = $latest_item ? ++$latest_item->order_local_number : 1;
+
+        /* --- Handle Price --- */
+        $order_item->price = $order_item->product->price;
+
+        $order_item->save();
     }
 }
