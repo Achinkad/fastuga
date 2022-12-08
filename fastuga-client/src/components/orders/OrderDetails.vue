@@ -113,8 +113,8 @@ const addProduct = (product) => {
 };
 const add = () => {
   fillOrder();
-  console.log(editingOrder.value);
-  console.log(userStore.user)
+  console.table(editingOrder.value);
+  console.table(userStore.user)
   let formData = new FormData()
   formData.append('id', editingOrder.value.id);
 
@@ -135,6 +135,7 @@ const add = () => {
   formData.append('delivered_by', editingOrder.value.delivered_by);
   formData.append('user', editingOrder.value.user);
   formData.append('order_item', editingOrder.value.order_item)
+  console.table(editingOrder.value)
   emit("add", formData);
 
 }
@@ -208,7 +209,7 @@ const productPhotoFullUrl = (product) => {
 onMounted(() => {
   getProducts();
 
-  console.log(editingOrder.value)
+  console.table(editingOrder.value)
 
 });
 </script>
