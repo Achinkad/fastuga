@@ -15,13 +15,12 @@ class OrderItemResource extends JsonResource
             'notes' => $this->notes,
             'custom' => $this->custom,
             'order_id' => $this->order_id,
-           // 'order' => new OrderResource($this->order),
+            'order' => new OrderWithNoItemsResource($this->order),
             'order_local_number' => $this->order_local_number,
             'product_id' => $this->product_id,
             'product' => new ProductResource($this->product),
             'preparation_by' => $this->preparation_by,
             'user' => new UserResource($this->user)
-            
         ];
     }
 }

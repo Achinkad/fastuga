@@ -69,7 +69,7 @@ const photoFullUrl = (product) => {
         <td v-if="showProductName">{{ order_item.product.name }}</td>
         <td v-if="showStatus">{{ order_item.status }}</td>
         <td v-if="showNotes">{{ order_item.notes }}</td>
-       <td v-if="showDate">###POR FAZER###</td>
+       <td v-if="showDate">{{ order_item.order.date }}</td>
         <td v-if="showOrderId">{{ order_item.order_id }}</td>
       </tr>
     </tbody>
