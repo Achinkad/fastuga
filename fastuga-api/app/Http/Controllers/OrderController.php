@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\Customer;
-use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Support\Facades\Http;
+
 
 class OrderController extends Controller
 {
@@ -109,18 +111,25 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function get_orders_customer(Customer $customer) // -> Get Orders From Customer
-    {
-        $orders = Order::where('customer_id', $customer->id)->paginate(20);
-        return OrderResource::collection($orders);
-    }
-
-    // TODO: @anaritaortigoso explain this.. not the same thing as the above one?
     public function get_orders_user($id)
     {
-        $orders = Order::where('customer_id', $id)->paginate(20);
-        return OrderResource::collection($orders);
+      
+        if(auth()->guard('api')->user()->type == "ED"){
+
+            $orders = Order::where('delivered_by', $id)->paginate(20);
+            return OrderResource::collection($orders);
+        }
+
+        if(auth()->guard('api')->user()->type == "C"){
+            $customer=Customer::where('user_id',$id)->firstOrFail();
+           
+            $orders = Order::where('customer_id', $customer->id)->paginate(20);
+            return OrderResource::collection($orders);
+        }
+       
     }
+       
+    
 
     /* --- Custom Functions --- */
 

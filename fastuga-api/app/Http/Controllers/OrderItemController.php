@@ -17,4 +17,12 @@ class OrderItemController extends Controller
         $order_item->save();
         return new OrderItemResource($order_item);
     }
+
+    public function get_order_items_user($id)
+    {
+       
+        $order_items = OrderItem::where('preparation_by', $id)->paginate(20);
+        return OrderItemResource::collection($order_items);
+     
+    }
 }

@@ -1,3 +1,8 @@
+<script setup>
+import { useUserStore } from '../stores/user.js'
+
+const userStore = useUserStore()
+</script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
         <div class="logo">
@@ -5,14 +10,15 @@
         </div>
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
-                <li id="orange" class="nav-item nav-item-title">Pages</li>
-                <li class="nav-item">
+                <li class="nav-item nav-item-title">Pages</li>
+                <li class="nav-item" v-if="userStore.user && userStore.user.type=='EM'">
                     <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
                         :to="{ name: 'Dashboard' }">
                         <i  id="orange" class="bi bi-house"></i>
                         Dashboard
                     </router-link>
                 </li>
+                <!--
                 <li class="nav-item">
                     <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }"
                         :to="{ name: 'CurrentOrder' }">
@@ -20,33 +26,46 @@
                         My Orders
                     </router-link>
                 </li>
+                -->
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                     <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
                         :to="{ name: 'Orders' }">
-                        <i id="orange" class="bi bi-bag-plus-fill"></i>
+                        <i class="bi bi-bag-plus-fill"></i>
+                   
+                        <div v-if="userStore.user && userStore.user.type=='EC'">
+                        Order-Items
+                        </div>
+                        <div v-else>
                         Orders
+                        </div>
                     </router-link>
-                    <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order">
+                    <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order"
+                    v-if="userStore.user && userStore.user.type=='EM'">
                         <i class="bi bi-xs bi-plus-circle"></i>
                     </router-link>
                 </li>
-                <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
-                        :to="{ name: 'Products' }">
-                        <i id="orange" class="bi bi-egg-fried"></i>
-                        Products
-                    </router-link>
-                    <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
-                        <i class="bi bi-xs bi-plus-circle"></i>
-                    </router-link>
-                </li>
-                <li id="orange" class="nav-item nav-item-title mt-3">Administration</li>
-                <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
-                        <i  id="orange" class="bi bi-people"></i>
-                        Users
-                    </router-link>
-                </li>
+
+                
+                
+                <div v-if="userStore.user && userStore.user.type=='EM'">
+                    <li class="nav-item nav-item-title mt-3">Administration</li>
+                    <li class="nav-item d-flex justify-content-between align-items-center pe-3">
+                        <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
+                            :to="{ name: 'Products' }">
+                            <i class="bi bi-egg-fried"></i>
+                            Products
+                        </router-link>
+                        <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
+                            <i class="bi bi-xs bi-plus-circle"></i>
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
+                            <i class="bi bi-people"></i>
+                            Users
+                        </router-link>
+                    </li>
+                </div>
             </ul>
         </div>
     </nav>
