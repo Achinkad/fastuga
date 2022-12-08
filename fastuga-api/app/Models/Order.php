@@ -28,6 +28,7 @@ class Order extends Model
         '$delivered_by'
     ];
 
+    
     public function order_item() {
         return $this->hasMany(OrderItem::class, 'order_id');
     }

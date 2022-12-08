@@ -21,6 +21,7 @@ class OrderItemResource extends JsonResource
             'product' => new ProductResource($this->product),
             'preparation_by' => $this->preparation_by,
             'user' => new UserResource($this->user)
+
         ];
     }
 }
