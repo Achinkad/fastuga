@@ -113,19 +113,15 @@ class OrderController extends Controller
 
     public function get_orders_user($id)
     {
-
         if(auth()->guard('api')->user()->type == "ED"){
-
             $orders = Order::where('delivered_by', $id)->paginate(20);
             return OrderResource::collection($orders);
         }
 
         if(auth()->guard('api')->user()->type == "C"){
-            $customer=Customer::where('user_id',$id)->firstOrFail();
-
+            $customer = Customer::where('user_id', $id)->firstOrFail();
             $orders = Order::where('customer_id', $customer->id)->paginate(20);
             return OrderResource::collection($orders);
         }
-
     }
 }
