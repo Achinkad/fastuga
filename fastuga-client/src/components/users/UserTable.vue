@@ -1,6 +1,10 @@
 <script setup>
-import { inject } from "vue";
+import { inject,ref,computed } from "vue";
 import avatarNoneUrl from "@/assets/avatar-none.png";
+
+const axios = inject('axios')
+const toast = inject('toast')
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 
@@ -29,9 +33,23 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showDeleteButton: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(["edit"]);
+const emit = defineEmits(["edit", "deleted", "forceRerender"]);
+
+const userToDelete = ref(null)
+const deleteConfirmationDialog = ref(null)
+
+const userToDeleteDescription = computed(() => {
+  return userToDelete.value
+    ? `#${userToDelete.value.id} (${userToDelete.value.name})`
+    : ""
+})
+
 
 const photoFullUrl = (user) => {
   return user.photo_url
@@ -42,9 +60,35 @@ const photoFullUrl = (user) => {
 const editClick = (user) => {
   emit("edit", user);
 };
+
+const dialogConfirmedDelete = () => {
+  axios
+    .delete(serverBaseUrl + "/api/users/" + userToDelete.value.id)
+    .then((response) => {
+      emit("deleted", response.data.data)
+      toast.info("User " + userToDeleteDescription.value + " was deleted")
+      emit("forceRerender", response.data.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+}
+
+const deleteClick = (user) => {
+  userToDelete.value = user
+
+  deleteConfirmationDialog.value.show()
+}
+
+
+
 </script>
 
 <template>
+    <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete user"
+    :msg="`Do you really want to delete the user ${userToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+  </confirmation-dialog>
   <table class="table">
     <thead>
       <tr>
@@ -78,6 +122,9 @@ const editClick = (user) => {
             >
               <i class="bi bi-xs bi-pencil"></i>
             </button>
+            <button class="btn btn-xs btn-light" @click="deleteClick(user)" v-if="showDeleteButton">
+            <i class="bi bi-trash3"></i>
+          </button>
           </div>
         </td>
       </tr>

@@ -6,6 +6,7 @@ import Dashboard from "../components/Dashboard.vue"
 import Orders from "../components/orders/Orders.vue"
 import Order from "../components/orders/Order.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import ChangeProfile from "../components/auth/ChangeProfile.vue"
 import Login from "../components/auth/Login.vue"
 import Users from "../components/users/Users.vue"
 import User from "../components/users/User.vue"
@@ -46,6 +47,11 @@ const router = createRouter({
             path: '/password',
             name: 'ChangePassword',
             component: ChangePassword
+        },
+        {
+        path: '/profile',
+        name: 'ChangeProfile',
+        component: ChangeProfile
         },
         {
             path: '/register',
@@ -119,12 +125,12 @@ router.beforeEach(async (to, from, next) => {
         next()
         return
     }
-
+/*
     if (!userStore.user) {
         next({ name: 'Login' })
         return
     }
-
+*/
     if (to.name == 'Products') {
         if (userStore.user.type != 'EM') {
             next({

@@ -1,94 +1,21 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
-const serverBaseUrl = inject("serverBaseUrl")
-var product_photo_intermediary = undefined
-
-
-
-const props = defineProps({
-  user: {
-    type: Object,
-    required: true,
-  },
-  errors: {
-    type: Object,
-    required: false
-  },
-  operationType: {
-    type: String,
-    default: "insert",
-  },
-})
-
-const handleUpload = (files) => {
-    product_photo_intermediary = files[0]
-
-}
-
-const emit = defineEmits(["save", "cancel", "add"]);
-
-const editingUser = ref(props.user)
-
-watch(
-  () => props.user,
-  (newUser) => {
-    editingUser.value = newUser
-  },
-  { immediate: true }
-)
-
-const photoFullUrl = computed(() => {
-  return editingUser.value.photo_url
-    ? serverBaseUrl + "/storage/fotos/" + editingUser.value.photo_url
-    : avatarNoneUrl
-})
-
-const add = () => {
-    let formData = new FormData()
-    formData.append('name', editingUser.value.name);
-    formData.append('email', editingUser.value.email);
-    formData.append('type', editingUser.value.type);
-    formData.append('password', editingUser.value.password);
-    formData.append('blocked', 0);
-
-
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
-    }
-
-
-    emit("add", formData);
-}
-
-const save = () => {
-  let formData = new FormData()
-    formData.append('name', editingUser.value.name);
-    formData.append('email', editingUser.value.email);
-    formData.append('type', editingUser.value.type);
-    formData.append('blocked', editingUser.value.blocked);
-
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
-    }
-
-    formData.append('_method', 'PUT');
-
-    emit("save", formData);
-
-}
-
-const cancel = () => {
-  emit("cancel", editingUser.value);
-}
+  import { ref, inject} from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useUserStore } from '../../stores/user.js'
+  const router = useRouter()
+  const axios = inject('axios')
+  const toast = inject('toast')
+  const userStore = useUserStore()
+  const serverBaseUrl = inject("serverBaseUrl")
 </script>
 
+
 <template>
-  <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'User'">User #{{ editingUser.id }}</h3>
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'newUser'">Adding New User</h3>
+   
+    <h3 class="mt-5 mb-3">Profile</h3>
+
     <hr />
-    <hr />
+        <!--
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
@@ -103,7 +30,7 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
-
+ 
         <div class="mb-3 px-1">
           <label for="inputEmail" class="form-label">Email</label>
           <input
@@ -172,20 +99,5 @@ const cancel = () => {
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </form>
+  -->
 </template>
-
-<style scoped>
-.total_hours {
-  width: 26rem;
-}
-#label {
-  background-color: orange;
-  color: white;
-  padding: 0.5rem;
-  font-family: sans-serif;
-  border-radius: 0.3rem;
-  cursor: pointer;
-  margin-top: 1rem;
-
-}
-</style>
