@@ -1,29 +1,29 @@
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
         <div class="logo">
-            <span style="vertical-align">FASTUGA APP</span>
+            <span id="orange" style="vertical-align">FASTUGA </span>
         </div>
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
-                <li class="nav-item nav-item-title">Pages</li>
+                <li id="orange" class="nav-item nav-item-title">Pages</li>
                 <li class="nav-item">
                     <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
                         :to="{ name: 'Dashboard' }">
-                        <i class="bi bi-house"></i>
+                        <i  id="orange" class="bi bi-house"></i>
                         Dashboard
                     </router-link>
                 </li>
                 <li class="nav-item">
                     <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }"
                         :to="{ name: 'CurrentOrder' }">
-                        <i class="bi bi-list-stars"></i>
+                        <i id="orange" class="bi bi-list-stars"></i>
                         My Orders
                     </router-link>
                 </li>
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                     <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
                         :to="{ name: 'Orders' }">
-                        <i class="bi bi-bag-plus-fill"></i>
+                        <i id="orange" class="bi bi-bag-plus-fill"></i>
                         Orders
                     </router-link>
                     <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order">
@@ -33,17 +33,17 @@
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                     <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
                         :to="{ name: 'Products' }">
-                        <i class="bi bi-egg-fried"></i>
+                        <i id="orange" class="bi bi-egg-fried"></i>
                         Products
                     </router-link>
                     <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
                         <i class="bi bi-xs bi-plus-circle"></i>
                     </router-link>
                 </li>
-                <li class="nav-item nav-item-title mt-3">Administration</li>
+                <li id="orange" class="nav-item nav-item-title mt-3">Administration</li>
                 <li class="nav-item">
                     <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
-                        <i class="bi bi-people"></i>
+                        <i  id="orange" class="bi bi-people"></i>
                         Users
                     </router-link>
                 </li>
@@ -65,7 +65,7 @@
     width: 280px;
     position: fixed;
     top: 0;
-    color: #dc9c37;
+    color: #fff;
     text-decoration: none !important;
     font-size: 1.125rem;
     font-weight: 800;
@@ -77,7 +77,9 @@
 ul {
     padding: 2rem .75rem;
 }
-
+#orange{
+    color: orange
+}
 .nav-item-title {
     padding: 12px 20px;
     letter-spacing: .05em;
@@ -85,12 +87,8 @@ ul {
     cursor: default;
     font-size: .6875rem;
     text-transform: uppercase;
-    color: #dc9c37;
+    color: #7e8d9f;
     font-weight: 700;
-}
-
-.sidebar .nav-link:hover {
-    color: #dc9c37;
 }
 
 .nav-link {
