@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue"
+import { useUserStore } from '../../stores/user.js'
 
+const userStore = useUserStore()
 const axios = inject("axios")
 const toast = inject("toast")
 
@@ -18,11 +20,6 @@ const props = defineProps({
   showStatus: {
     type: Boolean,
     default: true,
-  },
-  showStatus: {
-    type: Boolean,
-    default: true,
-
   },
   showCustomer: {
     type: Boolean,
@@ -132,7 +129,7 @@ const deleteClick = (order) => {
         <td v-if="showPrice">{{ order.total_paid }}€/{{ order.total_price }}€</td>
         <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
 
-        <td class="text-end" v-if="showCompletedButton || showEditButton || showDeleteButton">
+        <td class="text-end" v-if="userStore.user.type == 'EM'">
           <div class="d-flex justify-content-end">
 
             <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
@@ -144,6 +141,7 @@ const deleteClick = (order) => {
 
           </div>
         </td>
+
       </tr>
     </tbody>
   </table>

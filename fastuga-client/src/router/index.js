@@ -92,6 +92,7 @@ const router = createRouter({
             component: Product,
             props: route => ({ id: parseInt(route.params.id) })
         },
+        
         {
             path: '/:pathMatch(.*)*',
             name: 'Forbidden',
@@ -104,6 +105,7 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
+    
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await userStore.restoreToken()
@@ -113,11 +115,11 @@ router.beforeEach(async (to, from, next) => {
         next()
         return
     }
-
+    /*
     if (!userStore.user) {
         next({ name: 'Login' })
         return
-    }
+    }*/
 
     if (to.name == 'Products') {
         if (userStore.user.type != 'EM') {

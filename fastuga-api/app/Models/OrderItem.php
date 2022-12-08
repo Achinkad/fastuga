@@ -30,7 +30,7 @@ class OrderItem extends Model
     }
 
     public function order() {
-        return $this->belongsTo(Order::class, 'order_id')->withTrashed();
+        return $this->hasMany(OrderItem::class, 'order_id');
     }
 
     public function user() {
