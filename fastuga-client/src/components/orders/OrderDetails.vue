@@ -3,10 +3,14 @@ import { onMounted, ref, watch, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import { useUserStore } from '../../stores/user.js'
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
 
+axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
+
+const userStore = useUserStore()
 
 const props = defineProps({
   order: {
@@ -39,6 +43,7 @@ const newOrderItem = () => {
 
 const emit = defineEmits(["save", "cancel", "add"]);
 const products = ref([]);
+const customers = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
 
@@ -68,7 +73,22 @@ const getProducts = (page = 1) => {
       console.log(error);
     });
 };
+const getCustomers = () => {
+  axios.get(serverBaseUrl + '/api/customers/', {
+    params: {
+      type: value_type.value
+    }
 
+  })
+    .then((response) => {
+      customers.value = response.data.data
+      paginationNewOrder.value = response.data
+      console.log(customers.value)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 const save = () => {
   emit("save", editingOrder.value);
   console.log(editingOrder.value);
@@ -81,19 +101,51 @@ const addProduct = (product) => {
   if (product.type === "hot dish") {
     orderItem.value.status = "P"
   }
-
   orderItem.value.product_id = product.id;
   orderItem.value.order_local_number = size + 1
   orderItem.value.id = size + 1
-
   orderItem.value.order_id = editingOrder.value.id
   orderItem.value.price = product.price
   orderItem.value.product = product;
   editingOrder.value.order_item.push(orderItem.value);
-  console.log(editingOrder.value);
+
 
 };
+const add = () => {
+  fillOrder();
+  console.log(editingOrder.value);
+  console.log(userStore.user)
+  let formData = new FormData()
+  formData.append('id', editingOrder.value.id);
 
+  formData.append('total_price', editingOrder.value.total_price);
+  formData.append('total_paid', editingOrder.value.total_paid);
+  if (editingOrder.value.payment_type != undefined) {
+    formData.append('payment_type', editingOrder.value.payment_type);
+  }
+  if (editingOrder.value.payment_reference != 0) {
+    formData.append('payment_reference', editingOrder.value.payment_reference);
+  }
+  formData.append('date', editingOrder.value.date);
+  if (editingOrder.value.custom != null) {
+    formData.append('custom', editingOrder.value.custom);
+  }
+  formData.append('customer_id', editingOrder.value.customer_id);
+  formData.append('customer', editingOrder.value.customer);
+  formData.append('delivered_by', editingOrder.value.delivered_by);
+  formData.append('user', editingOrder.value.user);
+  formData.append('order_item', editingOrder.value.order_item)
+  emit("add", formData);
+
+}
+const fillOrder = () => {
+  editingOrder.value.total_price = totalPrice();
+  const current = new Date();
+  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
+  editingOrder.value.date = date
+  editingOrder.value.user = userStore.user;
+
+}
 const deleteProduct = (product, position) => {
 
   console.log(editingOrder.value.order_item)
@@ -155,6 +207,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
+
   console.log(editingOrder.value)
 
 });
@@ -272,7 +325,7 @@ onMounted(() => {
     </div>
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">
+      <button type="button" id="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'NewOrder'">
         Add Order
       </button>
       <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">
