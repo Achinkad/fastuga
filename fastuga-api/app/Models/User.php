@@ -43,10 +43,10 @@ class User extends Authenticatable
     }
 
     public function preparation_order() {
-        return $this->hasMany(OrderItem::class, 'preparation_id')->withTrashed();
+        return $this->hasMany(OrderItem::class, 'preparation_by')->withTrashed();
     }
 
     public function delivered_order() {
-        return $this->hasMany(Order::class, 'delivered_id')->withTrashed();
+        return $this->hasMany(Order::class, 'delivered_by')->withTrashed();
     }
 }

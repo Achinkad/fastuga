@@ -1,17 +1,26 @@
 <script setup>
 import { inject } from "vue";
 import { useUserStore } from '../stores/user.js'
+import { useRouter } from 'vue-router'
+import avatarNoneUrl from '@/assets/avatar-none.png'
 
+const serverBaseUrl = inject("serverBaseUrl")
+const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
 const logout = async () => {
     if (await userStore.logout()) {
         toast.success("User has logged out of the application.")
-        router.push({ name: 'login' })
+        router.push({ name: 'Login' })
     } else {
         toast.error("There was a problem logging out of the application!")
     }
+}
+const photoFullUrl = () => {
+
+    return userStore.user.photo_url  ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
+
 }
 </script>
 
@@ -24,49 +33,60 @@ const logout = async () => {
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-        <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-                <li class="nav-item d-flex" style="align-items:center;">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Register' }" :to="{ name: 'Register' }">
-                        Register
-                    </router-link>
-                </li>
-                <li class="nav-item d-flex" v-show="!userStore.user" style="align-items:center;">
-                    <router-link style="vertical-align:middle;" class="nav-link" :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-                        Login
-                    </router-link>
-                </li>
-                <div class="topbar-divider d-none d-sm-block"></div>
-                <li class="nav-item dropdown" v-if="userStore.user">
-                    <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="avatar-text">{{ userStore.user.name }}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdownMenuLink">
-                        <li>
-                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }" :to="{ name: 'ChangePassword' }">
-                                Change password
-                            </router-link>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
-                        </li>
-                    </ul>
-            </li>
-            <li class="nav-item" v-else="!userStore.user">
-                <a class="nav-link" href="#" role="button">
-                    <span class="avatar-text">Customer (Anonymous)</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
-</nav>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                            :to="{ name: 'Register' }">
+                            Register
+                        </router-link>
+                    </li>
+                    <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
+                        <router-link style="vertical-align:middle;" class="nav-link"
+                            :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+                            Login
+                        </router-link>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <li class="nav-item dropdown" v-if="userStore.user">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img :src="photoFullUrl()" class="rounded-circle img_photo">
+                            <span class="avatar-text">{{ userStore.user.name }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
+                            aria-labelledby="navbarDropdownMenuLink">
+                            <li>
+                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                                    :to="{ name: 'ChangePassword' }">
+                                    Change password
+                                </router-link>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
+                                <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" v-else="!userStore.user">
+                        <a class="nav-link" href="#" role="button">
+                            <span class="avatar-text">Customer (Anonymous)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </template>
 
 <style>
+.img_photo {
+  width: 3.2rem;
+  height: 3.2rem;
+  margin-right: 10px;
+}
 .navbar {
     height: 4.375rem;
 }
@@ -92,7 +112,4 @@ const logout = async () => {
         margin: auto 1rem;
     }
 
-    .dropdown-menu {
-        transform: translate(0px, 72px);
-    }
 </style>

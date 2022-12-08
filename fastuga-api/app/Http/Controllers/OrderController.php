@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Models\Customer;
-use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Support\Facades\Http;
+
 
 class OrderController extends Controller
 {
@@ -52,7 +54,7 @@ class OrderController extends Controller
 
         /* --- Handle Order Items --- */
         foreach ($request->input("items") as $order_item) {
-            $this->store_order_item($order_item, $order->id);
+            (new OrderItemController)->store($order_item, $order->id);
         }
 
         $order->save();
@@ -109,38 +111,17 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function get_orders_customer(Customer $customer) // -> Get Orders From Customer
-    {
-        $orders = Order::where('customer_id', $customer->id)->paginate(20);
-        return OrderResource::collection($orders);
-    }
-
-    // TODO: @anaritaortigoso explain this.. not the same thing as the above one?
     public function get_orders_user($id)
     {
-        $orders = Order::where('customer_id', $id)->paginate(20);
-        return OrderResource::collection($orders);
-    }
+        if(auth()->guard('api')->user()->type == "ED"){
+            $orders = Order::where('delivered_by', $id)->paginate(20);
+            return OrderResource::collection($orders);
+        }
 
-    /* --- Custom Functions --- */
-
-    private function store_order_item($item, $order_id) // -> Stores Order Items for an Order
-    {
-        $order_item = new OrderItem;
-        $order_item->fill($item);
-
-        $order_item->order_id = $order_id;
-
-        /* --- Handle Status --- */
-        $order_item->status = $order_item->product->type == "hot dish" ? "W" : "R";
-
-        /* --- Handle Order Local Number --- */
-        $latest_item = OrderItem::select('order_local_number')->latest('id')->where('order_id', $order_item->order_id)->first();
-        $order_item->order_local_number = $latest_item ? ++$latest_item->order_local_number : 1;
-
-        /* --- Handle Price --- */
-        $order_item->price = $order_item->product->price;
-
-        $order_item->save();
+        if(auth()->guard('api')->user()->type == "C"){
+            $customer = Customer::where('user_id', $id)->firstOrFail();
+            $orders = Order::where('customer_id', $customer->id)->paginate(20);
+            return OrderResource::collection($orders);
+        }
     }
 }
