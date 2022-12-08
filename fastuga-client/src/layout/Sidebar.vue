@@ -10,7 +10,7 @@ const userStore = useUserStore()
         </div>
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
-                <li class="nav-item nav-item-title">Pages</li>
+                <li id="orange" class="nav-item nav-item-title">Pages</li>
                 <li class="nav-item" v-if="userStore.user && userStore.user.type == 'EM'">
                     <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
                         :to="{ name: 'Dashboard' }">
@@ -31,11 +31,11 @@ const userStore = useUserStore()
                     <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
                         :to="{ name: 'Orders' }">
                         <div v-if="userStore.user && userStore.user.type == 'EC'">
-                            <i class="bi bi-bag-plus-fill"></i>
+                            <i id="orange" class="bi bi-bag-plus-fill"></i>
                             Order-Items
                         </div>
                         <div v-else>
-                            <i class="bi bi-bag-plus-fill"></i>
+                            <i id="orange" class="bi bi-bag-plus-fill"></i>
                             Orders
                         </div>
                     </router-link>
@@ -48,11 +48,11 @@ const userStore = useUserStore()
 
 
                 <div v-if="userStore.user && userStore.user.type == 'EM'">
-                    <li class="nav-item nav-item-title mt-3">Administration</li>
+                    <li id="orange" class="nav-item nav-item-title mt-3">Administration</li>
                     <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                         <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
                             :to="{ name: 'Products' }">
-                            <i class="bi bi-egg-fried"></i>
+                            <i id="orange" class="bi bi-egg-fried"></i>
                             Products
                         </router-link>
                         <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
@@ -62,7 +62,7 @@ const userStore = useUserStore()
                     <li class="nav-item">
                         <router-link class="nav-link" :class="{ active: $route.name === 'Users' }"
                             :to="{ name: 'Users' }">
-                            <i class="bi bi-people"></i>
+                            <i id="orange" class="bi bi-people"></i>
                             Users
                         </router-link>
                     </li>
