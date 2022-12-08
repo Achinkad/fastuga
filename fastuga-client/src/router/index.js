@@ -145,12 +145,57 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 
-    if (to.name == 'User') {
-        if ((userStore.user.type == 'A') || (userStore.user.id == to.params.id)) {
+    if (to.name == 'Product') {
+        if ((userStore.user.type == 'EM')) {
             next()
             return
         }
-        next({ name: 'home' })
+        next({
+            name: 'Forbidden',
+            params: { pathMatch: to.path.substring(1).split('/') },
+            query: to.query,
+            hash: to.hash
+        })
+        return
+    }
+
+    if (to.name == 'Order') {
+        if ((userStore.user.type == 'EM')) {
+            next()
+            return
+        }
+        next({
+            name: 'Forbidden',
+            params: { pathMatch: to.path.substring(1).split('/') },
+            query: to.query,
+            hash: to.hash
+        })
+        return
+    }
+
+    if (to.name == 'Users') {
+        if (userStore.user.type != 'EM') {
+            next({
+                name: 'Forbidden',
+                params: { pathMatch: to.path.substring(1).split('/') },
+                query: to.query,
+                hash: to.hash
+            })
+            return
+        }
+    }
+
+    if (to.name == 'User') {
+        if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
+            next()
+            return
+        }
+        next({
+            name: 'Forbidden',
+            params: { pathMatch: to.path.substring(1).split('/') },
+            query: to.query,
+            hash: to.hash
+        })
         return
     }
 
