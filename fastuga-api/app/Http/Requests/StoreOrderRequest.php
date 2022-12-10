@@ -18,6 +18,12 @@ class StoreOrderRequest extends FormRequest
         if ($this->has('payment_type')) {
             $this->merge(['payment_type' => strtoupper($this->payment_type)]);
         }
+
+        if ($this->has('items')) {
+            $items = array();
+            foreach ($this->request->all()['items'] as $item) { array_push($items, json_decode($item)); }
+            $this->merge(['items' => $items]);
+        }
     }
 
     public function rules()
@@ -35,7 +41,7 @@ class StoreOrderRequest extends FormRequest
             'date' => 'required|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'items' => 'required|array',
+            'items' => 'present|array',
             'items.*.order_id' => 'sometimes|exists:orders,id',
             'items.*.order_local_number' => 'sometimes',
             'items.*.product_id' => 'required|exists:products,id',

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
@@ -50,7 +51,7 @@ class CustomerController extends Controller
         return new CustomerResource($customer);
     }
 
-    public function update(StoreCustomerRequest $customer_request, StoreUserRequest $user_request, Customer $customer)
+    public function update(StoreCustomerRequest $customer_request, UpdateUserRequest $user_request, Customer $customer)
     {
         $updated_customer = DB::Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
             // -> Updates User
@@ -76,6 +77,7 @@ class CustomerController extends Controller
         });
         return new CustomerResource($updated_customer);
     }
+
     public function destroy($id) // -> Boolean Return
     {
         return DB::transaction(function () use ($id) {

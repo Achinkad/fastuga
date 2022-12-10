@@ -11,6 +11,8 @@ class OrderItemController extends Controller
 {
     public function store($item, $order_id) // -> Stores Order Items for an Order
     {
+        dd($item);
+        
         $order_item = new OrderItem;
         $order_item->fill($item);
 

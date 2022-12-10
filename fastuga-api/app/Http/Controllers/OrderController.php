@@ -14,7 +14,6 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\OrderItemController;
 use App\Models\OrderItem;
 
-
 class OrderController extends Controller
 {
     public function index(Request $request)
@@ -25,7 +24,6 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-       
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
@@ -55,8 +53,8 @@ class OrderController extends Controller
         }
 
         /* --- Handle Order Items --- */
-        foreach ($request->input("items") as $order_item) {
-            (new OrderItemController)->store($order_item, $order->id);
+        foreach ($request->input("items") as $item) {
+            (new OrderItemController)->store($item, $order->id);
         }
 
         $order->save();

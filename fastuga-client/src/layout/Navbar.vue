@@ -28,65 +28,72 @@ const photoFullUrl = () => {
     <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top flex-md-nowrap p-0 shadow">
         <div class="container-fluid">
             <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
-                        <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
-                            :to="{ name: 'Register' }">
-                            Register
-                        </router-link>
-                    </li>
-                    <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
-                        <router-link style="vertical-align:middle;" class="nav-link"
-                            :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-                            Login
-                        </router-link>
-                    </li>
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <li class="nav-item dropdown" v-if="userStore.user">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img :src="photoFullUrl()" class="rounded-circle img_photo">
-                            <span class="avatar-text">{{ userStore.user.name }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
-                            aria-labelledby="navbarDropdownMenuLink">
-                            <li>
-                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                                    :to="{ name: 'ChangePassword' }">
-                                    Change password
-                                </router-link>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item" v-else="!userStore.user">
-                        <a class="nav-link" href="#" role="button">
-                            <span class="avatar-text">Customer (Anonymous)</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                    :to="{ name: 'Register' }">
+                    Register
+                </router-link>
+            </li>
+            <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
+                <router-link style="vertical-align:middle;" class="nav-link"
+                :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+                Login
+            </router-link>
+        </li>
+        <div class="topbar-divider d-none d-sm-block"></div>
+        <li class="nav-item dropdown" v-if="userStore.user" id="dropdown-user">
+            <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img :src="photoFullUrl()" class="rounded-circle img_photo">
+            <span class="avatar-text">{{ userStore.user.name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
+        aria-labelledby="navbarDropdownMenuLink">
+        <li>
+            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+            :to="{ name: 'ChangePassword' }">
+            Change password
+        </router-link>
+    </li>
+    <li>
+        <hr class="dropdown-divider" />
+    </li>
+    <li>
+        <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
+    </li>
+</ul>
+</li>
+<li class="nav-item" v-else="!userStore.user">
+    <a class="nav-link" href="#" role="button">
+        <span class="avatar-text">Customer (Anonymous)</span>
+    </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
 </template>
 
 <style>
+
+/* #dropdown-user {
+    margin-right: .745rem;
+    background-color: red;
+} */
+
 .img_photo {
-  width: 3.2rem;
-  height: 3.2rem;
-  margin-right: 10px;
+    width: 2.745rem;
+    height: 2.745rem;
+    margin-right: 10px;
 }
+
 .navbar {
     height: 4.375rem;
 }
@@ -100,11 +107,11 @@ const photoFullUrl = () => {
     box-shadow: none !important;
 }
 
-    .topbar-divider {
-        width: 0;
-        border-right: 1px solid #e3e6f0;
-        height: calc(4.375rem - 2rem);
-        margin: auto 1rem;
-    }
+.topbar-divider {
+    width: 0;
+    border-right: 1px solid #e3e6f0;
+    height: calc(4.375rem - 2rem);
+    margin: auto 1rem;
+}
 
 </style>
