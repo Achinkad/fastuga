@@ -47,7 +47,7 @@ const products = ref([]);
 const customers = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
-var currentCustomer=ref();
+var currentCustomer=ref(null);
 
 watch(
     () => props.order,
@@ -95,9 +95,8 @@ const getCurrentCustomer = () => {
    axios.get(serverBaseUrl + '/api/customer/'+userStore.user.id)
     .then((response) => {
       if(response.data){
-        //console.log(response)
         currentCustomer=response.data.data
-        //console.log(currentCustomer)
+
       }
 
     })
@@ -133,8 +132,6 @@ const addProduct = (product) => {
 const add = () => {
   fillOrder();
 
-  emit("add",editingOrder.value);
-
     let formData = new FormData()
     formData.append('id', editingOrder.value.id);
     formData.append('total_price', editingOrder.value.total_price);
@@ -153,10 +150,10 @@ const add = () => {
         formData.append('custom', editingOrder.value.custom);
     }
 
+  if (editingOrder.value.customer_id != undefined) {
     formData.append('customer_id', editingOrder.value.customer_id);
-    formData.append('customer', editingOrder.value.customer);
+  }
     formData.append('delivered_by', editingOrder.value.delivered_by);
-    formData.append('user', editingOrder.value.user);
     formData.append('points_gained',editingOrder.value.points_gained)
     formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
     formData.append('total_paid_with_points', editingOrder.value.total_paid_with_points)
@@ -175,10 +172,9 @@ const fillOrder = () => {
 
   editingOrder.value.status='P';
   editingOrder.value.ticket_number=1;
-  getCurrentCustomer();
-  if(currentCustomer){
+  if(userStore.user && currentCustomer){
     editingOrder.value.customer_id=currentCustomer.id;
-    console.log(editingOrder.value.customer_id)
+    console.log(currentCustomer)
   }
 
   editingOrder.value.total_paid=2.8; //ver como funciona realmente o pagamento
@@ -244,7 +240,10 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
-  getCurrentCustomer();
+  if(userStore.user){
+    getCurrentCustomer();
+  }
+  
 
 });
 </script>

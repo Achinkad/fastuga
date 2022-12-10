@@ -28,7 +28,6 @@ class OrderController extends Controller
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
         $order = new Order;
-
         $order->fill($request->validated());
 
         $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
@@ -36,13 +35,13 @@ class OrderController extends Controller
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
 
-        $payment_response = Http::post('https://dad-202223-payments-api.vercel.app/api/payments', [
+        $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/payments', [
             "type" => strtolower($order->payment_type),
             "reference" => $order->payment_reference,
             "value" => floatval($order->total_paid)
         ]);
 
-
+       
         if ($payment_response->failed()) { return $payment_response->throw(); }
 
 
@@ -53,10 +52,11 @@ class OrderController extends Controller
             $order->points_gained = $points;
             $order->customer->save();
         }
-
+        
         /* --- Handle Order Items --- */
+
         foreach ($request->input("items") as $item) {
-            (new OrderItemController)->store($item, $order->id);
+            (new OrderItemController)->store((array)$item, $order->id);
         }
 
         $order->save();
