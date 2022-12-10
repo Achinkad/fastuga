@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\UserController;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Resources\CustomerResource;
-use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\UserController;
+use App\Http\Resources\CustomerResource;
+use App\Http\Requests\StoreCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -76,6 +77,7 @@ class CustomerController extends Controller
         });
         return new CustomerResource($updated_customer);
     }
+
     public function destroy($id) // -> Boolean Return
     {
         return DB::transaction(function () use ($id) {
@@ -83,5 +85,14 @@ class CustomerController extends Controller
             $customer->user->delete();
             return $customer->delete();
         });
+    }
+
+    public function get_customer_by_user($id){
+        $customer = Customer::where('user_id',$id)->first();
+       if($customer){
+            return new CustomerResource($customer);
+       }
+       return null;
+        
     }
 }

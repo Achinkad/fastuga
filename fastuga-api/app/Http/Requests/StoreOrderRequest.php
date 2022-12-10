@@ -23,8 +23,8 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'ticket_number' => 'sometimes|min:1|max:99',
-            'status' => 'sometimes|in:P,R,D,C',
+            'ticket_number' => 'min:1|max:99',
+            'status' => 'in:P,R,D,C',
             'customer_id' => 'nullable',
             'total_price' => 'required',
             'total_paid' => 'required',
@@ -35,15 +35,15 @@ class StoreOrderRequest extends FormRequest
             'date' => 'required|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'items' => 'required|array',
-            'items.*.order_id' => 'sometimes|exists:orders,id',
-            'items.*.order_local_number' => 'sometimes',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.status' => 'sometimes|in:W,P,R',
-            'items.*.price' => 'sometimes',
-            'items.*.preparation_by' => 'nullable',
-            'items.*.notes' => 'nullable',
-            'items.*.custom' => 'nullable'
+            'order_item' => 'required|array',
+            'order_item.*.order_id' => 'sometimes',
+            'order_item.*.order_local_number' => 'sometimes',
+            'order_item[*].product_id' => 'required|exists:products,id',
+            'order_item.*.status' => 'sometimes|in:W,P,R',
+            'order_item.*.price' => 'sometimes',
+            'order_item.*.preparation_by' => 'nullable',
+            'order_item.*.notes' => 'nullable',
+            'order_item.*.custom' => 'nullable'
         ];
 
         switch ($this->request->get('payment_type')) {
@@ -72,6 +72,6 @@ class StoreOrderRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'data' => $validator->errors()
-        ], 400));
+        ], 422));
     }
 }

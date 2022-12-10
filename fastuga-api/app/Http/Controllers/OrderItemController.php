@@ -9,7 +9,7 @@ use App\Models\User;
 
 class OrderItemController extends Controller
 {
-    private function store($item, $order_id) // -> Stores Order Items for an Order
+    public function store($item, $order_id) // -> Stores Order Items for an Order
     {
         $order_item = new OrderItem;
         $order_item->fill($item);

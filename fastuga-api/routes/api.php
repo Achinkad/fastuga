@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 
 /* --- [API Routes] -> Customers --- */
 Route::resource('customers', CustomerController::class);
+Route::get('customer/{id}', [CustomerController::class, 'get_customer_by_user']);
 
 /* --- [API Routes] -> Users --- */
 Route::resource('users', UserController::class);

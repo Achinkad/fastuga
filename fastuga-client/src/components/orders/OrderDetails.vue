@@ -34,11 +34,11 @@ const newOrderItem = () => {
     price: 0,
     notes: null,
     custom: null,
-    order_id: 0,
+    order_id: null,
     order_local_number: 0,
     product_id: null,
     product: [],
-    preparation_by: 0
+    preparation_by: null
   };
 };
 
@@ -47,6 +47,7 @@ const products = ref([]);
 const customers = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
+var currentCustomer=ref();
 
 watch(
   () => props.order,
@@ -90,6 +91,21 @@ const getCustomers = () => {
       console.log(error);
     });
 };
+const getCurrentCustomer = () => {
+   axios.get(serverBaseUrl + '/api/customer/'+userStore.user.id)
+    .then((response) => {
+      if(response.data){
+        //console.log(response)
+        currentCustomer=response.data.data
+        //console.log(currentCustomer)
+      }
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 const save = () => {
   emit("save", editingOrder.value);
   console.log(editingOrder.value);
@@ -102,11 +118,13 @@ const addProduct = (product) => {
   if (product.type === "hot dish") {
     orderItem.value.status = "P"
   }
+
   orderItem.value.product_id = product.id;
   orderItem.value.order_local_number = size + 1
   orderItem.value.id = size + 1
   orderItem.value.order_id = editingOrder.value.id
   orderItem.value.price = product.price
+  orderItem.value.preparation_by=null;
   orderItem.value.product = product;
   editingOrder.value.order_item.push(orderItem.value);
 
@@ -114,31 +132,8 @@ const addProduct = (product) => {
 };
 const add = () => {
   fillOrder();
-  let formData = new FormData()
-  console.log(editingOrder.value)
-  formData.append('id', editingOrder.value.id);
-  formData.append('total_price', editingOrder.value.total_price);
-  formData.append('total_paid', editingOrder.value.total_paid);
-  if (editingOrder.value.payment_type != undefined) {
-    formData.append('payment_type', editingOrder.value.payment_type);
-  }
-  if (editingOrder.value.payment_reference != undefined) {
-    formData.append('payment_reference', editingOrder.value.payment_reference);
-  }
-  formData.append('date', editingOrder.value.date);
-  if (editingOrder.value.custom != null) {
-    formData.append('custom', editingOrder.value.custom);
-  }
-  formData.append('customer_id', editingOrder.value.customer_id);
-  formData.append('customer', editingOrder.value.customer);
-  formData.append('delivered_by', editingOrder.value.delivered_by);
-  formData.append('user', editingOrder.value.user);
-  formData.append('points_gained',editingOrder.value.points_gained)
-  formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
-  formData.append('total_paid_with_points', editingOrder.value.total_paid_with_points)
-  editingOrder.value.order_item.forEach((item) =>{ formData.append('items',item)});
-  console.table(editingOrder.value)
-  emit("add", formData);
+  
+  emit("add",editingOrder.value);
 
 }
 const fillOrder = () => {
@@ -146,17 +141,25 @@ const fillOrder = () => {
   const current = new Date();
   const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
   editingOrder.value.date = date
-  editingOrder.value.user = userStore.user;
-  editingOrder.value.points_gained = Math.floor(editingOrder.value.totalPrice/10)
+  editingOrder.value.user = userStore.user; //####
+  editingOrder.value.points_gained = Math.floor(editingOrder.value.total_price/10) //passar para a API
+  
+  editingOrder.value.status='P';
+  editingOrder.value.ticket_number=1;
+  getCurrentCustomer();
+  if(currentCustomer){
+    editingOrder.value.customer_id=currentCustomer.id;
+    console.log(editingOrder.value.customer_id)
+  }
+ 
+  editingOrder.value.total_paid=2.8; //ver como funciona realmente o pagamento
+  editingOrder.value.total_paid_with_points=0;
+  editingOrder.value.points_used_to_pay=0;
 
 }
 const deleteProduct = (product, position) => {
 
-  console.log(editingOrder.value.order_item)
   editingOrder.value.order_item.splice(position - 1, 1)
-
-  console.log("No items to delete")
-  console.log(editingOrder.value)
 
 };
 
@@ -211,7 +214,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
-
+  getCurrentCustomer();
 
 });
 </script>
@@ -241,30 +244,31 @@ onMounted(() => {
           v-model="editingOrder.payment_reference" />
         <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
       </div>
-
+    <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
       <!-- DATA 
        <div class="mb-3">
         <label for="date">Date</label>
         <input type="date" id="date" name="date" v-model="editingOrder.date" />
         <field-error-message :errors="errors" fieldName="date"></field-error-message>
       </div> -->
-
+    <!--
       <div class="mb-3" v-if="editingOrder.customer_id != null">
         <label for="inputCustomer" class="form-label">Customer Name: </label>
         <br />
         <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
         <span style="padding-left: 10px;">{{ editingOrder.customer.user.name }}</span>
       </div>
-      <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
+      
       <div class="mb-3" v-if="editingOrder.delivered_by != null">
         <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
         <br />
         <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
         <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
       </div>
+      -->
     </div>
 
-
+<field-error-message :errors="errors" fieldName="order_item"></field-error-message>
 
     <div class="container">
       <div class="row">
