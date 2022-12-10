@@ -3,10 +3,15 @@ import { onMounted, ref, watch, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import { useUserStore } from '../../stores/user.js'
+
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
 
+axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
+
+const userStore = useUserStore()
 
 const props = defineProps({
   order: {
@@ -29,18 +34,20 @@ const newOrderItem = () => {
     price: 0,
     notes: null,
     custom: null,
-    order_id: 0,
+    order_id: null,
     order_local_number: 0,
     product_id: null,
-    product: null,
-    preparation_by: 0
+    product: [],
+    preparation_by: null
   };
 };
 
 const emit = defineEmits(["save", "cancel", "add"]);
 const products = ref([]);
+const customers = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
+var currentCustomer=ref();
 
 watch(
   () => props.order,
@@ -68,6 +75,36 @@ const getProducts = (page = 1) => {
       console.log(error);
     });
 };
+const getCustomers = () => {
+  axios.get(serverBaseUrl + '/api/customers/', {
+    params: {
+      type: value_type.value
+    }
+
+  })
+    .then((response) => {
+      customers.value = response.data.data
+      paginationNewOrder.value = response.data
+      console.log(customers.value)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+const getCurrentCustomer = () => {
+   axios.get(serverBaseUrl + '/api/customer/'+userStore.user.id)
+    .then((response) => {
+      if(response.data){
+        //console.log(response)
+        currentCustomer=response.data.data
+        //console.log(currentCustomer)
+      }
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 const save = () => {
   emit("save", editingOrder.value);
@@ -85,22 +122,44 @@ const addProduct = (product) => {
   orderItem.value.product_id = product.id;
   orderItem.value.order_local_number = size + 1
   orderItem.value.id = size + 1
-
   orderItem.value.order_id = editingOrder.value.id
   orderItem.value.price = product.price
+  orderItem.value.preparation_by=null;
   orderItem.value.product = product;
   editingOrder.value.order_item.push(orderItem.value);
-  console.log(editingOrder.value);
+
 
 };
+const add = () => {
+  fillOrder();
+  
+  emit("add",editingOrder.value);
 
+}
+const fillOrder = () => {
+  editingOrder.value.total_price = totalPrice();
+  const current = new Date();
+  const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
+  editingOrder.value.date = date
+  editingOrder.value.user = userStore.user; //####
+  editingOrder.value.points_gained = Math.floor(editingOrder.value.total_price/10) //passar para a API
+  
+  editingOrder.value.status='P';
+  editingOrder.value.ticket_number=1;
+  getCurrentCustomer();
+  if(currentCustomer){
+    editingOrder.value.customer_id=currentCustomer.id;
+    console.log(editingOrder.value.customer_id)
+  }
+ 
+  editingOrder.value.total_paid=2.8; //ver como funciona realmente o pagamento
+  editingOrder.value.total_paid_with_points=0;
+  editingOrder.value.points_used_to_pay=0;
+
+}
 const deleteProduct = (product, position) => {
 
-  console.log(editingOrder.value.order_item)
   editingOrder.value.order_item.splice(position - 1, 1)
-
-  console.log("No items to delete")
-  console.log(editingOrder.value)
 
 };
 
@@ -155,7 +214,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
   getProducts();
-  console.log(editingOrder.value)
+  getCurrentCustomer();
 
 });
 </script>
@@ -185,30 +244,31 @@ onMounted(() => {
           v-model="editingOrder.payment_reference" />
         <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
       </div>
-
+    <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
       <!-- DATA 
        <div class="mb-3">
         <label for="date">Date</label>
         <input type="date" id="date" name="date" v-model="editingOrder.date" />
         <field-error-message :errors="errors" fieldName="date"></field-error-message>
       </div> -->
-
+    <!--
       <div class="mb-3" v-if="editingOrder.customer_id != null">
         <label for="inputCustomer" class="form-label">Customer Name: </label>
         <br />
         <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
         <span style="padding-left: 10px;">{{ editingOrder.customer.user.name }}</span>
       </div>
-      <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
+      
       <div class="mb-3" v-if="editingOrder.delivered_by != null">
         <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
         <br />
         <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
         <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
       </div>
+      -->
     </div>
 
-
+<field-error-message :errors="errors" fieldName="order_item"></field-error-message>
 
     <div class="container">
       <div class="row">
@@ -272,7 +332,7 @@ onMounted(() => {
     </div>
 
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'NewOrder'">
+      <button type="button" id="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'NewOrder'">
         Add Order
       </button>
       <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">

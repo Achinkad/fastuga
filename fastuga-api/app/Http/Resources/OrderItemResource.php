@@ -15,6 +15,7 @@ class OrderItemResource extends JsonResource
             'notes' => $this->notes,
             'custom' => $this->custom,
             'order_id' => $this->order_id,
+            'order' => new OrderWithNoItemsResource($this->order),
             'order_local_number' => $this->order_local_number,
             'product_id' => $this->product_id,
             'product' => new ProductResource($this->product),

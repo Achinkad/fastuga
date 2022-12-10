@@ -9,16 +9,31 @@ const serverBaseUrl = inject("serverBaseUrl")
 const router = useRouter()
 const axios = inject('axios')
 const toast = inject('toast')
+const props = defineProps({
+  id: {
+    type: Number,
+    default: null
+  },
 
+})
 const newOrder = () => {
   return {
     id: null,
-    ticket_number: 1,  // Change it later
+    ticket_number: null,
     status: null,
     completed: false,
-    total_price: 0,
+    total_price: null,
+    total_paid: null,
+    total_paid_with_points: null,
+    points_gained: null,
+    points_used_to_pay: null,
+    payment_reference: null,
+    date: null,
+    custom: null,
     customer_id: null,
+    customer: [],
     delivered_by: null,
+    user: [],
     order_item: [],
   }
 }
@@ -46,7 +61,7 @@ const loadOrder = (id) => {
 const save = () => {
   errors.value = null
   if (operation.value == 'insert') {
-    axios.post(serverBaseUrl + '/api/order', order.value)
+    axios.post(serverBaseUrl + '/api/orders', order.value)
       .then((response) => {
         order.value = response.data.data
         originalValueStr = dataAsString()
@@ -64,13 +79,14 @@ const save = () => {
   }
 
 
-  const add = () => {
-    axios.post(serverBaseUrl + '/api/order/' + props.id, order.value)
+
+}
+  const add = (order_value) => {
+ 
+   
+    axios.post(serverBaseUrl + '/api/orders', order_value)
       .then((response) => {
-        order.value = response.data.data
-        originalValueStr = dataAsString()
-        toast.success('order #' + order.value.id + ' was updated successfully.')
-        router.back()
+        console.log("feito")
       })
       .catch((error) => {
         if (error.response.status == 422) {
@@ -81,8 +97,6 @@ const save = () => {
         }
       })
   }
-}
-
 const cancel = () => {
   originalValueStr = dataAsString()
   router.back()
@@ -110,19 +124,13 @@ onBeforeRouteLeave((to, from, next) => {
   }
 })
 
-const props = defineProps({
-  id: {
-    type: Number,
-    default: null
-  },
 
-})
 
 const order = ref(newOrder())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
 
-const operation = computed(() => (!props.id || props.id < 0) ? 'insert' : 'update')
+
 
 // beforeRouteUpdate was not fired correctly
 // Used this watcher instead to update the ID
@@ -142,5 +150,5 @@ watch(
   <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
   </confirmation-dialog>
-  <order-detail :operationType="operation" :order="order" :errors="errors" @save="save" @cancel="cancel"></order-detail>
+  <order-detail :order="order" :errors="errors" @save="save" @cancel="cancel" @add="add"></order-detail>
 </template>

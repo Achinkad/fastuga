@@ -24,7 +24,7 @@ const newProduct = () => {
         id: null,
         name: '',
         photo_url: null,
-        description:''
+        description: ''
     }
 }
 
@@ -36,53 +36,53 @@ const loadProduct = (id) => {
         product.value = newProduct()
         originalValueStr = dataAsString()
 
-      } else {
-        axios.get(serverBaseUrl+'/api/products/' + id)
-          .then((response) => {
-            product.value = response.data.data
-            originalValueStr = dataAsString()
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
-  }
+    } else {
+        axios.get(serverBaseUrl + '/api/products/' + id)
+            .then((response) => {
+                product.value = response.data.data
+                originalValueStr = dataAsString()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
 
 const save = (product_values) => {
     console.log("entrou na função save")
 
-    axios.post(serverBaseUrl+'/api/products/'+ props.id, product_values)
-    .then((response) => {
-        console.log("feito a foto")
-    })
-    .catch((error) => {
-        if (error.response.status == 422) {
+    axios.post(serverBaseUrl + '/api/products/' + props.id, product_values)
+        .then((response) => {
+            console.log("feito a foto")
+        })
+        .catch((error) => {
+            if (error.response.status == 422) {
 
-            toast.error('Product #' + props.id + ' was not updated due to validation errors!')
-            errors.value = error.response.data.data
-            console.log(errors.value)
-        } else {
-            toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
-        }
-    })
+                toast.error('Product #' + props.id + ' was not updated due to validation errors!')
+                errors.value = error.response.data.data
+                console.log(errors.value)
+            } else {
+                toast.error('Product #' + props.id + ' was not updated due to unknown server error!')
+            }
+        })
 
 }
 
 const add = (product_values) => {
-    axios.post(serverBaseUrl+'/api/products', product_values)
-    .then((response) => {
-        console.log("feito")
-    })
-    .catch((error) => {
-        if (error.response.status == 422) {
+    axios.post(serverBaseUrl + '/api/products', product_values)
+        .then((response) => {
+            console.log("feito")
+        })
+        .catch((error) => {
+            if (error.response.status == 422) {
 
-            toast.error('Couldn\'t add the product due to validation errors!')
-            errors.value = error.response.data.data
-           // console.log(errors.value)
-        } else {
-            toast.error('Couldn\'t add the product due to unknown server error!')
-        }
-    })
+                toast.error('Couldn\'t add the product due to validation errors!')
+                errors.value = error.response.data.data
+                // console.log(errors.value)
+            } else {
+                toast.error('Couldn\'t add the product due to unknown server error!')
+            }
+        })
 }
 
 const cancel = () => {
@@ -123,26 +123,16 @@ watch(
     (newValue) => {
         loadProduct(newValue)
     },
-    {immediate: true}
+    { immediate: true }
 )
 
 
 </script>
 
 <template>
-    <confirmation-dialog
-    ref="confirmationLeaveDialog"
-    confirmationBtn="Discard changes and leave"
-    msg="Do you really want to leave? You have unsaved changes!"
-    @confirmed="leaveConfirmed"
-    >
-</confirmation-dialog>
+    <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
+        msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
+    </confirmation-dialog>
 
-<product-detail
-:product="product"
-:errors="errors"
-@save="save"
-@cancel="cancel"
-@add="add"
-></product-detail>
+    <product-detail :product="product" :errors="errors" @save="save" @cancel="cancel" @add="add"></product-detail>
 </template>

@@ -68,8 +68,8 @@ const dialogConfirmedDelete = () => {
     .catch((error) => {
       console.log(error)
     })
-
 }
+
 const editClick = (product) => {
   emit("edit", product);
 };
@@ -83,7 +83,7 @@ const deleteClick = (product) => {
 
 <template>
 
-  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete task"
+  <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete product"
     :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
   <table class="table">
