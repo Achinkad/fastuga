@@ -29,10 +29,10 @@ const photoFullUrl = () => {
     <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top flex-md-nowrap p-0 shadow">
         <div class="container-fluid">
             <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav">
@@ -92,11 +92,18 @@ const photoFullUrl = () => {
 </template>
 
 <style>
+
+/* #dropdown-user {
+    margin-right: .745rem;
+    background-color: red;
+} */
+
 .img_photo {
-  width: 3.2rem;
-  height: 3.2rem;
-  margin-right: 10px;
+    width: 2.745rem;
+    height: 2.745rem;
+    margin-right: 10px;
 }
+
 .navbar {
     height: 4.375rem;
 }
@@ -110,11 +117,11 @@ const photoFullUrl = () => {
     box-shadow: none !important;
 }
 
-    .topbar-divider {
-        width: 0;
-        border-right: 1px solid #e3e6f0;
-        height: calc(4.375rem - 2rem);
-        margin: auto 1rem;
-    }
+.topbar-divider {
+    width: 0;
+    border-right: 1px solid #e3e6f0;
+    height: calc(4.375rem - 2rem);
+    margin: auto 1rem;
+}
 
 </style>
