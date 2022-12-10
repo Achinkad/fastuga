@@ -29,6 +29,12 @@ class OrderItemController extends Controller
         $order_item->save();
     }
 
+    public function update($item, $order_item)
+    {
+        $order_item->fill($item);
+        $order_item->save();
+    }
+
     public function status(Request $request, OrderItem $order_item) // -> Change Order Item Status (Request -> Status:W,P,R)
     {
         $request->validate(['status' => 'required|in:W,P,R']);
@@ -37,7 +43,7 @@ class OrderItemController extends Controller
         return new OrderItemResource($order_item);
     }
 
-    public function get_order_items_by_chef(User $user)
+    public function get_order_items_by_chef(User $user) // -> Gets All Order Items From a Chef
     {
         if ($user->type != "EC") { abort(400); }
         $order_items = OrderItem::where('preparation_by', $user->id)->paginate(10);

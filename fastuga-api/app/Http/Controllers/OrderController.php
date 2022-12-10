@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Controllers\OrderItemController;
 use App\Models\OrderItem;
 
 
@@ -75,6 +76,15 @@ class OrderController extends Controller
     {
         $order->fill($request->validated());
         $order->save();
+
+        // TODO: Verify if there is new Order Items
+
+
+        /* --- Handle Order Items --- */
+        foreach ($request->input("items") as $item) {
+            (new OrderItemController)->update($item, $order->order_item);
+        }
+
         return new OrderResource($order);
     }
 
