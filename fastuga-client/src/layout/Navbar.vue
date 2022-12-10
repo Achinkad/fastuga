@@ -67,6 +67,15 @@ const photoFullUrl = () => {
                                 <hr class="dropdown-divider" />
                             </li>
                             <li>
+                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                    :to="{ name: 'ChangeProfile' }">
+                                    Change profile
+                                </router-link>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
                                 <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
                             </li>
                         </ul>
