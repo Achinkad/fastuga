@@ -75,22 +75,7 @@ const getProducts = (page = 1) => {
       console.log(error);
     });
 };
-const getCustomers = () => {
-  axios.get(serverBaseUrl + '/api/customers/', {
-    params: {
-      type: value_type.value
-    }
 
-  })
-    .then((response) => {
-      customers.value = response.data.data
-      paginationNewOrder.value = response.data
-      console.log(customers.value)
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
 const getCurrentCustomer = () => {
    axios.get(serverBaseUrl + '/api/customer/'+userStore.user.id)
     .then((response) => {
