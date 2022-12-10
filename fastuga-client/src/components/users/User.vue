@@ -1,6 +1,7 @@
 <script setup>
   import { ref, watch, inject, computed} from 'vue'
   import UserDetail from "./UserDetail.vue"
+  import ChangeProfile from '../auth/ChangeProfile.vue';
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 

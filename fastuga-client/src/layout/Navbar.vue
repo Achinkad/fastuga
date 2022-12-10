@@ -5,6 +5,7 @@ import { useUserStore } from '../stores/user.js'
 const userStore = useUserStore()
 const toast = inject("toast")
 
+
 const logout = async () => {
     if (await userStore.logout()) {
         toast.success("User has logged out of the application.")

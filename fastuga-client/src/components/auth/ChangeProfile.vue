@@ -1,21 +1,120 @@
 <script setup>
-  import { ref, inject} from 'vue'
+  import { ref, inject, onMounted} from 'vue'
   import { useRouter } from 'vue-router'
   import { useUserStore } from '../../stores/user.js'
+
   const router = useRouter()
   const axios = inject('axios')
   const toast = inject('toast')
   const userStore = useUserStore()
+
   const serverBaseUrl = inject("serverBaseUrl")
+
+  const errors = ref(null)
+
+
+  const newCustomer = ref({
+      id: "",
+      phone: "",
+      points: 0,
+      nif: "",
+      default_payment_type: "",
+      default_payment_reference: "",
+      user: {
+      name: "",
+      email: "",
+      type: "C",
+      blocked: 0,
+      photo_url: null,
+      }
+  })
+  const customer = ref(newCustomer)
+
+  const dataAsString = () => {
+    return JSON.stringify(customer.value)
+  }
+
+  let originalValueStr = ''
+  const loadCustomer = () => {
+    errors.value = null
+    if(userStore.user.type == "C"){
+    originalValueStr = ''
+        axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
+          .then((response) => {
+            customer.value = response.data.data
+            originalValueStr = dataAsString()
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        }
+    else{
+      toast.error("The authencicated user isn't a customer")
+
+    }
+  }
+
+  
+ 
+onMounted(() => {
+  loadCustomer()
+})
+
+
+const updateCostumer = () => {
+      errors.value = null
+        let formData = new FormData()
+        formData.append('phone', customer.value.phone);
+        formData.append('points', customer.value.points);
+        if(customer.value.nif!=undefined){
+            formData.append('nif', customer.value.nif);
+        }
+        if(customer.value.default_payment_type!=undefined){
+            formData.append('default_payment_type', customer.value.default_payment_type);
+        }
+        if(customer.value.default_payment_reference!=undefined){
+            formData.append('default_payment_reference', customer.value.default_payment_reference);
+        }
+        formData.append('name', customer.value.user.name);
+        formData.append('email', customer.value.user.email);
+        formData.append('type', customer.value.user.type);
+        if(customer.value.user.blocked == false){
+        formData.append('blocked', 0);
+        }else{
+          formData.append('blocked', 1);
+        }
+
+        axios.put(serverBaseUrl+'/api/customers/' + customer.value.id, formData)
+        .then((response) => {
+          customer.value = response.data.data
+          originalValueStr = dataAsString()
+          toast.success('Register was done successfully.')
+          router.back()
+        })
+        .catch((error) => {
+          if (error.response.status == 422) {
+              toast.error('User was not created due to validation errors!')
+              errors.value = error.response.data.errors
+            } else {
+              toast.error('User was not created due to unknown server error!')
+            }
+        })
+  }
+
+
+
+
+
+  
 </script>
 
 
 <template>
    
     <h3 class="mt-5 mb-3">Profile</h3>
-
     <hr />
-        <!--
+       <form>
+        
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
         <div class="mb-3">
@@ -25,12 +124,13 @@
             class="form-control"
             id="inputName"
             placeholder="User Name"
-            required
-            v-model="editingUser.name"
+                        required
+            v-model="customer.user.name"
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
- 
+     
+
         <div class="mb-3 px-1">
           <label for="inputEmail" class="form-label">Email</label>
           <input
@@ -39,65 +139,66 @@
             id="inputEmail"
             placeholder="Email"
             required
-            v-model="editingUser.email"
+            v-model="customer.user.email"
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
-        </div>
-        <div class="mb-3 px-1" v-if="$route.name == 'newUser'">
-          <label for="inputPassword" class="form-label">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="inputPassword"
-            placeholder="Password"
-            required
-            v-model="editingUser.password"
-          />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
-        </div>
-         <div class="mb-3">
-            <label for="type">Role:</label>
-            <select id="type" name="type"  v-model="editingUser.type">
-              <option value="EM">Manager</option>
-              <option value="EC">Chef</option>
-              <option value="ED">Delivery</option>
-            </select>
-          <field-error-message :errors="errors" fieldName="type"></field-error-message>
-        </div>
-
-        <div v-if="$route.name == 'User'" class="mb-3">
-            <label for="blocked">Blocked:</label>
-            <select id="blocked" name="blocked"  v-model="editingUser.blocked">
-              <option value="0">Unblocked</option>
-              <option value="1">Blocked</option>
-            </select>
-          <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
-        </div>
-
-      </div>
-      <div class="w-25">
-        <div class="mb-3">
-          <label class="form-label">Photo</label>
-          <div class="form-control text-center">
-            <img :src="photoFullUrl" class="w-100" />
-          
-              <input type="file" id="actual-btn" hidden/>
-              <label for="actual-btn" id="label">Choose File</label>
-            
-          </div>
-          
         </div>
         
-      </div>
       
+        <div class="mb-3 px-1">
+          <label for="inputPhone" class="form-label">Phone</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputPhone"
+            placeholder="Phone"
+            required
+            v-model="customer.phone"
+          />
+          <field-error-message :errors="errors" fieldName="phone"></field-error-message>
+        </div>
+
+        <div class="mb-3">
+          <label for="inputNif" class="form-label">NIF</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputNif"
+            placeholder="NIF"
+                        
+            v-model="customer.nif"
+          />
+          <field-error-message :errors="errors" fieldName="name"></field-error-message>
+        </div>
+        <div class="mb-3">
+            <label for="payment_type">Payment Type</label>
+            <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
+                <option value="VISA">Visa</option>
+                <option value="PAYPAL">PayPal</option>
+                <option value="MBWAY">MBWay</option>
+            </select>
+        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+        </div>
+        <div class="mb-3">
+            <div class="mb-3">
+                <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
+                <input type="text" class="form-control" id="inputPaymentReference" v-model="customer.default_payment_reference"/>
+                
+            </div>
+        </div>
+        </div>
     </div>
+
+
+
+
+    
     <div class="mb-3 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'newUser'">Add
-                User</button>
-            <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'User'">Save
+            <button type="button" class="btn btn-primary px-5" @click="updateCostumer">Save
                 User</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
+  
   </form>
-  -->
+
 </template>

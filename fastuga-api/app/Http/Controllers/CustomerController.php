@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateUserRequest;
+
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Customer;
+use App\Models\User;
+
 
 class CustomerController extends Controller
 {
@@ -50,7 +54,7 @@ class CustomerController extends Controller
         return new CustomerResource($customer);
     }
 
-    public function update(StoreCustomerRequest $customer_request, StoreUserRequest $user_request, Customer $customer)
+    public function update(StoreCustomerRequest $customer_request, UpdateUserRequest $user_request, Customer $customer)
     {
         $updated_customer = DB::Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
             // -> Updates User
@@ -83,5 +87,10 @@ class CustomerController extends Controller
             $customer->user->delete();
             return $customer->delete();
         });
+    }
+
+    public function showByUser(User $user)
+    {
+        return new CustomerResource($user->customer);
     }
 }

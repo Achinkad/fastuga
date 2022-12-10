@@ -70,7 +70,7 @@ class UserController extends Controller
 
     public function toogle($id) {
         /* --- Authorization --- */
-        if (Auth()->user()->type() != "EM") { abort(403); }
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
 
         $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
         $user->blocked = $user->blocked == 1 ? 0 : 1;

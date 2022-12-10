@@ -37,9 +37,13 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showBlockButton: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(["edit", "deleted", "forceRerender"]);
+const emit = defineEmits(["edit", "deleted", "forceRerender","blockToggled"]);
 
 const userToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
@@ -60,6 +64,18 @@ const photoFullUrl = (user) => {
 const editClick = (user) => {
   emit("edit", user);
 };
+
+const toogleClick = (user) => {
+  axios
+    .patch("users/block/" + user.id, { blocked: user.blocked = 1 })
+    .then((response) => {
+      user.blocked = response.data.data.blocked
+      emit("blockToggled", user)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
 const dialogConfirmedDelete = () => {
   axios
@@ -97,6 +113,7 @@ const deleteClick = (user) => {
         <th class="align-middle">Name</th>
         <th v-if="showEmail" class="align-middle">Email</th>
         <th v-if="showRole" class="align-middle">Role</th>
+        <th v-if="showBlockButton" class="align-middle">Blocked?</th>
       </tr>
     </thead>
     <tbody>
@@ -113,8 +130,28 @@ const deleteClick = (user) => {
           <span v-if="user.type == 'ED'">Delivery</span>
           <span v-if="user.type == 'C'">Customer</span>
         </td>
+        <td>
+        <button
+              class="btn btn-xs btn-light"
+              @click="toogleClick(user)"
+
+              v-if="showBlockButton"
+            >
+          
+              <i
+                class="bi bi-xs"
+                
+                :class="{
+                  'bi-square': !user.blocked,
+                  'bi-check2-square': user.blocked,
+                }"
+               
+              ></i>
+            </button>
+          </td>
         <td class="text-end align-middle" v-if="showEditButton">
           <div class="d-flex justify-content-end">
+
             <button
               class="btn btn-xs btn-light"
               @click="editClick(user)"
@@ -125,6 +162,8 @@ const deleteClick = (user) => {
             <button class="btn btn-xs btn-light" @click="deleteClick(user)" v-if="showDeleteButton">
             <i class="bi bi-trash3"></i>
           </button>
+
+
           </div>
         </td>
       </tr>
