@@ -16,14 +16,17 @@ class UpdateUserRequest extends FormRequest
 
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($this->customer->user)],
             'type' => 'required|in:C,EC,ED,EM',
             'blocked' => 'required|in:0,1',
             'photo_url' => 'nullable',
             'custom' => 'nullable'
         ];
+
+        $email_rule = $this->user ? ['email' => ['required', 'email', Rule::unique('users')->ignore($this->user)]] : ['email' => ['required', 'email', Rule::unique('users')->ignore($this->customer->user)]];
+
+        return array_merge($rules, $email_rule);
     }
 
     public function failedValidation(Validator $validator)
