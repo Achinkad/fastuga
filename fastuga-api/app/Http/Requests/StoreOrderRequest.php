@@ -21,7 +21,7 @@ class StoreOrderRequest extends FormRequest
 
         if ($this->has('items')) {
             $items = array();
-            foreach ($this->request->all()['items'] as $item) { array_push($items, json_decode($item)); }
+            foreach ($this->request->all()['items'] as $item) { array_push($items, json_decode($item, true)); }
             $this->merge(['items' => $items]);
         }
     }
@@ -41,16 +41,22 @@ class StoreOrderRequest extends FormRequest
             'date' => 'required|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'items' => 'present|array',
-            'items.*.order_id' => 'sometimes|exists:orders,id',
-            'items.*.order_local_number' => 'sometimes',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.status' => 'sometimes|in:W,P,R',
-            'items.*.price' => 'sometimes',
-            'items.*.preparation_by' => 'nullable',
-            'items.*.notes' => 'nullable',
-            'items.*.custom' => 'nullable'
+            'items' => 'present|array'
         ];
+
+        if ($this->has('items')) {
+            $items_rules = [
+                'items.*.order_id' => 'nullable|exists:orders,id',
+                'items.*.order_local_number' => 'sometimes',
+                'items.*.product_id' => 'required|exists:products,id',
+                'items.*.status' => 'sometimes|in:W,P,R',
+                'items.*.price' => 'sometimes',
+                'items.*.preparation_by' => 'nullable',
+                'items.*.notes' => 'nullable',
+                'items.*.product' => 'nullable',
+                'items.*.custom' => 'nullable'
+            ];
+        }
 
         switch ($this->request->get('payment_type')) {
             case 'VISA':
@@ -70,7 +76,7 @@ class StoreOrderRequest extends FormRequest
                 break;
         }
 
-        return array_merge($rules, $reference_rule);
+        return array_merge($rules, $reference_rule, $items_rules);
     }
 
     public function failedValidation(Validator $validator)
