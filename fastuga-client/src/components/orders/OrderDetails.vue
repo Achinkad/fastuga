@@ -47,7 +47,7 @@ const products = ref([]);
 const customers = ref([]);
 var value_type = ref("all");
 const editingOrder = ref(props.order);
-var currentCustomer=ref(null);
+var currentCustomer=ref();
 
 watch(
     () => props.order,
@@ -92,11 +92,12 @@ const getCustomers = () => {
     });
 };
 const getCurrentCustomer = () => {
-    axios.get(serverBaseUrl + '/api/customer/'+userStore.user.id)
+    axios.get(serverBaseUrl + '/api/customers/user/'+userStore.user.id)
     .then((response) => {
+      console.log(response)
         if(response.data){
             currentCustomer=response.data.data
-
+            
         }
 
     })

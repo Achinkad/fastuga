@@ -11,7 +11,6 @@ use App\Http\Requests\StoreUserRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\CustomerResource;
 use App\Http\Requests\StoreCustomerRequest;
 
@@ -92,9 +91,9 @@ class CustomerController extends Controller
         });
     }
 
-    public function showByUser($user)
+    public function showByUser(User $user)
     {
-  
+       
         return new CustomerResource($user->customer);
             
     }
