@@ -93,7 +93,8 @@ class CustomerController extends Controller
 
     public function showByUser(User $user)
     {
-       
+        
+      
         return new CustomerResource($user->customer);
             
     }

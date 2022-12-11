@@ -39,8 +39,7 @@ const userStore = useUserStore()
                             Orders
                         </div>
                     </router-link>
-                    <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order"
-                        v-if="userStore.user && userStore.user.type == 'EM'">
+                    <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order" v-if="(userStore.user && userStore.user.type!='EC' && userStore.user.type!='ED') || !userStore.user">
                         <i class="bi bi-xs bi-plus-circle"></i>
                     </router-link>
                 </li>

@@ -42,7 +42,7 @@ const newOrderItem = () => {
     };
 };
 
-const emit = defineEmits(["save", "cancel", "add"]);
+const emit = defineEmits(["cancel", "add"]);
 const products = ref([]);
 const customers = ref([]);
 var value_type = ref("all");
@@ -92,6 +92,7 @@ const getCustomers = () => {
     });
 };
 const getCurrentCustomer = () => {
+   
     axios.get(serverBaseUrl + '/api/customers/user/'+userStore.user.id)
     .then((response) => {
       console.log(response)
@@ -105,11 +106,6 @@ const getCurrentCustomer = () => {
         console.log(error);
     });
 }
-
-const save = () => {
-    emit("save", editingOrder.value);
-    console.log(editingOrder.value);
-};
 
 
 const addProduct = (product) => {
@@ -205,7 +201,6 @@ const deleteProductInAdd = (product) => {
     })
 }
 
-
 const totalPrice = () => {
     var total = 0;
     editingOrder.value.order_item.forEach((value) => {
@@ -214,6 +209,7 @@ const totalPrice = () => {
     });
     return total.toFixed(2);
 };
+
 const countProduct = (product) => {
     let count = 0
     editingOrder.value.order_item.forEach(order => {
@@ -241,7 +237,7 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
     getProducts();
-    if(userStore.user){
+    if((userStore.user && userStore.user.type=='C') || !userStore.user){
         getCurrentCustomer();
     }
 

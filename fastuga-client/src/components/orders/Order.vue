@@ -59,28 +59,6 @@ const loadOrder = (id) => {
     }
 }
 
-
-const save = () => {
-    errors.value = null
-    if (operation.value == 'insert') {
-        axios.post(serverBaseUrl + '/api/orders', order.value)
-        .then((response) => {
-            order.value = response.data.data
-            originalValueStr = dataAsString()
-            toast.success('order #' + order.value.id + ' was created successfully.')
-            router.back()
-        })
-        .catch((error) => {
-            if (error.response.status == 422) {
-                toast.error('order was not created due to validation errors!')
-                errors.value = error.response.data.data
-            } else {
-                toast.error('order was not created due to unknown server error!')
-            }
-        })
-    }
-}
-
 const add = (order_value) => {
     axios({
         method: 'POST',
@@ -127,7 +105,6 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 
-
 const order = ref(newOrder())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
@@ -152,5 +129,5 @@ watch(
     <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
 </confirmation-dialog>
-<order-detail :order="order" :errors="errors" @save="save" @cancel="cancel" @add="add"></order-detail>
+<order-detail :order="order" :errors="errors" @cancel="cancel" @add="add"></order-detail>
 </template>
