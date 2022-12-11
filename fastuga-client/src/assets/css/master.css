@@ -8,6 +8,8 @@ body {
     overflow-y: auto !important;
     padding: 0 !important;
     margin: 0;
+    background-color: #fafbfe !important;
+    color: #6c757d !important;
 }
 
 .wrapper {
@@ -18,7 +20,10 @@ body {
 
 main {
     width: calc(100% - 280px) !important;
-    padding: .5rem 2rem !important;
+    margin-left: 260px;
+    overflow: hidden;
+    min-height: 100vh;
+    padding: 70px 12px 65px;
 }
 
 .bi {
