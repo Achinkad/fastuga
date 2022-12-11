@@ -85,8 +85,9 @@ const editClick = (order) => {
 }
 
 const dialogConfirmedDelete = () => {
+  console.log(orderToDelete.value)
   axios
-    .put(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
+    .patch(serverBaseUrl + "/api/orders/" + orderToDelete.value.id + "/status", { status: 'C' })
     .then((response) => {
       emit("canceled", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
@@ -98,8 +99,6 @@ const dialogConfirmedDelete = () => {
 
 const deleteClick = (order) => {
   orderToDelete.value = order
-  console.table(orderToDelete)
-  orderToDelete.value.status = "C"
   deleteConfirmationDialog.value.show()
 }
 </script>
