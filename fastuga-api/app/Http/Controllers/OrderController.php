@@ -96,7 +96,7 @@ class OrderController extends Controller
     {
        
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
-
+       
         if ($request->input('status') == "C" && $order->status != "C") {
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [

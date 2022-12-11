@@ -127,6 +127,11 @@ const props = defineProps({
   },
 });
 
+const forceRerender = () => {
+    loadOrders()
+    console.log("reload ORDERS")
+}
+
 const orders = ref([])
 const order_items = ref([])
 
@@ -187,8 +192,8 @@ onMounted(() => {
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
   </div>
 
-  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
-  <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
+  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
+  <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
   <div v-if="userStore.user && !onlyCurrentOrders">
 
