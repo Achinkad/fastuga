@@ -9,7 +9,6 @@ const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
-
 const logout = async () => {
     if (await userStore.logout()) {
         toast.success("User has logged out of the application.")
@@ -19,97 +18,139 @@ const logout = async () => {
     }
 }
 const photoFullUrl = () => {
-
     return userStore.user.photo_url  ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
-
 }
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top flex-md-nowrap p-0 shadow">
-        <div class="container-fluid">
-            <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-md flex-md-nowrap">
+        <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+        aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
-                        <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
-                            :to="{ name: 'Register' }">
-                            Register
+    <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+            <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
+                <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                :to="{ name: 'Register' }">
+                    Register
+                </router-link>
+            </li>
+            <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
+                <router-link style="vertical-align:middle;" class="nav-link"
+                :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+                    Login
+                </router-link>
+            </li>
+            <div class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
+            <li class="nav-item dropdown nav-user" v-if="userStore.user" id="dropdown-user">
+                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="account-user-avatar">
+                        <img :src="photoFullUrl()" class="rounded-circle img_photo">
+                    </span>
+                    <span>
+                        <span class="account-user-name">{{ userStore.user.name }}</span>
+                        <span class="account-position" v-if="userStore.user.type == 'EM'">Manager</span>
+                        <span class="account-position" v-if="userStore.user.type == 'EC'">Chef</span>
+                        <span class="account-position" v-if="userStore.user.type == 'ED'">Delivery</span>
+                        <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
+                    </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdownMenuLink">
+                    <li>
+                        <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                        :to="{ name: 'ChangePassword' }">
+                            Change password
                         </router-link>
                     </li>
-                    <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
-                        <router-link style="vertical-align:middle;" class="nav-link"
-                            :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-                            Login
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                        <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                        :to="{ name: 'ChangeProfile' }">
+                            Change profile
                         </router-link>
                     </li>
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <li class="nav-item dropdown" v-if="userStore.user">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img :src="photoFullUrl()" class="rounded-circle img_photo">
-                            <span class="avatar-text">{{ userStore.user.name }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
-                            aria-labelledby="navbarDropdownMenuLink">
-                            <li>
-                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                                    :to="{ name: 'ChangePassword' }">
-                                    Change password
-                                </router-link>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
-                                    :to="{ name: 'ChangeProfile' }">
-                                    Change profile
-                                </router-link>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
-                            </li>
-                        </ul>
+                    <li>
+                        <hr class="dropdown-divider" />
                     </li>
-                    <li class="nav-item" v-else="!userStore.user">
-                        <a class="nav-link" href="#" role="button">
-                            <span class="avatar-text">Customer (Anonymous)</span>
-                        </a>
+                    <li>
+                        <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
                     </li>
                 </ul>
-            </div>
-        </div>
-    </nav>
+            </li>
+            <li class="nav-item" v-else="!userStore.user">
+                <a class="nav-link" href="#" role="button">
+                    <span class="avatar-text">Customer (Anonymous)</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 </template>
 
-<style>
-
-/* #dropdown-user {
-    margin-right: .745rem;
-    background-color: red;
-} */
+<style scoped>
 
 .img_photo {
-    width: 2.745rem;
-    height: 2.745rem;
-    margin-right: 10px;
+    width: 32px;
+    height: 32px;
+}
+
+.nav-link {
+    padding: 0;
+    min-width: 32px;
+    display: block;
+    text-align: center;
+    margin: 0 7px;
+    margin-right: 7px;
+    position: relative;
+}
+
+.nav-user {
+    padding: calc(31px * .5) 20px calc(31px * .5) 57px !important;
+    text-align: left !important;
+    position: relative;
+    background-color: rgb(250, 250, 253);
+    border: 1px solid #eef2f7;
+    border-width: 0 1px;
+    min-height: 70px;
+    transition: none;
+}
+
+.nav-user .account-user-avatar {
+    position: absolute;
+    top: calc(9px * .5);
+    left: -35px;
+}
+
+.nav-user .account-user-name {
+    display: block;
+    font-weight: 600;
+}
+
+.nav-user .account-position {
+    display: block;
+    font-size: 12px;
+    margin-top: -3px;
+    text-align: initial;
 }
 
 .navbar {
     height: 4.375rem;
-}
-
-.navbar.shadow {
-    box-shadow: 0 .5rem 2rem rgba(0, 0, 0, .1) !important;
+    padding: 0 12px;
+    min-height: 70px;
+    position: fixed;
+    left: 260px;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 0 35px 0 rgba(154, 161, 171, .15) !important;
+    background-color: #fff;
 }
 
 .navbar-brand {

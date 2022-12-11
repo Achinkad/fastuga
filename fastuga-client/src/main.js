@@ -4,6 +4,7 @@ import axios from 'axios'
 import App from './App.vue'
 import router from './router'
 import Toaster from "@meforma/vue-toaster";
+import VueApexCharts from 'vue3-apexcharts'
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -27,6 +28,7 @@ app.use(Toaster, {
     timeout: 3000,
     pauseOnHover: true
 })
+app.use(VueApexCharts)
 app.provide('toast', app.config.globalProperties.$toast);
 app.use(createPinia())
 app.use(router)

@@ -55,7 +55,7 @@ const loadOrders = (page = 1) => {
         }
       })
       .then((response) => {
-        
+
         orders.value = response.data.data
         pagination.value = response.data
       })
@@ -68,7 +68,7 @@ const loadOrders = (page = 1) => {
 
       axios.get(serverBaseUrl+'/api/users/'+ userStore.userId +'/orders?page='+page)
       .then((response) => {
-       
+
         orders.value = response.data.data
         pagination.value = response.data
       })
@@ -82,13 +82,13 @@ const loadOrders = (page = 1) => {
       .then((response) => {
         order_items.value = response.data.data
         pagination.value = response.data
-       
+
       })
       .catch((error) => {
         console.log(error)
       })
     }
-   
+
 
     }
 

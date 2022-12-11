@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "../stores/user.js"
 
-import HomeView from '../views/HomeView.vue'
-import Dashboard from "../components/Dashboard.vue"
+import Dashboard from "../views/Dashboard.vue"
 import Orders from "../components/orders/Orders.vue"
 import Order from "../components/orders/Order.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
@@ -19,8 +18,8 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: HomeView
+            name: 'Dashboard',
+            component: Dashboard
         },
         {
             path: '/users',
@@ -49,9 +48,9 @@ const router = createRouter({
             component: ChangePassword
         },
         {
-        path: '/profile',
-        name: 'ChangeProfile',
-        component: ChangeProfile
+            path: '/profile',
+            name: 'ChangeProfile',
+            component: ChangeProfile
         },
         {
             path: '/register',
@@ -88,11 +87,6 @@ const router = createRouter({
             props: { id: -1 }
         },
         {
-            path: '/dashboard',
-            name: 'Dashboard',
-            component: Dashboard
-        },
-        {
             path: '/orders/:id',
             name: 'Order',
             component: Order,
@@ -104,7 +98,7 @@ const router = createRouter({
             component: Product,
             props: route => ({ id: parseInt(route.params.id) })
         },
-        
+
         {
             path: '/:pathMatch(.*)*',
             name: 'Forbidden',
@@ -117,7 +111,7 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
-    
+
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await userStore.restoreToken()
