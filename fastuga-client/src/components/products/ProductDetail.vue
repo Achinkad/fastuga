@@ -39,6 +39,8 @@ const handleUpload = (files) => {
 }
 
 
+
+
 const save = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);

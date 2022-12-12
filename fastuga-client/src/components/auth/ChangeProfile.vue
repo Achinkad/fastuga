@@ -31,7 +31,6 @@
   })
 
 
-  const emit = defineEmits(["save"]);
 
   const customer = ref(newCustomer)
 
@@ -73,7 +72,8 @@
 
     formData.append('_method', 'PUT');
 
-    emit("save", formData);
+    userStore.save(formData,userStore.user.id);
+
     }
 
   
