@@ -75,22 +75,7 @@ const getProducts = (page = 1) => {
             console.log(error);
         });
 };
-const getCustomers = () => {
-    axios.get(serverBaseUrl + '/api/customers/', {
-        params: {
-            type: value_type.value
-        }
 
-    })
-        .then((response) => {
-            customers.value = response.data.data
-            paginationNewOrder.value = response.data
-            console.log(customers.value)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-};
 const getCurrentCustomer = () => {
 
     axios.get(serverBaseUrl + '/api/customers/user/' + userStore.user.id)
@@ -98,7 +83,7 @@ const getCurrentCustomer = () => {
             console.log(response)
             if (response.data) {
                 currentCustomer = response.data.data
-
+            console.log(currentCustomer)
             }
 
         })
@@ -209,6 +194,9 @@ const totalPrice = () => {
     });
     return total.toFixed(2);
 };
+const points = () => {
+   return currentCustomer.points;
+};
 
 const countProduct = (product) => {
     let count = 0
@@ -279,6 +267,8 @@ onMounted(() => {
 
             </div>
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
+            <br />
+            <span style="font-size: large;">Points available: {{ points() }} </span>
             <div v-if="userStore.user.type == 'EM'">
                 <div class="mb-3">
                     <label for="date">Date</label>

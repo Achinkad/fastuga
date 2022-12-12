@@ -1,7 +1,6 @@
 <script setup>
   import { ref, watch, inject, computed} from 'vue'
   import UserDetail from "./UserDetail.vue"
-  import ChangeProfile from '../auth/ChangeProfile.vue';
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 
@@ -19,7 +18,7 @@ const serverBaseUrl = inject("serverBaseUrl")
       }
   })
 
-  const operation = computed(() => (!props.id || props.id < 0) ? 'insert' : 'update')
+
 
   const newUser = () => {
       return {

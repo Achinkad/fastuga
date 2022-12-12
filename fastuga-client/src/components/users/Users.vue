@@ -19,9 +19,7 @@ const forceRerender = () => {
 }
   var value_role=ref("all");
 
-  const totalUsers = computed(() => {
-    return users.value.length
-  })
+
 
   const loadUsers = (page = 1) => {
     axios.get(serverBaseUrl+'/api/users?page='+page,{

@@ -21,10 +21,7 @@ const props = defineProps({
   },
 })
 
-const handleUpload = (files) => {
-    product_photo_intermediary = files[0]
 
-}
 
 const emit = defineEmits(["save", "cancel", "add"]);
 

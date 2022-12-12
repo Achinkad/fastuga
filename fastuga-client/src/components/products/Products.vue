@@ -16,9 +16,7 @@ const pagination = ref({})
 //variável usada no filtro
 var value_type = ref("all");
 
-const totalProducts = computed(() => {
-    return products.value.length
-})
+
 
 const loadProducts = (page = 1) => {
     axios.get(serverBaseUrl + '/api/products?page=' + page, {
