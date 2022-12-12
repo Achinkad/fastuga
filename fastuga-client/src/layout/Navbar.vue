@@ -114,7 +114,7 @@ const photoFullUrl = () => {
     text-align: left !important;
     position: relative;
     background-color: rgb(250, 250, 253);
-    border: 1px solid #eef2f7;
+    border: 1px solid #9b9d9e;
     border-width: 0 1px;
     min-height: 70px;
     transition: none;
