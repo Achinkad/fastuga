@@ -116,7 +116,6 @@ const add = () => {
         formData.append('customer_id', editingOrder.value.customer_id);
     }
    
-  
     formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
    
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
@@ -251,7 +250,7 @@ onMounted(() => {
                 <br>
                 <br>
                 <span style="font-size: large;">Points Used:</span>
-                <input type="range" :value="points()" min="0" :max="points()" step="1" oninput="this.nextElementSibling.value = this.value">
+                <input type="range" min="0" :max="points()" step="1" oninput="this.nextElementSibling.value = this.value" v-model="editingOrder.points_used_to_pay">
                 <output>{{ points() }}</output>
                 <br>
                 <br>
