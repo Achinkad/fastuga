@@ -126,7 +126,7 @@ const deleteClick = (order) => {
               </button>
             </div>
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
-              <i class="bi bi-pencil"></i>
+              <i class="bi bi-eye"></i>
             </button>
 
           </div>

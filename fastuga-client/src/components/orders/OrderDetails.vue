@@ -219,13 +219,13 @@ onMounted(() => {
             <div class="mb-3">
                 <label for="payment_type">Payment Type</label>
                 <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type"
-                    v-if="userStore.user.type == 'C'">
+                    v-if="userStore.user && userStore.user.type == 'C'">
                     <option value="VISA">Visa</option>
                     <option value="PAYPAL">PayPal</option>
                     <option value="MBWAY">MBWay</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Payment Type" required
-                    v-model="editingOrder.payment_type" readonly v-if="userStore.user.type == 'EM'" />
+                    v-model="editingOrder.payment_type" readonly v-if="userStore.user && userStore.user.type == 'EM'" />
 
                 <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
             </div>
@@ -233,18 +233,16 @@ onMounted(() => {
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" v-if="userStore.user.type == 'C'" />
+                    required v-model="editingOrder.payment_reference" v-if="userStore.user && userStore.user.type == 'C'" />
 
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user.type == 'EM'" />
+                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user && userStore.user.type == 'EM'" />
 
                 <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
 
             </div>
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
-            <br />
-            <span style="font-size: large;">Points available: {{ points() }} </span>
-            <div v-if="userStore.user.type == 'EM'">
+            <div v-if="userStore.user && userStore.user.type == 'EM'">
                 <div class="mb-3">
                     <label for="date">Date</label>
                     <input type="date" id="date" name="date" v-model="editingOrder.date" readonly />
@@ -295,9 +293,9 @@ onMounted(() => {
                             <label for="inputNotes" style="color:white" class="form-label">Notes</label>
                             <textarea class="form-control" id="inputNotes" rows="1"
                                 v-model="editingOrder.order_item[n - 1].notes"
-                                v-if="userStore.user.type == 'C'"></textarea>
+                                v-if="userStore.user && userStore.user.type == 'C'"></textarea>
                             <textarea class="form-control" id="inputNotes" rows="1"
-                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user.type == 'EM'"
+                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user && userStore.user.type == 'EM'"
                                 readonly></textarea>
                             <field-error-message :errors="errors" fieldName="notes"></field-error-message>
                         </div>
