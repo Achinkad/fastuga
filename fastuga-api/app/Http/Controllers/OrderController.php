@@ -36,10 +36,13 @@ class OrderController extends Controller
 
         /* --- Handle Points System --- */
         if ($order->customer_id) {
-            if (!$order->points_used_to_pay % 2) { return response()->json(["msg" => "Invalid number of points!"], 402); }
+            $discount_value = $order->points_used_to_pay / 2;
 
-            $order->total_paid_with_points = $order->points_used_to_pay / 2;
-            $order->total_paid = $order->total_price - ($order->points_used_to_pay / 2);
+            if (!$order->points_used_to_pay % 2) { return response()->json(["msg" => "Invalid number of points!"], 422); }
+            if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
+
+            $order->total_paid_with_points = $discount_value;
+            $order->total_paid = $order->total_price - $discount_value;
 
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
             $order->customer->points += abs($points - $order->points_used_to_pay);

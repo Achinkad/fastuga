@@ -97,7 +97,7 @@ const props = defineProps({
 
 const forceRerender = () => {
     loadOrders()
-   
+
 }
 
 const orders = ref([])
@@ -126,7 +126,7 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div class="row" v-if="!onlyCurrentOrders && userStore.user &&userStore.user.type == 'EM'">
+        <div class="row">
             <div class="d-flex">
                 <div class="col-3">
                     <label for="selectCompleted" class="form-label">Filter by status:</label>
