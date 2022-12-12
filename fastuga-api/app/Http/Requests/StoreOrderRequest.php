@@ -60,7 +60,6 @@ class StoreOrderRequest extends FormRequest
 
         switch ($this->request->get('payment_type')) {
             case 'VISA':
-                
                 $reference_rule = [
                     'payment_reference' => ['required', 'regex:/^[1-9]\d{15}$/'],
                     'total_paid' => 'numeric|gt:0|lte:200'
@@ -68,15 +67,13 @@ class StoreOrderRequest extends FormRequest
                 break;
 
             case 'PAYPAL':
-                
                 $reference_rule = [
-                    'payment_reference' => ['required','regex:/^[\w.-]+@[\w.-]+.(com|pt)$/'],
+                    'payment_reference' => ['required', 'regex:/^[\w.-]+@[\w.-]+.(com|pt)$/'],
                     'total_paid' => 'numeric|gt:0|lte:50'
                 ];
                 break;
 
             case 'MBWAY':
-              
                 $reference_rule = [
                     'payment_reference' => ['required', 'regex:/^[1-9]\d{8}$/'],
                     'total_paid' => 'numeric|gt:0|lte:10'
@@ -84,7 +81,6 @@ class StoreOrderRequest extends FormRequest
                 break;
 
             default:
-                
                 $reference_rule = ['payment_reference' => 'nullable'];
                 break;
         }

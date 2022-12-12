@@ -14,7 +14,7 @@ const loadOrders = () => {
         .then((response) => {
             orders.value = response.data.data
             console.log(orders.value)
-          
+
         })
         .catch((error) => {
             console.log(error)
