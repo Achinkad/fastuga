@@ -84,8 +84,7 @@ const add = () => {
 
 
     emit("add", formData);
-    toast.success('Product successfully created.')
-    router.back()
+  
 }
 
 const cancel = () => {

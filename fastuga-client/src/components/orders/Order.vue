@@ -67,6 +67,8 @@ const add = (order_value) => {
     })
     .then((response) => {
         console.log("feito")
+        toast.success("Order added successfuly")
+        
     })
     .catch((error) => {
         if (error.response.status == 422) {

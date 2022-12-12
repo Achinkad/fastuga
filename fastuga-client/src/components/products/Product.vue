@@ -54,6 +54,7 @@ const save = (product_values) => {
     axios.post(serverBaseUrl + '/api/products/' + props.id, product_values)
         .then((response) => {
             console.log("feito a foto")
+            toast.success("Product updated successfuly")
         })
         .catch((error) => {
             if (error.response.status == 422) {
@@ -72,6 +73,7 @@ const add = (product_values) => {
     axios.post(serverBaseUrl + '/api/products', product_values)
         .then((response) => {
             console.log("feito")
+            toast.success("Product added successfuly")
         })
         .catch((error) => {
             if (error.response.status == 422) {

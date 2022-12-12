@@ -55,7 +55,7 @@ class OrderController extends Controller
         $order->save();
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
-        $payment_response = Http::post('https://dad-202223-payments-api.vercel.app/api/payments', [
+        $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/payments', [
             "type" => strtolower($order->payment_type),
             "reference" => $order->payment_reference,
             "value" => floatval($order->total_paid)

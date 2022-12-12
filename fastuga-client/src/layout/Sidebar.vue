@@ -97,7 +97,7 @@ onMounted(() => {
                             <router-link class="nav-link w-100 me-3"
                                 :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
                                 :to="{ name: 'Order', params: { id: order.id } }">
-                                <i id="orange" class="bi bi-bag"></i>
+                                <i id="orange" class="bi bi-ticket"></i>
                                 <span> Ticket nº {{ order.ticket_number }}</span>
                             </router-link>
                         </div>
