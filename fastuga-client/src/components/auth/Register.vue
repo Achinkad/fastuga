@@ -190,7 +190,7 @@ onBeforeUnmount(() => {
     }
 
     .card-header {
-        background-color: rgb(114, 124, 245);
+        background-color: #ffa500;
         color: #fff !important;
         font-weight: 800;
         font-size: 1.1rem;
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
     }
 
     button[type="button"] {
-        background-color: #727cf5 !important;
+        background-color: #ffa500 !important;
         color: #fff;
         border-color: #727cf5;
         border-radius: 0.15rem;

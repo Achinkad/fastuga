@@ -4,11 +4,13 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import { useUserStore } from '../../stores/user.js'
+import { useRouter } from 'vue-router'
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
-
+const toast = inject('toast')
+const router = useRouter()
 axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
 
 const userStore = useUserStore()
@@ -36,7 +38,7 @@ const newOrderItem = () => {
 
 const emit = defineEmits(["cancel", "add"]);
 const products = ref([]);
-const customers = ref([]);
+
 var value_type = ref("all");
 const editingOrder = ref(props.order);
 var currentCustomer = ref();
@@ -122,6 +124,8 @@ const add = () => {
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
     
     emit("add", formData);
+    toast.success('Order successfully created.')
+    router.back()
 }
 
 const fillOrder = () => {
@@ -202,6 +206,7 @@ onMounted(() => {
     getProducts();
     if (userStore.user && userStore.user.type == 'C') {
         getCurrentCustomer();
+        points();
     }
 
 });
@@ -219,13 +224,13 @@ onMounted(() => {
             <div class="mb-3">
                 <label for="payment_type">Payment Type</label>
                 <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type"
-                    v-if="userStore.user.type == 'C'">
+                    v-if="(userStore.user && (userStore.user.type == 'C' || (userStore.user.type == 'EM' && $route.name == 'NewOrder'))) || !userStore.user">
                     <option value="VISA">Visa</option>
                     <option value="PAYPAL">PayPal</option>
                     <option value="MBWAY">MBWay</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Payment Type" required
-                    v-model="editingOrder.payment_type" readonly v-if="userStore.user.type == 'EM'" />
+                    v-model="editingOrder.payment_type" readonly v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'" />
 
                 <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
             </div>
@@ -233,18 +238,29 @@ onMounted(() => {
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" v-if="userStore.user.type == 'C'" />
+                    required v-model="editingOrder.payment_reference" v-if="(userStore.user && (userStore.user.type == 'C' || (userStore.user.type == 'EM' && $route.name == 'NewOrder'))) || !userStore.user" />
 
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user.type == 'EM'" />
+                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'" />
 
                 <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
 
             </div>
+            
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
-            <br />
-            <span style="font-size: large;">Points available: {{ points() }} </span>
-            <div v-if="userStore.user.type == 'EM'">
+            <br>
+            <br>
+            <div v-if="userStore.user && userStore.user.type=='C'">
+                <span style="font-size: large;">Points available: {{ points() }} </span>
+                <br>
+                <br>
+                <span style="font-size: large;">Points Used:</span>
+                <input type="range" :value="points()" min="0" :max="points()" step="1" oninput="this.nextElementSibling.value = this.value">
+                <output>{{ points() }}</output>
+                <br>
+                <br>
+            </div>
+            <div v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'">
                 <div class="mb-3">
                     <label for="date">Date</label>
                     <input type="date" id="date" name="date" v-model="editingOrder.date" readonly />
@@ -295,9 +311,9 @@ onMounted(() => {
                             <label for="inputNotes" style="color:white" class="form-label">Notes</label>
                             <textarea class="form-control" id="inputNotes" rows="1"
                                 v-model="editingOrder.order_item[n - 1].notes"
-                                v-if="userStore.user.type == 'C'"></textarea>
+                                v-if="userStore.user && userStore.user.type == 'C'"></textarea>
                             <textarea class="form-control" id="inputNotes" rows="1"
-                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user.type == 'EM'"
+                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user && userStore.user.type == 'EM'"
                                 readonly></textarea>
                             <field-error-message :errors="errors" fieldName="notes"></field-error-message>
                         </div>

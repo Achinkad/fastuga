@@ -1,41 +1,65 @@
 <script setup>
+import { ref,onMounted, inject} from 'vue'
+
+const axios = inject('axios')
+const serverBaseUrl = inject("serverBaseUrl");
+const orders = ref([])
+var value_status = ref("all");
+const loadOrders = () => {
+    axios.get(serverBaseUrl + '/api/orders', {
+        params: {
+            status: value_status.value
+        }
+    })
+        .then((response) => {
+            orders.value = response.data.data
+            console.log(orders.value)
+
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+onMounted(() => {
+    loadOrders()
+})
 const options = {
     chart: {
-      id: 'orders-per-month',
-      toolbar: {
-          show: true,
-          offsetX: -10,
-          offsetY: -53,
-      }
+        id: 'orders-per-month',
+        toolbar: {
+            show: true,
+            offsetX: -10,
+            offsetY: -53,
+        }
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      labels: {
-          style: {
-              colors: '#6c757d'
-          }
-      }
+        categories: [],
+        labels: {
+            style: {
+                colors: '#6c757d'
+            }
+        }
     },
     yaxis: {
-         labels: {
-             show: true,
-             style: {
-                 colors: '#6c757d'
-             }
-         }
+        labels: {
+            show: true,
+            style: {
+                colors: '#6c757d'
+            }
+        }
     },
     plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '20%',
-        endingShape: 'rounded'
-      },
+        bar: {
+            horizontal: false,
+            columnWidth: '20%',
+            endingShape: 'rounded'
+        },
     },
     dataLabels: {
         enabled: false
     },
     fill: {
-        colors: '#727cf5'
+        colors: '#ffa500'
     },
     grid: {
         borderColor: '#f9f9f9',
@@ -148,7 +172,8 @@ const series = [{
                     </div>
                     <div class="card-body pt-0">
                         <div class="chart">
-                            <apexchart width="100%" height="247px" type="bar" :options="options" :series="series"></apexchart>
+                            <apexchart width="100%" height="247px" type="bar" :options="options" :series="series">
+                            </apexchart>
                         </div>
                     </div>
                 </div>
@@ -171,6 +196,17 @@ h3 {
     font-size: 1.5rem;
     font-weight: 700;
     color: rgb(108, 117, 125);
+}
+
+.p-title-box .p-title {
+    font-size: 1.235rem;
+    margin: 0;
+    line-height: 75px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #6c757d;
+    font-weight: 600;
 }
 
 .widget-flat {
@@ -205,9 +241,9 @@ h3 {
 }
 
 .card-icon {
-    color: #727cf5;
+    color: #ffa500;
     font-size: 16px;
-    background-color: rgba(114,124,245,.25);
+    background-color: rgba(255, 240, 155, 0.25);
     height: 40px;
     width: 40px;
     text-align: center;

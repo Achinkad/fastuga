@@ -97,7 +97,7 @@ const props = defineProps({
 
 const forceRerender = () => {
     loadOrders()
-    console.log("reload ORDERS")
+   
 }
 
 const orders = ref([])

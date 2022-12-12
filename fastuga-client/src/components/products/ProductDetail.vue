@@ -1,8 +1,10 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
+import { useRouter } from 'vue-router'
 
-
+const router = useRouter()
+const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")
 var product_photo_intermediary = undefined
 
@@ -82,6 +84,8 @@ const add = () => {
 
 
     emit("add", formData);
+    toast.success('Product successfully created.')
+    router.back()
 }
 
 const cancel = () => {

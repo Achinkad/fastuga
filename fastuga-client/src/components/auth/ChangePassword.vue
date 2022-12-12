@@ -30,7 +30,7 @@
       .then((response) => {
         //order.value = response.data.data
         //originalValueStr = dataAsString()
-        toast.success('password was updated successfully.')
+        toast.success('Password was updated successfully.')
         router.back()
       })
       .catch((error) => {
