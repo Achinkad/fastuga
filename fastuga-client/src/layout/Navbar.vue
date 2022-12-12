@@ -165,4 +165,10 @@ const photoFullUrl = () => {
     margin: auto 1rem;
 }
 
+.avatar-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+}
 </style>
