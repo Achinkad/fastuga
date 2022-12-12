@@ -99,8 +99,7 @@ class OrderController extends Controller
        
         if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
 
-
-
+            
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
                 "type" => strtolower($order->payment_type),
@@ -115,12 +114,15 @@ class OrderController extends Controller
                 $order->customer->points -= abs($order->points_gained - $order->points_used_to_pay);
                 $order->customer->save();
             }
-        }
 
+            $order->total_paid=0.0;
+            $order->status = $request->status;
         
-        $order->status = $request->status;
-        $order->save();
+            $order->save();
+            
+        }
         return new OrderResource($order);
+        
     }
 
     public function get_orders_user($id)
