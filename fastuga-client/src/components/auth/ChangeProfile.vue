@@ -3,6 +3,7 @@
   import { useRouter } from 'vue-router'
   import { useUserStore } from '../../stores/user.js'
 
+
   const router = useRouter()
   const axios = inject('axios')
   const toast = inject('toast')
@@ -28,7 +29,12 @@
       photo_url: null,
       }
   })
+
+
+  const emit = defineEmits(["save"]);
+
   const customer = ref(newCustomer)
+
 
   const dataAsString = () => {
     return JSON.stringify(customer.value)
@@ -49,10 +55,26 @@
           })
         }
     else{
-      toast.error("The authencicated user isn't a customer")
+      customer.value.user = userStore.user
 
     }
   }
+
+  const save = () => {
+  let formData = new FormData()
+    formData.append('name', customer.value.user.name);
+    formData.append('email', customer.value.user.email);
+    formData.append('type', customer.value.user.type);
+    if(customer.value.user.blocked == false){
+        formData.append('blocked', 0);
+        }else{
+          formData.append('blocked', 1);
+        }
+
+    formData.append('_method', 'PUT');
+
+    emit("save", formData);
+    }
 
   
  
@@ -145,7 +167,7 @@ const updateCostumer = () => {
         </div>
         
       
-        <div class="mb-3 px-1">
+        <div class="mb-3 px-1" v-if="userStore.user.type == 'C'">
           <label for="inputPhone" class="form-label">Phone</label>
           <input
             type="text"
@@ -158,7 +180,7 @@ const updateCostumer = () => {
           <field-error-message :errors="errors" fieldName="phone"></field-error-message>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.user.type == 'C'">
           <label for="inputNif" class="form-label">NIF</label>
           <input
             type="text"
@@ -170,7 +192,7 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.user.type == 'C'">
             <label for="payment_type">Payment Type</label>
             <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
                 <option value="VISA">Visa</option>
@@ -179,7 +201,7 @@ const updateCostumer = () => {
             </select>
         <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
         </div>
-        <div class="mb-3">
+        <div class="mb-3" v-if="userStore.user.type == 'C'">
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" v-model="customer.default_payment_reference"/>
@@ -194,7 +216,9 @@ const updateCostumer = () => {
 
     
     <div class="mb-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary px-5" @click="updateCostumer">Save
+            <button  v-if="userStore.user.type == 'C'" type="button" class="btn btn-primary px-5" @click="updateCostumer">Save
+                User</button>
+            <button v-else type="button" class="btn btn-primary px-5" @click="save">Save
                 User</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>

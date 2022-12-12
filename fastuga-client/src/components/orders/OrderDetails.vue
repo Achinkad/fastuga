@@ -237,10 +237,9 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
     getProducts();
-    if((userStore.user && userStore.user.type=='C') || !userStore.user){
+    if(userStore.user && userStore.user.type=='C'){
         getCurrentCustomer();
     }
-
 
 });
 </script>
@@ -250,48 +249,56 @@ onMounted(() => {
     <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
         <div class="box_form">
             <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
-                Editing Order #{{ editingOrder.id }}
+                Order #{{ editingOrder.id }} Details
             </h3>
             <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
             <hr style="color:beige" />
             <div class="mb-3">
                 <label for="payment_type">Payment Type</label>
-                <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type">
+                <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type" v-if="userStore.user.type=='C'">
                     <option value="VISA">Visa</option>
                     <option value="PAYPAL">PayPal</option>
                     <option value="MBWAY">MBWay</option>
                 </select>
+                <input type="text" class="form-control" placeholder="Payment Type" required
+                v-model="editingOrder.payment_type" readonly v-if="userStore.user.type=='EM'"/>
+
                 <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
             </div>
 
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference" required
-                v-model="editingOrder.payment_reference" />
+                v-model="editingOrder.payment_reference" v-if="userStore.user.type=='C'"/>
+
+                <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference" required
+                v-model="editingOrder.payment_reference" readonly v-if="userStore.user.type=='EM'"/>
+
                 <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
+
             </div>
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
-            <!-- DATA
+        <div v-if="userStore.user.type=='EM'">    
             <div class="mb-3">
             <label for="date">Date</label>
-            <input type="date" id="date" name="date" v-model="editingOrder.date" />
+            <input type="date" id="date" name="date" v-model="editingOrder.date" readonly/>
             <field-error-message :errors="errors" fieldName="date"></field-error-message>
-        </div> -->
-        <!--
+        </div> 
+    
         <div class="mb-3" v-if="editingOrder.customer_id != null">
-        <label for="inputCustomer" class="form-label">Customer Name: </label>
-        <br />
-        <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
-        <span style="padding-left: 10px;">{{ editingOrder.customer.user.name }}</span>
-    </div>
+            <label for="inputCustomer" class="form-label">Customer Name: </label>
+            <br />
+            <img :src="userPhotoFullUrl(editingOrder.customer.user)" class="rounded-circle img_photo" />
+            <span style="padding-left: 10px;">{{ editingOrder.customer.user.name }}</span>
+        </div>
 
-    <div class="mb-3" v-if="editingOrder.delivered_by != null">
-    <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
-    <br />
-    <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
-    <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
-</div>
--->
+        <div class="mb-3" v-if="editingOrder.delivered_by != null">
+        <label for="inputDeliveredBy" class="form-label">Delivered By: </label>
+        <br />
+        <img :src="userPhotoFullUrl(editingOrder.user)" class="rounded-circle img_photo" />
+        <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
+        </div>
+    </div>
 </div>
 
 <field-error-message :errors="errors" fieldName="order_item"></field-error-message>
@@ -317,13 +324,14 @@ onMounted(() => {
                 <div>
                     <label for="inputNotes" style="color:white" class="form-label">Notes</label>
                     <textarea class="form-control" id="inputNotes" rows="1"
-                    v-model="editingOrder.order_item[n - 1].notes"></textarea>
+                    v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user.type=='C'"></textarea>
+                    <textarea class="form-control" id="inputNotes" rows="1"
+                    v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user.type=='EM'" readonly></textarea>
                     <field-error-message :errors="errors" fieldName="notes"></field-error-message>
                 </div>
             </div>
         </div>
 
-       
 
         <div class="col-md twin " v-if="editingOrder.status != 'C'">
             <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
@@ -361,9 +369,7 @@ onMounted(() => {
     <button type="button" id="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'NewOrder'">
         Add Order
     </button>
-    <button type="button" id="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Order'">
-        Save Order
-    </button>
+   
     <button type="button" class="btn btn-light px-5" @click="cancel">
         Cancel
     </button>
@@ -395,7 +401,7 @@ onMounted(() => {
     rgba(0, 0, 0, 0.6)), url(@/assets/italian.jpg);
     background-size: cover;
     background-position-x: center;
-    background-attachment: fixed;
+   
 }
 
 #hr {

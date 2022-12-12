@@ -105,8 +105,8 @@ onBeforeMount(() => {
                      <li class="nav-item nav-item-title">Orders</li>
                     <li class="nav-item" v-for="order in orders" :key="order.id">
                         <router-link class="nav-link w-100 me-3"
-                            :class="{ active: $route.name == 'NewOrder' && $route.params.id == order.id }"
-                            :to="{ name: 'CurrentOrder', params: { id: order.id } }">
+                            :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
+                            :to="{ name: 'Order', params: { id: order.id } }">
                             <i class="bi bi-bag"></i>
                             <span> Ticket nº {{order.ticket_number}}</span>
                         </router-link>
