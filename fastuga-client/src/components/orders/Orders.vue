@@ -16,32 +16,11 @@ const pagination = ref({})
 //variável usada no filtro
 var value_status = ref("all");
 
-// funcao provisoria enquanto as rotas nao estao definidas
-/*
-const loadOrders = (page = 1) => {
-
-  axios.get(serverBaseUrl + '/api/orders?page=' + page, {
-    params: {
-      status: value_status.value
-    }
-
-  })
-    .then((response) => {
-      orders.value = response.data.data
-      pagination.value = response.data
-
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-*/
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
 watch(value_status, () => {
   console.log(value_status.value)
   loadOrders()
 })
-
 
 //funcao a implementar com filtros para historicos de negocio
 
@@ -92,19 +71,6 @@ const loadOrders = (page = 1) => {
 
     }
 
-
-//funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API~
-/*
-const loadHistoricOrders = (page = 1) => {
-  axios.get('/api/users/' + userStore.userId + '/orders?page=' + page)
-    .then((response) => {
-      orders.value = response.data.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}*/
-
 const addOrder = () => {
   router.push({ name: "NewOrder" });
 };
@@ -127,37 +93,19 @@ const props = defineProps({
   },
 });
 
+const forceRerender = () => {
+    loadOrders()
+    console.log("reload ORDERS")
+}
+
 const orders = ref([])
 const order_items = ref([])
-
-//TALVEZ TIRAR,OU MELHORAR, NÃO FAZ SENTIDO O TOTAL APARECER 30
-/*
-const totalOrders = computed(() => {
-    return orders.value.reduce((c,o) =>
-    (props.onlyCurrentOrders && o.status=='P')
-    ||
-    (props.onlyCurrentOrders && o.status=='R')
-    ||
-    (!props.onlyCurrentOrders && (
-
-      (value_status.value == "-1"
-        || value_status.value == "P" && o.status =='P'
-        || value_status.value == "D" && o.status =='D'
-        || value_status.value == "R" && o.status =='R'
-        || value_status.value == "C" && o.status =='C'
-
-      ))) ? c + 1 : c, 0)
-})
-*/
-
-
 
 onMounted(() => {
   if(userStore.user){
     loadOrders()
   }
 
-  //loadHistoricOrders()
 
 })
 </script>
@@ -187,8 +135,8 @@ onMounted(() => {
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
   </div>
 
-  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
-  <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
+  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
+  <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
   <div v-if="userStore.user && !onlyCurrentOrders">
 

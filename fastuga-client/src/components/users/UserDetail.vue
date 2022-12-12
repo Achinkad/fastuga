@@ -66,8 +66,11 @@ const save = () => {
     formData.append('name', editingUser.value.name);
     formData.append('email', editingUser.value.email);
     formData.append('type', editingUser.value.type);
-    formData.append('blocked', editingUser.value.blocked);
-
+    if(editingUser.value.blocked == false){
+        formData.append('blocked', 0);
+        }else{
+          formData.append('blocked', 1);
+        }
     if (product_photo_intermediary != undefined) {
         formData.append('photo_url', product_photo_intermediary);
     }
@@ -141,8 +144,8 @@ const cancel = () => {
         <div v-if="$route.name == 'User'" class="mb-3">
             <label for="blocked">Blocked:</label>
             <select id="blocked" name="blocked"  v-model="editingUser.blocked">
-              <option value="0">Unblocked</option>
-              <option value="1">Blocked</option>
+              <option value="false">Unblocked</option>
+              <option value="true">Blocked</option>
             </select>
           <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
         </div>

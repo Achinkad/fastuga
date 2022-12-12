@@ -48,7 +48,7 @@ const props = defineProps({
 
 })
 
-const emit = defineEmits(["completeToggled", "edit", "deleted"])
+const emit = defineEmits(["completeToggled", "edit", "deleted","forceRerender"])
 
 const editingOrders = ref(props.orders)
 const orderToDelete = ref(null)
@@ -89,7 +89,7 @@ const dialogConfirmedDelete = () => {
   axios
     .patch(serverBaseUrl + "/api/orders/" + orderToDelete.value.id + "/status", { status: 'C' })
     .then((response) => {
-      emit("canceled", response.data.data)
+      emit("forceRerender");
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
     })
     .catch((error) => {
@@ -97,6 +97,7 @@ const dialogConfirmedDelete = () => {
     });
 
 }
+
 
 const deleteClick = (order) => {
   orderToDelete.value = order

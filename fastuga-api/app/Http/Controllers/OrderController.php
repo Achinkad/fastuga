@@ -96,8 +96,11 @@ class OrderController extends Controller
     {
        
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+       
+        if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
 
-        if ($request->input('status') == "C" && $order->status != "C") {
+
+
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
                 "type" => strtolower($order->payment_type),
@@ -105,7 +108,6 @@ class OrderController extends Controller
                 "value" => floatval($order->total_paid)
             ]);
             
-
             if ($payment_response->failed()) { return $payment_response->throw(); }
 
             /* --- Handle Points System --- */
@@ -114,6 +116,7 @@ class OrderController extends Controller
                 $order->customer->save();
             }
         }
+
         
         $order->status = $request->status;
         $order->save();
