@@ -71,22 +71,6 @@ const serverBaseUrl = inject("serverBaseUrl")
       })
 }
 
-  const save = (user_values) => {
-      errors.value = null
-      axios.post(serverBaseUrl+'/api/users/' + props.id, user_values)
-        .then((response) => {
-          toast.success('User #' + props.id + ' was updated successfully.')
-          router.back()
-        })
-        .catch((error) => {
-          if (error.response.status == 422) {
-              toast.error('User #' + props.id + ' was not updated due to validation errors!')
-              errors.value = error.response.data.errors
-            } else {
-              toast.error('User #' + props.id + ' was not updated due to unknown server error!')
-            }
-        })
-      }
 
 
   const cancel = () => {

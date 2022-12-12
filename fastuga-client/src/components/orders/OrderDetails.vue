@@ -42,7 +42,7 @@ var value_type = ref("all");
 const editingOrder = ref(props.order);
 var currentCustomer = ref();
 
-editingOrder.value.points_used_to_pay="5";
+editingOrder.value.points_used_to_pay="0";
 
 watch(
     () => props.order,
@@ -250,13 +250,13 @@ onMounted(() => {
             
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
             <br>
-            <br>
+            
             <div v-if="userStore.user && userStore.user.type=='C'">
-                <span style="font-size: large;">Points available: {{ points() }} <br><div id="nota">NOTE: You can only use 10 points at a time.</div></span>
+                <span style="font-size: large;">Points available: {{ points() }} <br></span>
                 <br>
                 <span style="font-size: large;">Points Used:</span>
          
-                <input type="range" min="0" max="10" step="1" v-model="editingOrder.points_used_to_pay" oninput="this.nextElementSibling.value = this.value" v-if="$route.name == 'NewOrder'">
+                <input type="range" min="0" :max="points()" step="10" v-model="editingOrder.points_used_to_pay" oninput="this.nextElementSibling.value = this.value" v-if="$route.name == 'NewOrder'">
                 <output>{{editingOrder.points_used_to_pay}}</output>
        
                 <br>
