@@ -36,7 +36,7 @@ const newOrderItem = () => {
 
 const emit = defineEmits(["cancel", "add"]);
 const products = ref([]);
-const customers = ref([]);
+
 var value_type = ref("all");
 const editingOrder = ref(props.order);
 var currentCustomer = ref();

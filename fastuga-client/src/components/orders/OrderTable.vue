@@ -48,7 +48,7 @@ const props = defineProps({
 
 })
 
-const emit = defineEmits(["completeToggled", "edit", "deleted","forceRerender"])
+const emit = defineEmits(["completeToggled", "edit", "deleted", "forceRerender"])
 
 const editingOrders = ref(props.orders)
 const orderToDelete = ref(null)
@@ -80,7 +80,7 @@ const dialogConfirmedDelete = () => {
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
     })
     .catch((error) => {
-        console.log(error);
+      console.log(error);
     });
 
 }
