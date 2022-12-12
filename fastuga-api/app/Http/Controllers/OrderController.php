@@ -30,26 +30,41 @@ class OrderController extends Controller
         $order = new Order;
         $order->fill($request->validated());
 
+        $order->date = Carbon::now();
         $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
         $order->status = "P";
+
+        /* --- Handle Points System --- */
+        if ($order->customer_id) {
+            $discount_value = $order->points_used_to_pay / 2;
+
+            if (!$order->points_used_to_pay % 2) { return response()->json(["msg" => "Invalid number of points!"], 422); }
+            if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
+
+            $order->total_paid_with_points = $discount_value;
+            $order->total_paid = $order->total_price - $discount_value;
+
+            $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
+            $order->customer->points += abs($points - $order->points_used_to_pay);
+            $order->points_gained = $points;
+
+            $order->customer->save();
+        } else {
+            $order->total_paid = $order->total_price;
+            $order->points_gained = 0;
+            $order->total_paid_with_points = 0;
+        }
+
         $order->save();
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
-        $payment_response = Http::post('https://dad-202223-payments-api.vercel.app/api/payments', [
+        $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/payments', [
             "type" => strtolower($order->payment_type),
             "reference" => $order->payment_reference,
             "value" => floatval($order->total_paid)
         ]);
 
         if ($payment_response->failed()) { return $payment_response->throw(); }
-
-        /* --- Handle Points System --- */
-        if ($order->customer_id) {
-            $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
-            $order->customer->points += abs($points - $order->points_used_to_pay);
-            $order->points_gained = $points;
-            $order->customer->save();
-        }
 
         /* --- Handle Order Items --- */
         foreach ($request->input("items") as $item) {
@@ -94,19 +109,19 @@ class OrderController extends Controller
 
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
-       
+
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
-       
+
         if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
 
-            
+
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
                 "type" => strtolower($order->payment_type),
                 "reference" => $order->payment_reference,
                 "value" => floatval($order->total_paid)
             ]);
-            
+
             if ($payment_response->failed()) { return $payment_response->throw(); }
 
             /* --- Handle Points System --- */
@@ -117,12 +132,12 @@ class OrderController extends Controller
 
             $order->total_paid=0.0;
             $order->status = $request->status;
-        
+
             $order->save();
-            
+
         }
         return new OrderResource($order);
-        
+
     }
 
     public function get_orders_user($id)

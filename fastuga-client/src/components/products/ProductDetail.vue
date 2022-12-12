@@ -41,6 +41,8 @@ const handleUpload = (files) => {
 }
 
 
+
+
 const save = () => {
     let formData = new FormData()
     formData.append('name', editingProduct.value.name);
@@ -84,8 +86,7 @@ const add = () => {
 
 
     emit("add", formData);
-    toast.success('Product successfully created.')
-    router.back()
+  
 }
 
 const cancel = () => {

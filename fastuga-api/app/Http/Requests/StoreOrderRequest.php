@@ -33,34 +33,31 @@ class StoreOrderRequest extends FormRequest
             'status' => 'in:P,R,D,C',
             'customer_id' => 'nullable',
             'total_price' => 'required',
-            'total_paid' => 'required',
-            'total_paid_with_points' => 'required',
-            'points_gained' => 'required',
+            'total_paid' => 'nullable',
+            'total_paid_with_points' => 'nullable',
+            'points_gained' => 'nullable',
             'points_used_to_pay' => 'required',
             'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
-            'date' => 'required|date',
+            'date' => 'nullable|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'items' => 'present|array'
+            'items' => 'required|array'
         ];
 
-        if ($this->has('items')) {
-            $items_rules = [
-                'items.*.order_id' => 'nullable|exists:orders,id',
-                'items.*.order_local_number' => 'sometimes',
-                'items.*.product_id' => 'required|exists:products,id',
-                'items.*.status' => 'sometimes|in:W,P,R',
-                'items.*.price' => 'sometimes',
-                'items.*.preparation_by' => 'nullable',
-                'items.*.notes' => 'nullable',
-                'items.*.product' => 'nullable',
-                'items.*.custom' => 'nullable'
-            ];
-        }
+        $items_rules = [
+            'items.*.order_id' => 'nullable|exists:orders,id',
+            'items.*.order_local_number' => 'sometimes',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.status' => 'sometimes|in:W,P,R',
+            'items.*.price' => 'sometimes',
+            'items.*.preparation_by' => 'nullable',
+            'items.*.notes' => 'nullable',
+            'items.*.product' => 'nullable',
+            'items.*.custom' => 'nullable'
+        ];
 
         switch ($this->request->get('payment_type')) {
             case 'VISA':
-                
                 $reference_rule = [
                     'payment_reference' => ['required', 'regex:/^[1-9]\d{15}$/'],
                     'total_paid' => 'numeric|gt:0|lte:200'
@@ -68,15 +65,13 @@ class StoreOrderRequest extends FormRequest
                 break;
 
             case 'PAYPAL':
-                
                 $reference_rule = [
-                    'payment_reference' => ['required','regex:/^[\w.-]+@[\w.-]+.(com|pt)$/'],
+                    'payment_reference' => ['required', 'regex:/^[\w.-]+@[\w.-]+.(com|pt)$/'],
                     'total_paid' => 'numeric|gt:0|lte:50'
                 ];
                 break;
 
             case 'MBWAY':
-              
                 $reference_rule = [
                     'payment_reference' => ['required', 'regex:/^[1-9]\d{8}$/'],
                     'total_paid' => 'numeric|gt:0|lte:10'
@@ -84,7 +79,6 @@ class StoreOrderRequest extends FormRequest
                 break;
 
             default:
-                
                 $reference_rule = ['payment_reference' => 'nullable'];
                 break;
         }

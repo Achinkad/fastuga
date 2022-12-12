@@ -9,6 +9,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -45,15 +47,53 @@ class UserController extends Controller
         $user->blocked = $user->blocked == 1 ? 0 : 1;
 
         if ($request->has('photo_url')) {
+
+
             // -> Check if a previous file exists and deletes it
             if(Storage::disk('public')->exists($user->photo_url)) {
                 Storage::delete($user->photo_url);
             }
+/*
+            $image = $user->photo_url;  // your base64 encoded
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            dd(base64_decode($image));
+
+            $imageName = str_random(10) . '.png';
+            
+
+  
+          Storage::disk('public/fotos')->put($imageName, base64_decode($image));
+          */ 
+          
+            //$folderPath = "fotos/";
+/*
+            $image_parts = explode(";base64,", $user->photo_url);
+    
+            $image_type_aux = explode("image/", $image_parts[0]);
+    
+            $image_type = $image_type_aux[1];
+    
+            $image_base64 = base64_decode($image_parts[1]);
+            */
+            
+            //$image_base64 = base64_decode($user->photo_url);
+
+            dd($image_base64);
+            /*
+            $uniqid=uniqid();
+            $id_user=$user->id;
+            //$photo_id = $photo->hashName();
+
+            $file="{$id_user}_ {$uniqid}.{$image_type}";
+            
             // -> Stores the new photo
-            $photo = $request->file('photo_url');
-            $photo_id = $photo->hashName();
-            Storage::putFileAs('public/users', $photo, $photo_id);
-            $user->photo_url = $photo_id;
+            //$photo = $request->file('photo_url');
+            //$photo_id = $photo->hashName();
+            Storage::putFile('public/fotos', $file)->put($imageName, base64_decode($image));
+            */
+            $user->photo_url = $file;
+            
         }
         $user->save();
         return new UserResource($user);

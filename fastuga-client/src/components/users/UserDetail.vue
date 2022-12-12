@@ -1,8 +1,14 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
+import { useUserStore } from '../../stores/user.js'
+
+const userStore = useUserStore()
+
 const serverBaseUrl = inject("serverBaseUrl")
 var product_photo_intermediary = undefined
+var previewImage = null
+
 
 
 
@@ -22,6 +28,15 @@ const props = defineProps({
 })
 
 
+const handleUpload = (e) => {
+                const image = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = e =>{
+                    previewImage = e.target.result;
+                    console.log(previewImage);
+                }
+}
 
 const emit = defineEmits(["save", "cancel", "add"]);
 
@@ -50,8 +65,8 @@ const add = () => {
     formData.append('blocked', 0);
 
 
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
+    if (previewImage != null) {
+        formData.append('photo_url', previewImage);
     }
 
 
@@ -68,13 +83,12 @@ const save = () => {
         }else{
           formData.append('blocked', 1);
         }
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
+        if (previewImage != null) {
+        formData.append('photo_url', previewImage);
     }
-
     formData.append('_method', 'PUT');
 
-    emit("save", formData);
+    userStore.save(formData,props.user.id);
 
 }
 
@@ -146,8 +160,21 @@ const cancel = () => {
             </select>
           <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
         </div>
-
       </div>
+
+      <div class="w-25">
+                <label class="form-label">Photo</label>
+                <div class="mb-3">
+                    <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name == 'newUser'" />
+                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'" />
+                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                        required>
+                    <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
+                </div>
+            </div>
+
+      <!--
+
       <div class="w-25">
         <div class="mb-3">
           <label class="form-label">Photo</label>
@@ -162,6 +189,7 @@ const cancel = () => {
         </div>
         
       </div>
+    -->
       
     </div>
     <div class="mb-3 d-flex justify-content-end">

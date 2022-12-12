@@ -44,10 +44,13 @@ var value_type = ref("all");
 const editingOrder = ref(props.order);
 var currentCustomer = ref();
 
+editingOrder.value.points_used_to_pay="0";
+
 watch(
     () => props.order,
     (newOrder) => {
         editingOrder.value = newOrder;
+   
     }
 );
 watch(value_type, () => {
@@ -115,15 +118,15 @@ const add = () => {
     if (editingOrder.value.customer_id != undefined) {
         formData.append('customer_id', editingOrder.value.customer_id);
     }
-
-
-    formData.append('points_used_to_pay', editingOrder.value.points_used_to_pay)
-
-    editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item)) });
-
+   if(userStore.user && userStore.user.type=='EM'){
+    editingOrder.value.points_used_to_pay=0;
+   }
+    formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
+    console.log("points used to pay:"+editingOrder.value.points_used_to_pay)
+    editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
+    
     emit("add", formData);
-    toast.success('Order successfully created.')
-    router.back()
+
 }
 
 const fillOrder = () => {
@@ -137,8 +140,7 @@ const fillOrder = () => {
         console.log(currentCustomer)
     }
 
-    editingOrder.value.total_paid = 2.8; //ver como funciona realmente o pagamento
-    editingOrder.value.points_used_to_pay = 0;
+    editingOrder.value.total_paid=editingOrder.value.total_price; //ver como funciona realmente o pagamento
 
 }
 
@@ -227,16 +229,15 @@ onMounted(() => {
             <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
             <hr style="color:beige" />
             <div class="mb-3">
-                <label for="payment_type">Payment Type</label>
+                <label for="payment_type">Payment Type </label>
                 <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type"
-                    v-if="(userStore.user && (userStore.user.type == 'C' || (userStore.user.type == 'EM' && $route.name == 'NewOrder'))) || !userStore.user">
+                    v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" >
                     <option value="VISA">Visa</option>
                     <option value="PAYPAL">PayPal</option>
                     <option value="MBWAY">MBWay</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Payment Type" required
-                    v-model="editingOrder.payment_type" readonly
-                    v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'" />
+                    v-model="editingOrder.payment_type" readonly v-if="userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C') && $route.name == 'Order'" />
 
                 <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
             </div>
@@ -244,12 +245,10 @@ onMounted(() => {
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference"
-                    v-if="(userStore.user && (userStore.user.type == 'C' || (userStore.user.type == 'EM' && $route.name == 'NewOrder'))) || !userStore.user" />
+                    required v-model="editingOrder.payment_reference" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
 
                 <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" readonly
-                    v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'" />
+                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C') && $route.name == 'Order'" />
 
                 <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
 

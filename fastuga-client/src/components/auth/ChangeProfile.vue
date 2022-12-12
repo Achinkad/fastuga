@@ -31,7 +31,6 @@
   })
 
 
-  const emit = defineEmits(["save"]);
 
   const customer = ref(newCustomer)
 
@@ -40,10 +39,10 @@
     return JSON.stringify(customer.value)
   }
 
-  
+  const originalValueStr='';
   const loadCustomer = () => {
     errors.value = null
-    if(userStore.user.type == "C"){
+    if(userStore.user && userStore.user.type == "C"){
     originalValueStr = ''
         axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
           .then((response) => {
@@ -72,10 +71,9 @@
         }
 
     formData.append('_method', 'PUT');
-    
-    emit("save", formData);
-    toast.success('Profile updated successfully.')
-    router.back()
+
+    userStore.save(formData,userStore.user.id);
+
     }
 
   
@@ -170,7 +168,7 @@ const updateCostumer = () => {
         </div>
         
       
-        <div class="mb-3 px-1" v-if="userStore.user.type == 'C'">
+        <div class="mb-3 px-1" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputPhone" class="form-label">Phone</label>
           <input
             type="text"
@@ -183,7 +181,7 @@ const updateCostumer = () => {
           <field-error-message :errors="errors" fieldName="phone"></field-error-message>
         </div>
 
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputNif" class="form-label">NIF</label>
           <input
             type="text"
@@ -195,7 +193,7 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
             <label for="payment_type">Payment Type</label>
             <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
                 <option value="VISA">Visa</option>
@@ -204,7 +202,7 @@ const updateCostumer = () => {
             </select>
         <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
         </div>
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" v-model="customer.default_payment_reference"/>
