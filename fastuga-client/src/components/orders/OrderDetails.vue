@@ -4,11 +4,13 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import { useUserStore } from '../../stores/user.js'
+import { useRouter } from 'vue-router'
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
-
+const toast = inject('toast')
+const router = useRouter()
 axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
 
 const userStore = useUserStore()
@@ -122,6 +124,8 @@ const add = () => {
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
     
     emit("add", formData);
+    toast.success('Order successfully created.')
+    router.back()
 }
 
 const fillOrder = () => {

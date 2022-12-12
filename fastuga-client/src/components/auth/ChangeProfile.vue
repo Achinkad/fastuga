@@ -40,7 +40,7 @@
     return JSON.stringify(customer.value)
   }
 
-  let originalValueStr = ''
+  
   const loadCustomer = () => {
     errors.value = null
     if(userStore.user.type == "C"){
@@ -72,8 +72,10 @@
         }
 
     formData.append('_method', 'PUT');
-
+    
     emit("save", formData);
+    toast.success('Profile updated successfully.')
+    router.back()
     }
 
   
@@ -110,6 +112,7 @@ const updateCostumer = () => {
         .then((response) => {
           customer.value = response.data.data
           originalValueStr = dataAsString()
+          console.log("aaa")
           toast.success('Register was done successfully.')
           router.back()
         })
