@@ -67,19 +67,6 @@ watch(
   }
 )
 
-/*
-const toogleClick = (order) => {
-  axios
-    .patch(serverBaseUrl + "(api/orders/" + order.id + "/completed", { completed: !order.completed })
-    .then((response) => {
-      order.completed = response.data.data.completed
-      emit("completeToggled", order)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-*/
 const editClick = (order) => {
   emit("edit", order)
 }

@@ -1,8 +1,7 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue"
+import { inject } from "vue"
 
-const axios = inject("axios")
-const toast = inject("toast")
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 
