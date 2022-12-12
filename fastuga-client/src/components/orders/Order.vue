@@ -77,6 +77,7 @@ const add = (order_value) => {
         }
     })
 }
+
 const cancel = () => {
     originalValueStr = dataAsString()
     router.back()
@@ -104,12 +105,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-
 const order = ref(newOrder())
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
-
-
 
 // beforeRouteUpdate was not fired correctly
 // Used this watcher instead to update the ID
@@ -120,14 +118,12 @@ watch(
     },
     { immediate: true }
 )
-
-
 </script>
 
 
 <template>
     <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-</confirmation-dialog>
-<order-detail :order="order" :errors="errors" @cancel="cancel" @add="add"></order-detail>
+    </confirmation-dialog>
+    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add"></order-detail>
 </template>

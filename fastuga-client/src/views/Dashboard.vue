@@ -173,17 +173,6 @@ h3 {
     color: rgb(108, 117, 125);
 }
 
-.p-title-box .p-title {
-  font-size: 1.235rem;
-  margin: 0;
-  line-height: 75px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: #6c757d;
-  font-weight: 600;
-}
-
 .widget-flat {
     position: relative;
     overflow: hidden;
