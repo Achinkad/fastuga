@@ -323,7 +323,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <!-- CONDIÇOES AINDA NAO FUNCIONAIS-->
+       
 
         <div class="col-md twin " v-if="editingOrder.status != 'C'">
             <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
