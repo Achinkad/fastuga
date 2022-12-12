@@ -1,47 +1,28 @@
 <script setup>
 import { ref, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import OrderTable from "./OrderTable.vue"
-import OrderItemsTable from "./OrderItemsTable.vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
+import OrderTable from "./OrderTable.vue"
+import OrderItemsTable from "./OrderItemsTable.vue"
+
+const axios = inject('axios')
+const serverBaseUrl = inject("serverBaseUrl")
 
 const userStore = useUserStore()
-const axios = inject('axios')
 const router = useRouter()
-const serverBaseUrl = inject("serverBaseUrl");
+
 const pagination = ref({})
 
 //variável usada no filtro
 var value_status = ref("all");
 
-// funcao provisoria enquanto as rotas nao estao definidas
-/*
-const loadOrders = (page = 1) => {
-
-  axios.get(serverBaseUrl + '/api/orders?page=' + page, {
-    params: {
-      status: value_status.value
-    }
-
-  })
-    .then((response) => {
-      orders.value = response.data.data
-      pagination.value = response.data
-
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
-*/
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
 watch(value_status, () => {
   console.log(value_status.value)
   loadOrders()
 })
-
 
 //funcao a implementar com filtros para historicos de negocio
 
@@ -92,19 +73,6 @@ const loadOrders = (page = 1) => {
 
     }
 
-
-//funcao com historico de orders por utilizador nao funcional ainda por falta de rota e funcao na API~
-/*
-const loadHistoricOrders = (page = 1) => {
-  axios.get('/api/users/' + userStore.userId + '/orders?page=' + page)
-    .then((response) => {
-      orders.value = response.data.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}*/
-
 const addOrder = () => {
   router.push({ name: "NewOrder" });
 };
@@ -127,86 +95,95 @@ const props = defineProps({
   },
 });
 
+const forceRerender = () => {
+    loadOrders()
+   
+}
+
 const orders = ref([])
 const order_items = ref([])
-
-//TALVEZ TIRAR,OU MELHORAR, NÃO FAZ SENTIDO O TOTAL APARECER 30
-/*
-const totalOrders = computed(() => {
-    return orders.value.reduce((c,o) =>
-    (props.onlyCurrentOrders && o.status=='P')
-    ||
-    (props.onlyCurrentOrders && o.status=='R')
-    ||
-    (!props.onlyCurrentOrders && (
-
-      (value_status.value == "-1"
-        || value_status.value == "P" && o.status =='P'
-        || value_status.value == "D" && o.status =='D'
-        || value_status.value == "R" && o.status =='R'
-        || value_status.value == "C" && o.status =='C'
-
-      ))) ? c + 1 : c, 0)
-})
-*/
-
-
 
 onMounted(() => {
   if(userStore.user){
     loadOrders()
   }
 
-  //loadHistoricOrders()
 
 })
 </script>
 
 <template>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex">
+                    <div class="p-title-box">
+                        <div class="p-title-right">
+                            <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: 83)</h4>
+                            <h4 class="p-title" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" v-if="!onlyCurrentOrders && userStore.user &&userStore.user.type == 'EM'">
+            <div class="d-flex">
+                <div class="col-3">
+                    <label for="selectCompleted" class="form-label">Filter by status:</label>
+                    <select class="form-select" id="selectCompleted" v-model="value_status">
+                        <option value="all" selected>Any</option>
+                        <option value="P">Preparing Orders</option>
+                        <option value="R">Ready Orders</option>
+                        <option value="D">Delivered Orders</option>
+                        <option value="C">Canceled Orders</option>
+                    </select>
+                </div>
+                <div class="ms-auto align-self-center">
+                    <div class="mx-0 mt-2" v-if="!userStore.user || userStore.user.type == 'EM' || userStore.user.type == 'C'">
+                          <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
+                              <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
+                          </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <div class="mx-2">
-    <h3 class="mt-4" v-if="!userStore.user || userStore.user.type != 'EC'">Orders</h3>
-    <h3 class="mt-4" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h3>
-  </div>
+        <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
+        <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
-  <hr>
-  <div v-if="!onlyCurrentOrders && userStore.user &&userStore.user.type == 'EM'" class="mb-3 d-flex justify-content-between flex-wrap">
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectCompleted" class="form-label">Filter by status:</label>
-      <select class="form-select" id="selectCompleted" v-model="value_status">
-        <option value="all" selected>Any</option>
-        <option value="P">Preparing Orders</option>
-        <option value="R">Ready Orders</option>
-        <option value="D">Delivered Orders</option>
-        <option value="C">Canceled Orders</option>
-      </select>
+        <div v-if="userStore.user && !onlyCurrentOrders" class="d-flex justify-content-end mt-3">
+            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+        </div>
     </div>
-  </div>
-  <div class="mx-0 mt-2" v-if="!userStore.user || userStore.user.type == 'EM' || userStore.user.type == 'C'">
-        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addOrder"><i
-            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order</button>
-  </div>
-
-  <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
-  <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
-
-  <div v-if="userStore.user && !onlyCurrentOrders">
-
-    <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
-    <hr>
-  </div>
 </template>
 
 <style scoped>
-.filter-div {
-  min-width: 12rem;
-}
-
-.total-filtro {
-  margin-top: 0.35rem;
-}
-
 .btn-addOrder {
   margin-top: 1.85rem;
+}
+
+button[type="button"] {
+    background-color: #727cf5 !important;
+    color: #fff;
+    border-color: #727cf5;
+    border-radius: 0.15rem;
+    box-shadow: 0px 2px 6px 0px rgba(114, 124, 245, 0.5);
+    border: 1px #727cf5;
+    font-size: 15px;
+    padding: .5rem 0;
+}
+
+button[type="button"]:hover {
+    color: #fff;
+}
+
+button[type="button"]:focus {
+    color: #fff;
+    box-shadow: 0 0 0 .15rem rgba(135, 144, 247, 0.5);
+}
+
+.btn-add {
+    position: relative;
+    top: .775rem;
 }
 </style>

@@ -18,84 +18,82 @@ const logout = async () => {
     }
 }
 const photoFullUrl = () => {
-    return userStore.user.photo_url  ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
+    return userStore.user.photo_url ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
 }
 </script>
 
 <template>
     <nav class="navbar navbar-expand-md flex-md-nowrap">
         <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-        aria-label="Toggle navigation">
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-    <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-            <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
-                <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
-                :to="{ name: 'Register' }">
-                    Register
-                </router-link>
-            </li>
-            <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
-                <router-link style="vertical-align:middle;" class="nav-link"
-                :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
-                    Login
-                </router-link>
-            </li>
-            <div class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
-            <li class="nav-item dropdown nav-user" v-if="userStore.user" id="dropdown-user">
-                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="account-user-avatar">
-                        <img :src="photoFullUrl()" class="rounded-circle img_photo">
-                    </span>
-                    <span>
-                        <span class="account-user-name">{{ userStore.user.name }}</span>
-                        <span class="account-position" v-if="userStore.user.type == 'EM'">Manager</span>
-                        <span class="account-position" v-if="userStore.user.type == 'EC'">Chef</span>
-                        <span class="account-position" v-if="userStore.user.type == 'ED'">Delivery</span>
-                        <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
-                    </span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu dropdown-menu-end"
-                aria-labelledby="navbarDropdownMenuLink">
-                    <li>
-                        <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                        :to="{ name: 'ChangePassword' }">
-                            Change password
-                        </router-link>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li>
-                        <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
-                        :to="{ name: 'ChangeProfile' }">
-                            Change profile
-                        </router-link>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li>
-                        <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item" v-else="!userStore.user">
-                <a class="nav-link" href="#" role="button">
-                    <span class="avatar-text">Customer (Anonymous)</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item d-flex" style="align-items:center;" v-if="!userStore.user">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                        :to="{ name: 'Register' }">
+                        Register
+                    </router-link>
+                </li>
+                <li class="nav-item d-flex" v-if="!userStore.user" style="align-items:center;">
+                    <router-link style="vertical-align:middle;" class="nav-link"
+                        :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+                        Login
+                    </router-link>
+                </li>
+                <div class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
+                <li class="nav-item dropdown nav-user" v-if="userStore.user" id="dropdown-user">
+                    <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="account-user-avatar">
+                            <img alt="user image" :src="photoFullUrl()" class="rounded-circle img_photo">
+                        </span>
+                        <span>
+                            <span class="account-user-name">{{ userStore.user.name }}</span>
+                            <span class="account-position" v-if="userStore.user.type == 'EM'">Manager</span>
+                            <span class="account-position" v-if="userStore.user.type == 'EC'">Chef</span>
+                            <span class="account-position" v-if="userStore.user.type == 'ED'">Delivery</span>
+                            <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                                :to="{ name: 'ChangePassword' }">
+                                Change password
+                            </router-link>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                :to="{ name: 'ChangeProfile' }">
+                                Change profile
+                            </router-link>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item" v-else="!userStore.user">
+                    <a class="nav-link" href="#" role="button">
+                        <span class="avatar-text">Customer (Anonymous)</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </template>
 
 <style scoped>
-
 .img_photo {
     width: 32px;
     height: 32px;
@@ -116,7 +114,7 @@ const photoFullUrl = () => {
     text-align: left !important;
     position: relative;
     background-color: rgb(250, 250, 253);
-    border: 1px solid #eef2f7;
+    border: 1px solid #9b9d9e;
     border-width: 0 1px;
     min-height: 70px;
     transition: none;
@@ -165,4 +163,10 @@ const photoFullUrl = () => {
     margin: auto 1rem;
 }
 
+.avatar-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+}
 </style>

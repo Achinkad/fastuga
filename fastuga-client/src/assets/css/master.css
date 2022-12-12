@@ -26,16 +26,6 @@ main {
     padding: 70px 12px 65px;
 }
 
-.bi {
-    font-size: 1.3rem;
-    margin-right: 0.5rem;
-}
-
-.bi-xs {
-    font-size: 1rem;
-    margin-right: 0.1rem;
-}
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -100,4 +90,26 @@ main {
 .form-control-dark:focus {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.p-title-box .p-title {
+  font-size: 1.235rem;
+  margin: 0;
+  line-height: 75px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.active > .page-link, .page-link.active {
+    z-index: 3;
+    color: #fff !important;
+    background-color: #727cf5 !important;
+    border-color: #727cf5 !important;
+}
+
+.page-link {
+    color: #727cf5 !important;
 }

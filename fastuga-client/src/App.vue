@@ -1,19 +1,25 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import { useConfigStore } from './stores/config.js'
 
-import Navbar from "@/layout/Navbar.vue";
-import Sidebar from "@/layout/Sidebar.vue";
+import Navbar from "@/layout/Navbar.vue"
+import Sidebar from "@/layout/Sidebar.vue"
+
+const configStore = useConfigStore()
 </script>
 
 <template>
     <div class="wrapper">
-        <Navbar/>
-        <Sidebar/>
-        <main>
+        <Navbar v-if="configStore.showNavbar"/>
+        <Sidebar v-if="configStore.showSidebar"/>
+        <main v-if="configStore.showMain">
             <div class="content">
-                <router-view></router-view>
+                <router-view/>
             </div>
         </main>
+        <section v-if="!configStore.showMain">
+            <router-view/>
+        </section>
     </div>
 </template>
 

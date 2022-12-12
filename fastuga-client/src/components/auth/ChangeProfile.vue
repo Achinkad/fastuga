@@ -39,7 +39,7 @@
     return JSON.stringify(customer.value)
   }
 
-  let originalValueStr = ''
+  
   const loadCustomer = () => {
     errors.value = null
     if(userStore.user.type == "C"){
@@ -110,6 +110,7 @@ const updateCostumer = () => {
         .then((response) => {
           customer.value = response.data.data
           originalValueStr = dataAsString()
+          console.log("aaa")
           toast.success('Register was done successfully.')
           router.back()
         })
