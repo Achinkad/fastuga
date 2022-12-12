@@ -242,6 +242,8 @@ onMounted(() => {
 
             </div>
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
+            <br />
+            <span style="font-size: large;">Points available: {{ points() }} </span>
             <div v-if="userStore.user && userStore.user.type == 'EM'">
                 <div class="mb-3">
                     <label for="date">Date</label>
