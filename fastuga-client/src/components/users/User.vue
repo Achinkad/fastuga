@@ -75,8 +75,6 @@ const serverBaseUrl = inject("serverBaseUrl")
       errors.value = null
       axios.post(serverBaseUrl+'/api/users/' + props.id, user_values)
         .then((response) => {
-          //user.value = response.data.data
-          //originalValueStr = dataAsString()
           toast.success('User #' + props.id + ' was updated successfully.')
           router.back()
         })

@@ -1,4 +1,6 @@
 <script setup>
+
+
 const options = {
     chart: {
       id: 'orders-per-month',

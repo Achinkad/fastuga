@@ -36,36 +36,27 @@ onMounted(() => {
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
         <div class="logo">
-            <span style="vertical-align">FASTUGA</span>
+            <span id="orange" style="vertical-align">FASTUGA</span>
         </div>
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
-                <li class="nav-item nav-item-title">Navigation</li>
+                <li id="orange" class="nav-item nav-item-title">Navigation</li>
                 <li class="nav-item" v-if="userStore.user && userStore.user.type == 'EM'">
                     <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
                         :to="{ name: 'Dashboard' }">
-                        <i class="bi bi-house-door"></i>
+                        <i id="orange" class="bi bi-house-door"></i>
                         Dashboard
                     </router-link>
                 </li>
-                <!--
-            <li class="nav-item">
-            <router-link class="nav-link" :class="{ active: $route.name === 'CurrentOrder' }"
-            :to="{ name: 'CurrentOrder' }">
-            <i class="bi bi-list-stars"></i>
-            My Orders
-        </router-link>
-    </li>
--->
                 <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                     <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
                         :to="{ name: 'Orders' }">
                         <div v-if="userStore.user && userStore.user.type == 'EC'">
-                            <i class="bi bi-basket3"></i>
+                            <i id="orange" class="bi bi-basket3"></i>
                             Order-Items
                         </div>
                         <div v-else>
-                            <i class="bi bi-basket3"></i>
+                            <i id="orange" class="bi bi-basket3"></i>
                             Orders
                         </div>
                     </router-link>
@@ -78,11 +69,11 @@ onMounted(() => {
 
 
                 <div v-if="userStore.user && userStore.user.type == 'EM'">
-                    <li class="nav-item nav-item-title mt-3">Administration</li>
+                    <li id="orange" class="nav-item nav-item-title mt-3">Administration</li>
                     <li class="nav-item d-flex justify-content-between align-items-center pe-3">
                         <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
                             :to="{ name: 'Products' }">
-                            <i class="bi bi-egg-fried"></i>
+                            <i id="orange" class="bi bi-egg-fried"></i>
                             Products
                         </router-link>
                         <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
@@ -92,7 +83,7 @@ onMounted(() => {
                     <li class="nav-item">
                         <router-link class="nav-link" :class="{ active: $route.name === 'Users' }"
                             :to="{ name: 'Users' }">
-                            <i class="bi bi-people"></i>
+                            <i id="orange" class="bi bi-people"></i>
                             Users
                         </router-link>
                     </li>
@@ -103,14 +94,13 @@ onMounted(() => {
 
 
                 <ul class="nav flex-column">
-                    <li class="nav-item nav-item-title">In preparation</li>
-
+                    <li id="orange" class="nav-item nav-item-title">In preparation</li>
                     <li class="nav-item" v-for="order in orders" :key="order.id">
                         <div v-if="order.status == 'P'">
                             <router-link class="nav-link w-100 me-3"
                                 :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
                                 :to="{ name: 'Order', params: { id: order.id } }">
-                                <i class="bi bi-bag"></i>
+                                <i id="orange" class="bi bi-bag"></i>
                                 <span> Ticket nº {{ order.ticket_number }}</span>
                             </router-link>
                         </div>
