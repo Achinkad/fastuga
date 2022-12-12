@@ -30,8 +30,28 @@ class OrderController extends Controller
         $order = new Order;
         $order->fill($request->validated());
 
+        $order->date = Carbon::now();
         $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
         $order->status = "P";
+
+        /* --- Handle Points System --- */
+        if ($order->customer_id) {
+            if (!$order->points_used_to_pay % 2) { return response()->json(["msg" => "Invalid number of points!"], 402); }
+
+            $order->total_paid_with_points = $order->points_used_to_pay / 2;
+            $order->total_paid = $order->total_price - ($order->points_used_to_pay / 2);
+
+            $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
+            $order->customer->points += abs($points - $order->points_used_to_pay);
+            $order->points_gained = $points;
+
+            $order->customer->save();
+        } else {
+            $order->total_paid = $order->total_price;
+            $order->points_gained = 0;
+            $order->total_paid_with_points = 0;
+        }
+
         $order->save();
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
@@ -42,14 +62,6 @@ class OrderController extends Controller
         ]);
 
         if ($payment_response->failed()) { return $payment_response->throw(); }
-
-        /* --- Handle Points System --- */
-        if ($order->customer_id) {
-            $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
-            $order->customer->points += abs($points - $order->points_used_to_pay);
-            $order->points_gained = $points;
-            $order->customer->save();
-        }
 
         /* --- Handle Order Items --- */
         foreach ($request->input("items") as $item) {
