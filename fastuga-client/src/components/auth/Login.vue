@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </div>
-    <footer class="footer footer-alt">
+    <footer  class="footer footer-alt">
         Distributed Applications Development - 2022 Project
     </footer>
 </template>
@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
     }
 
     .card-header {
-        background-color: rgb(114, 124, 245);
+        background-color: #ffa500;
         color: #fff !important;
         font-weight: 800;
         font-size: 1.1rem;
@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
     h4 {
         font-size: 1.125rem;
     }
-
+    
     .text-muted {
         color: #6c757d !important;
         margin-bottom: 1.5rem !important;
@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
     }
 
     button[type="button"] {
-        background-color: #727cf5 !important;
+        background-color: #ffa500 !important;
         color: #fff;
         border-color: #727cf5;
         border-radius: 0.15rem;
