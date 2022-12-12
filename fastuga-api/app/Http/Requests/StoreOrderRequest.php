@@ -18,6 +18,12 @@ class StoreOrderRequest extends FormRequest
         if ($this->has('payment_type')) {
             $this->merge(['payment_type' => strtoupper($this->payment_type)]);
         }
+
+        if ($this->has('items')) {
+            $items = array();
+            foreach ($this->request->all()['items'] as $item) { array_push($items, json_decode($item, true)); }
+            $this->merge(['items' => $items]);
+        }
     }
 
     public function rules()
@@ -35,16 +41,22 @@ class StoreOrderRequest extends FormRequest
             'date' => 'required|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'order_item' => 'required|array',
-            'order_item.*.order_id' => 'sometimes',
-            'order_item.*.order_local_number' => 'sometimes',
-            'order_item[*].product_id' => 'required|exists:products,id',
-            'order_item.*.status' => 'sometimes|in:W,P,R',
-            'order_item.*.price' => 'sometimes',
-            'order_item.*.preparation_by' => 'nullable',
-            'order_item.*.notes' => 'nullable',
-            'order_item.*.custom' => 'nullable'
+            'items' => 'present|array'
         ];
+
+        if ($this->has('items')) {
+            $items_rules = [
+                'items.*.order_id' => 'nullable|exists:orders,id',
+                'items.*.order_local_number' => 'sometimes',
+                'items.*.product_id' => 'required|exists:products,id',
+                'items.*.status' => 'sometimes|in:W,P,R',
+                'items.*.price' => 'sometimes',
+                'items.*.preparation_by' => 'nullable',
+                'items.*.notes' => 'nullable',
+                'items.*.product' => 'nullable',
+                'items.*.custom' => 'nullable'
+            ];
+        }
 
         switch ($this->request->get('payment_type')) {
             case 'VISA':
@@ -64,7 +76,7 @@ class StoreOrderRequest extends FormRequest
                 break;
         }
 
-        return array_merge($rules, $reference_rule);
+        return array_merge($rules, $reference_rule, $items_rules);
     }
 
     public function failedValidation(Validator $validator)

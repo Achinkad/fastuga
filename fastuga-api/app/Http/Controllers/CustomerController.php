@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
-use App\Http\Controllers\UserController;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\StoreUserRequest;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\UserController;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\CustomerResource;
-use Illuminate\Support\Facades\DB;
-use App\Models\Customer;
-use App\Models\User;
+use App\Http\Requests\StoreCustomerRequest;
 
 
 class CustomerController extends Controller
@@ -92,6 +93,9 @@ class CustomerController extends Controller
 
     public function showByUser(User $user)
     {
+        
+      
         return new CustomerResource($user->customer);
+            
     }
 }

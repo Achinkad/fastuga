@@ -85,15 +85,17 @@ const editClick = (order) => {
 }
 
 const dialogConfirmedDelete = () => {
+  console.log(orderToDelete.value)
   axios
-    .delete(serverBaseUrl + "/api/orders/" + orderToDelete.value.id)
+    .patch(serverBaseUrl + "/api/orders/" + orderToDelete.value.id + "/status", { status: 'C' })
     .then((response) => {
-      emit("deleted", response.data.data)
+      emit("canceled", response.data.data)
       toast.info("Order " + orderToDeleteDescription.value + " was deleted")
     })
     .catch((error) => {
-      console.log(error)
-    })
+        console.log(error);
+    });
+
 }
 
 const deleteClick = (order) => {
@@ -109,7 +111,7 @@ const deleteClick = (order) => {
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId && userStore.user && userStore.user.type=='EM'">ID</th>
+        <th v-if="showId && userStore.user && userStore.user.type == 'EM'">ID</th>
         <th v-if="showStatus">Status</th>
         <th v-if="showPrice">Total Paid/Total Price</th>
         <th v-if="showTicketNumber">Ticket Number</th>
@@ -119,7 +121,7 @@ const deleteClick = (order) => {
     </thead>
     <tbody>
       <tr v-for="order in editingOrders" :key="order.id">
-        <td v-if="showId && userStore.user && userStore.user.type=='EM'">{{ order.id }}</td>
+        <td v-if="showId && userStore.user && userStore.user.type == 'EM'">{{ order.id }}</td>
         <td v-if="showStatus">
           <span v-if="order.status == 'P'">Preparing</span>
           <span v-if="order.status == 'R'">Ready</span>
@@ -128,22 +130,23 @@ const deleteClick = (order) => {
         </td>
         <td v-if="showPrice">{{ order.total_paid }}€/{{ order.total_price }}€</td>
         <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
-
         <td class="text-end" v-if="userStore.user.type == 'EM'">
           <div class="d-flex justify-content-end">
-
-            <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
-              <i class="bi bi-x-lg"></i>
-            </button>
+            <div v-if="order.status != 'C'">
+              <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
             <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
               <i class="bi bi-pencil"></i>
             </button>
 
           </div>
         </td>
-
       </tr>
+
     </tbody>
+
   </table>
 
 

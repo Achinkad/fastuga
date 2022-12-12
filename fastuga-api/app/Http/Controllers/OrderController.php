@@ -14,7 +14,6 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\OrderItemController;
 use App\Models\OrderItem;
 
-
 class OrderController extends Controller
 {
     public function index(Request $request)
@@ -25,29 +24,25 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
- 
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
-        $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;   
-      
-        $order = new Order;
+        $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
+        $order = new Order;
         $order->fill($request->validated());
 
         $order->ticket_number = $latest_ticket >= 99 ? 1 : ++$latest_ticket;
-        $order->status = "P"; // mudar conforme os order_item
+        $order->status = "P";
+        $order->save();
 
         /* --- Handle Payment Gateway (Create a New Payment) --- */
-        
         $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/payments', [
             "type" => strtolower($order->payment_type),
             "reference" => $order->payment_reference,
             "value" => floatval($order->total_paid)
         ]);
 
-      
         if ($payment_response->failed()) { return $payment_response->throw(); }
-        
-          
+
         /* --- Handle Points System --- */
         if ($order->customer_id) {
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
@@ -55,12 +50,10 @@ class OrderController extends Controller
             $order->points_gained = $points;
             $order->customer->save();
         }
-       
+
         /* --- Handle Order Items --- */
-        $order->save();
-        foreach ($request->input("order_item") as $order_item) {
-           
-            (new OrderItemController)->store($order_item, $order->id);
+        foreach ($request->input("items") as $item) {
+            (new OrderItemController)->store($item, $order->id);
         }
 
         $order->save();
@@ -78,7 +71,6 @@ class OrderController extends Controller
         $order->save();
 
         // TODO: Verify if there is new Order Items
-
 
         /* --- Handle Order Items --- */
         foreach ($request->input("items") as $item) {
@@ -102,15 +94,17 @@ class OrderController extends Controller
 
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
-        $request->validate(['status' => 'required|in:P,R,D,C']);
+       
+        $request->validate(['status' => 'sometimes|in:P,R,D,C']);
 
         if ($request->input('status') == "C" && $order->status != "C") {
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
-            $payment_response = Http::post('https://dad-202223-payments-api.vercel.app/api/refunds', [
+            $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
                 "type" => strtolower($order->payment_type),
                 "reference" => $order->payment_reference,
                 "value" => floatval($order->total_paid)
             ]);
+            
 
             if ($payment_response->failed()) { return $payment_response->throw(); }
 
@@ -120,8 +114,8 @@ class OrderController extends Controller
                 $order->customer->save();
             }
         }
-
-        $order->status = $request->input('status');
+        
+        $order->status = $request->status;
         $order->save();
         return new OrderResource($order);
     }
