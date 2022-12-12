@@ -41,22 +41,20 @@ class StoreOrderRequest extends FormRequest
             'date' => 'nullable|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
-            'items' => 'present|array'
+            'items' => 'required|array'
         ];
 
-        if ($this->has('items')) {
-            $items_rules = [
-                'items.*.order_id' => 'nullable|exists:orders,id',
-                'items.*.order_local_number' => 'sometimes',
-                'items.*.product_id' => 'required|exists:products,id',
-                'items.*.status' => 'sometimes|in:W,P,R',
-                'items.*.price' => 'sometimes',
-                'items.*.preparation_by' => 'nullable',
-                'items.*.notes' => 'nullable',
-                'items.*.product' => 'nullable',
-                'items.*.custom' => 'nullable'
-            ];
-        }
+        $items_rules = [
+            'items.*.order_id' => 'nullable|exists:orders,id',
+            'items.*.order_local_number' => 'sometimes',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.status' => 'sometimes|in:W,P,R',
+            'items.*.price' => 'sometimes',
+            'items.*.preparation_by' => 'nullable',
+            'items.*.notes' => 'nullable',
+            'items.*.product' => 'nullable',
+            'items.*.custom' => 'nullable'
+        ];
 
         switch ($this->request->get('payment_type')) {
             case 'VISA':
