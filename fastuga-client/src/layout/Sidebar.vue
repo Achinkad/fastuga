@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject ,watch} from 'vue'
 import { useUserStore } from '../stores/user.js'
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
@@ -20,15 +20,18 @@ const loadOrders = () => {
             })
     }
 }
-
 onMounted(() => {
+  loadOrders();
 
-    timer = setInterval(function () {
+  watch(
+    () => userStore.userId,
+    (userId) => {
+      if (userId) {
         loadOrders();
-        clearInterval(timer)
-    }, 1000)
-
-})
+      }
+    },
+  );
+});
 
 
 

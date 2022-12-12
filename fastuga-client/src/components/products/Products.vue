@@ -85,7 +85,7 @@ onMounted(() => {
                 <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Product</button>
         </div>
     </div>
-    <hr>
+   <br>
     <product-table :products="products" :showId="true" @edit="editProduct" @forceRerender="forceRerender"
         @deleted="deletedProduct"></product-table>
 

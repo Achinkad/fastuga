@@ -99,7 +99,7 @@ const deleteClick = (order) => {
   <table class="table">
     <thead>
       <tr>
-        <th v-if="showId && userStore.user && userStore.user.type == 'EM'">ID</th>
+        <th v-show="showId && userStore.user && userStore.user.type == 'EM'">ID</th>
         <th v-if="showStatus">Status</th>
         <th v-if="showPrice">Total Paid/Total Price</th>
         <th v-if="showTicketNumber">Ticket Number</th>

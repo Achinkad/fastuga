@@ -92,6 +92,9 @@ const deleteClick = (product) => {
         <th v-if="showId">ID</th>
         <th v-if="showPhoto">Photo</th>
         <th class="align-middle">Name</th>
+        <th class="align-middle"></th>
+        <th class="align-middle"></th>
+        <th class="align-middle"></th>
       </tr>
     </thead>
     <tbody>
@@ -103,6 +106,7 @@ const deleteClick = (product) => {
         <td class="align-middle">{{ product.name }}</td>
         <td class="align-middle">{{ product.type }}</td>
         <td class="align-middle">{{ product.price }}€</td>
+        <td>
         <div class="d-flex justify-content-end">
           <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
             <i class="bi bi-trash3"></i>
@@ -110,7 +114,7 @@ const deleteClick = (product) => {
           <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
             <i class="bi bi-pencil"></i>
           </button>
-        </div>
+        </div></td>
       </tr>
     </tbody>
   </table>
