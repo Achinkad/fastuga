@@ -29,9 +29,6 @@ onMounted(() => {
     }, 1000)
 
 })
-
-
-
 </script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
@@ -167,8 +164,9 @@ ul {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.nav-link .active {
-    color: #fff;
+.sidebar .nav-link.active {
+    color: orange;
+    font-weight: 600;
 }
 
 .nav-link i {

@@ -31,7 +31,6 @@
   })
 
 
-  const emit = defineEmits(["save"]);
 
   const customer = ref(newCustomer)
 
@@ -72,10 +71,9 @@
         }
 
     formData.append('_method', 'PUT');
-    
-    emit("save", formData);
-    toast.success('Profile updated successfully.')
-    router.back()
+
+    userStore.save(formData,userStore.user.id);
+
     }
 
   
