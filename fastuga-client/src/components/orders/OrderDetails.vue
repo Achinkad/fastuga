@@ -29,16 +29,8 @@ const props = defineProps({
 });
 const newOrderItem = () => {
     return {
-        id: null,
-        status: "R",
-        price: 0,
         notes: null,
-        custom: null,
-        order_id: null,
-        order_local_number: 0,
         product_id: null,
-        product: [],
-        preparation_by: null
     };
 };
 
@@ -110,17 +102,11 @@ const getCurrentCustomer = () => {
 
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem());
-    const size = editingOrder.value.order_item.length
-    if (product.type === "hot dish") {
-        orderItem.value.status = "P"
-    }
 
     orderItem.value.product_id = product.id;
-    orderItem.value.order_local_number = size + 1
-    orderItem.value.id = size + 1
-    orderItem.value.order_id = editingOrder.value.id
+
     orderItem.value.price = product.price
-    orderItem.value.preparation_by=null;
+
     orderItem.value.product = product;
     editingOrder.value.order_item.push(orderItem.value);
 
@@ -130,9 +116,8 @@ const add = () => {
     fillOrder();
 
     let formData = new FormData()
-    formData.append('id', editingOrder.value.id);
+ 
     formData.append('total_price', editingOrder.value.total_price);
-    formData.append('total_paid', editingOrder.value.total_paid);
 
     if (editingOrder.value.payment_type != undefined) {
         formData.append('payment_type', editingOrder.value.payment_type);
@@ -142,18 +127,13 @@ const add = () => {
         formData.append('payment_reference', editingOrder.value.payment_reference);
     }
 
-    formData.append('date', editingOrder.value.date);
-    if (editingOrder.value.custom != null) {
-        formData.append('custom', editingOrder.value.custom);
-    }
-
     if (editingOrder.value.customer_id != undefined) {
         formData.append('customer_id', editingOrder.value.customer_id);
     }
-    formData.append('delivered_by', editingOrder.value.delivered_by);
-    formData.append('points_gained',editingOrder.value.points_gained)
+   
+  
     formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
-    formData.append('total_paid_with_points', editingOrder.value.total_paid_with_points)
+   
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
     
     emit("add", formData);
@@ -161,21 +141,14 @@ const add = () => {
 
 const fillOrder = () => {
     editingOrder.value.total_price = totalPrice();
-    const current = new Date();
-    const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-    editingOrder.value.date = date
-    editingOrder.value.user = userStore.user; //####
-    editingOrder.value.points_gained = Math.floor(editingOrder.value.total_price/10) //passar para a API
 
-    editingOrder.value.status='P';
-    editingOrder.value.ticket_number=1;
+
     if(userStore.user && currentCustomer){
         editingOrder.value.customer_id=currentCustomer.id;
         console.log(currentCustomer)
     }
 
     editingOrder.value.total_paid=2.8; //ver como funciona realmente o pagamento
-    editingOrder.value.total_paid_with_points=0;
     editingOrder.value.points_used_to_pay=0;
 
 }
@@ -356,10 +329,8 @@ onMounted(() => {
                     @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
                     <hr id="hr" />
 
-
                 </div>
             </div>
-
 
         </div>
     </div>
