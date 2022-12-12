@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { useUserStore } from '../stores/user.js'
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
@@ -20,7 +20,8 @@ const loadOrders = () => {
             })
     }
 }
-onBeforeMount(() => {
+
+onMounted(() => {
 
     timer = setInterval(function () {
         loadOrders();
@@ -99,18 +100,22 @@ onBeforeMount(() => {
             </ul>
 
             <div v-if="userStore.user && userStore.user.type == 'C'">
-               
-             
-                <ul  class="nav flex-column">
-                     <li class="nav-item nav-item-title">Orders</li>
+
+
+                <ul class="nav flex-column">
+                    <li class="nav-item nav-item-title">Orders</li>
+
                     <li class="nav-item" v-for="order in orders" :key="order.id">
-                        <router-link class="nav-link w-100 me-3"
-                            :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
-                            :to="{ name: 'Order', params: { id: order.id } }">
-                            <i class="bi bi-bag"></i>
-                            <span> Ticket nº {{order.ticket_number}}</span>
-                        </router-link>
+                        <div v-if="order.status == 'P'">
+                            <router-link class="nav-link w-100 me-3"
+                                :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
+                                :to="{ name: 'Order', params: { id: order.id } }">
+                                <i class="bi bi-bag"></i>
+                                <span> Ticket nº {{ order.ticket_number }}</span>
+                            </router-link>
+                        </div>
                     </li>
+
                 </ul>
             </div>
         </div>

@@ -154,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == 'Order') {
-        if ((userStore.user.type == 'EM')) {
+        if ((userStore.user.type == 'EM' || userStore.user.type == 'C')) {
             next()
             return
         }
