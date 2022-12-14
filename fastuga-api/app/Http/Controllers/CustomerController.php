@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\StoreUserRequest;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+
 use App\Http\Controllers\UserController;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\CustomerResource;
@@ -34,7 +36,7 @@ class CustomerController extends Controller
             $customer = new Customer;
             $customer->fill($customer_fields);
             $customer->user_id = trim($create_user->id);
-
+/*
             // -> Stores Customer Photo
             if ($customer_request->has('photo_url')) {
                 $photo = $customer_request->file('photo_url');
@@ -42,7 +44,7 @@ class CustomerController extends Controller
                 Storage::putFileAs('public/fotos', $photo, $photo_id);
                 $customer->photo_url = $photo_id;
             }
-
+*/
             $customer->save();
             return $customer;
         });
@@ -63,17 +65,41 @@ class CustomerController extends Controller
 
             // -> Updates Customer
             $customer->fill($customer_request->validated());
-
+            
+            //dd($customer);
             if ($customer_request->has('photo_url')) {
-                // -> Check if a previous file exists and deletes it
+                /*
                 if(Storage::disk('public')->exists($customer->photo_url)) {
                     Storage::delete($customer->photo_url);
                 }
+                */
                 // -> Stores the new photo
-                $photo = $customer_request->file('photo_url');
-                $photo_id = $customer->id . '_' . $photo->hashName();
-                Storage::putFileAs('public/fotos', $photo, $photo_id);
-                $customer->photo_url = $photo_id;
+                $folderPath = "public/fotos/";
+
+                $image_parts = explode(";base64,", $customer->photo_url);
+        
+                $image_type_aux = explode("image/", $image_parts[0]);
+        
+                $image_type = $image_type_aux[1];
+        
+                $image_base64 = base64_decode($image_parts[1]);
+                
+                
+    
+              
+                
+                $uniqid=uniqid();
+                $id_user=$customer->user_id;
+             
+    
+                $file="{$id_user}_ {$uniqid}.{$image_type}";
+                
+                // -> Stores the new photo
+    
+                Storage::put($folderPath.$file, $image_base64);
+    
+    
+                $customer->photo_url = $file;
             }
 
             $customer->save();

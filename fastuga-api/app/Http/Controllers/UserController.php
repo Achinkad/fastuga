@@ -29,20 +29,17 @@ class UserController extends Controller
             $user = User::create($request->validated());
             $password_hashed = Hash::make($request->input('password'));
             $user->password = $password_hashed;
+            
             if ($request->has('photo_url')) {
 
-            
+                /*
 
                 // -> Check if a previous file exists and deletes it
                 //This isn't working
                 if(Storage::disk('public')->exists($user->photo_url)) {
                     Storage::delete($user->photo_url);
                 }
-                
-    
-        
-    
-              
+                  */        
                 $folderPath = "public/fotos/";
     
                 $image_parts = explode(";base64,", $user->photo_url);
@@ -52,10 +49,6 @@ class UserController extends Controller
                 $image_type = $image_type_aux[1];
         
                 $image_base64 = base64_decode($image_parts[1]);
-                
-                
-    
-              
                 
                 $uniqid=uniqid();
                 $id_user=$user->id;

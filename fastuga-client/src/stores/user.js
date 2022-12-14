@@ -83,7 +83,7 @@ export const useUserStore = defineStore('user', () => {
 
     function save (user_values, user_id) {
         errors.value = null
-        axios.post(serverBaseUrl+'/api/users/' + user_id, user_values)
+        axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
           .then((response) => {
             //user.value = response.data.data
             //originalValueStr = dataAsString()
