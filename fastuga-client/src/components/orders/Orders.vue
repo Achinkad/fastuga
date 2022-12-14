@@ -97,7 +97,7 @@ const props = defineProps({
 
 const forceRerender = () => {
     loadOrders()
-   
+
 }
 
 const orders = ref([])
@@ -126,7 +126,7 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div class="row" v-if="!onlyCurrentOrders && userStore.user &&userStore.user.type == 'EM'">
+        <div class="row">
             <div class="d-flex">
                 <div class="col-3">
                     <label for="selectCompleted" class="form-label">Filter by status:</label>
@@ -137,16 +137,18 @@ onMounted(() => {
                         <option value="D">Delivered Orders</option>
                         <option value="C">Canceled Orders</option>
                     </select>
+                  </div>
                 </div>
+              </div> 
                 <div class="ms-auto align-self-center">
-                    <div class="mx-0 mt-2" v-if="!userStore.user || userStore.user.type == 'EM' || userStore.user.type == 'C'">
+                    <div class="mx-0 mt-2" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
                           <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
                               <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
                           </button>
                     </div>
                 </div>
-            </div>
-        </div>
+          
+       
 
         <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
         <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>

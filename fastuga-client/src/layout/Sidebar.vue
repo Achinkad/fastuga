@@ -1,11 +1,14 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject ,watch} from 'vue'
 import { useUserStore } from '../stores/user.js'
+
 const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl");
+const serverBaseUrl = inject("serverBaseUrl")
+
 const userStore = useUserStore()
-var timer = null;
 const orders = ref([])
+
+var timer = null;
 
 const loadOrders = () => {
     if (userStore.user && userStore.user.type == 'C') {
@@ -20,15 +23,21 @@ const loadOrders = () => {
             })
     }
 }
-
 onMounted(() => {
+  loadOrders();
 
-    timer = setInterval(function () {
+  watch(
+    () => userStore.userId,
+    (userId) => {
+      if (userId) {
         loadOrders();
-        clearInterval(timer)
-    }, 1000)
+      }
+    },
+  );
+});
 
-})
+
+
 </script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
@@ -63,8 +72,6 @@ onMounted(() => {
                     </router-link>
                 </li>
 
-
-
                 <div v-if="userStore.user && userStore.user.type == 'EM'">
                     <li id="orange" class="nav-item nav-item-title mt-3">Administration</li>
                     <li class="nav-item d-flex justify-content-between align-items-center pe-3">
@@ -85,13 +92,9 @@ onMounted(() => {
                         </router-link>
                     </li>
                 </div>
-            </ul>
 
-            <div v-if="userStore.user && userStore.user.type == 'C'">
-
-
-                <ul class="nav flex-column">
-                    <li id="orange" class="nav-item nav-item-title">In preparation</li>
+                <div v-if="userStore.user && userStore.user.type == 'C'">
+                    <li id="orange" class="nav-item nav-item-title mt-3">In preparation</li>
                     <li class="nav-item" v-for="order in orders" :key="order.id">
                         <div v-if="order.status == 'P'">
                             <router-link class="nav-link w-100 me-3"
@@ -102,9 +105,8 @@ onMounted(() => {
                             </router-link>
                         </div>
                     </li>
-
-                </ul>
-            </div>
+                </div>
+            </ul>
         </div>
     </nav>
 </template>

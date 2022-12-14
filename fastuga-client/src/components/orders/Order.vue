@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, inject } from 'vue'
+import { ref, watch, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 import OrderDetail from "./OrderDetails.vue"

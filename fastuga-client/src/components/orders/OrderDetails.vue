@@ -1,17 +1,19 @@
 <script setup>
-import { onMounted, ref, watch, inject } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
-import productNoneUrl from '@/assets/product-none.png'
+import { inject,onMounted, ref, watch } from "vue";
+import avatarNoneUrl from '@/assets/avatar-none.png';
+import productNoneUrl from '@/assets/product-none.png';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
-import { useUserStore } from '../../stores/user.js'
-import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user.js';
+import { useRouter } from 'vue-router';
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
 const toast = inject('toast')
 const router = useRouter()
-axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
+
+
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -42,7 +44,7 @@ var value_type = ref("all");
 const editingOrder = ref(props.order);
 var currentCustomer = ref();
 
-editingOrder.value.points_used_to_pay="5";
+editingOrder.value.points_used_to_pay="0";
 
 watch(
     () => props.order,
@@ -79,7 +81,7 @@ const getCurrentCustomer = () => {
             console.log(response)
             if (response.data) {
                 currentCustomer = response.data.data
-            console.log(currentCustomer)
+                console.log(currentCustomer)
             }
 
         })
@@ -91,11 +93,8 @@ const getCurrentCustomer = () => {
 
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem());
-
     orderItem.value.product_id = product.id;
-
     orderItem.value.price = product.price
-
     orderItem.value.product = product;
     editingOrder.value.order_item.push(orderItem.value);
 
@@ -105,7 +104,7 @@ const add = () => {
     fillOrder();
 
     let formData = new FormData()
- 
+
     formData.append('total_price', editingOrder.value.total_price);
 
     if (editingOrder.value.payment_type != undefined) {
@@ -134,10 +133,10 @@ const fillOrder = () => {
     editingOrder.value.total_price = totalPrice();
 
 
-    editingOrder.value.status='P';
-    editingOrder.value.ticket_number=1;
-    if(userStore.user && currentCustomer){
-        editingOrder.value.customer_id=currentCustomer.id;
+    editingOrder.value.status = 'P';
+    editingOrder.value.ticket_number = 1;
+    if (userStore.user && currentCustomer) {
+        editingOrder.value.customer_id = currentCustomer.id;
         console.log(currentCustomer)
     }
 
@@ -145,8 +144,7 @@ const fillOrder = () => {
 
 }
 
-const deleteProduct = (product, position) => {
-
+const deleteProduct = (position) => {
     editingOrder.value.order_item.splice(position - 1, 1)
 
 };
@@ -174,8 +172,10 @@ const totalPrice = () => {
     });
     return total.toFixed(2);
 };
+
+
 const points = () => {
-   return currentCustomer.points;
+    return currentCustomer.points;
 };
 
 const countProduct = (product) => {
@@ -185,9 +185,15 @@ const countProduct = (product) => {
             count++
         }
     })
-    //console.log(count)
     return count
 }
+/* 
+const countProduct = (product) => {
+    const productItems = editingOrder.value.order_item.filter(order => order.product.id === product.id);
+    return productItems.length;
+}
+*/ 
+
 const cancel = () => {
     emit("cancel", editingOrder.value);
 };
@@ -247,18 +253,18 @@ onMounted(() => {
                 <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
 
             </div>
-            
+
             <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
             <br>
             <br>
-            <div v-if="userStore.user && userStore.user.type=='C'">
-                <span style="font-size: large;">Points available: {{ points() }} <br><div id="nota">NOTE: You can only use 10 points at a time.</div></span>
+            <div v-if="userStore.user && userStore.user.type == 'C'">
+                <span style="font-size: large;">Points available: {{ points() }} </span>
                 <br>
-                <span style="font-size: large;">Points Used:</span>
-         
-                <input type="range" min="0" max="10" step="1" v-model="editingOrder.points_used_to_pay" oninput="this.nextElementSibling.value = this.value" v-if="$route.name == 'NewOrder'">
-                <output>{{editingOrder.points_used_to_pay}}</output>
-       
+                <br>
+                    <span id="slider" style="font-size: large;">Points Used:</span>
+                    <input id="slider" type="range" :value="points()" min="0" :max="points()" step="1"
+                        oninput="this.nextElementSibling.value = this.value">
+                    <output>{{ points() }}</output>
                 <br>
                 <br>
             </div>
@@ -315,8 +321,8 @@ onMounted(() => {
                                 v-model="editingOrder.order_item[n - 1].notes"
                                 v-if="userStore.user && userStore.user.type == 'C'"></textarea>
                             <textarea class="form-control" id="inputNotes" rows="1"
-                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user && userStore.user.type == 'EM'"
-                                readonly></textarea>
+                                v-model="editingOrder.order_item[n - 1].notes"
+                                v-if="userStore.user && userStore.user.type == 'EM'" readonly></textarea>
                             <field-error-message :errors="errors" fieldName="notes"></field-error-message>
                         </div>
                     </div>
@@ -348,13 +354,13 @@ onMounted(() => {
                                 @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
                             <hr id="hr" />
 
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
-
-
         </div>
-    </div>
-</div>
 
         <div class="mb-3 d-flex justify-content-end">
             <button type="button" id="button" class="btn btn-primary px-5" @click="add"
@@ -378,10 +384,12 @@ onMounted(() => {
     border: 3px solid #dc9c37ed;
     border-radius: 25px;
 }
-#nota{
-    opacity: 0.4;
-    color:red;
+
+#slider {
+    display: inline-block;
+    vertical-align: middle;
 }
+
 .child {
     display: flex;
     border: 3px solid #dc9c37ed;
