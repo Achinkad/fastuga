@@ -34,10 +34,34 @@ class ProductController extends Controller
 
         // -> Stores Product Photo
         if ($request->has('photo_url') && $request->file('photo_url')->isValid()) {
+            /*
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName();
             Storage::putFileAs('public/products', $photo, $photo_id);
             $product->photo_url = $photo_id;
+            */
+            $folderPath = "public/products/";
+
+            $image_parts = explode(";base64,", $product->photo_url);
+    
+            $image_type_aux = explode("image/", $image_parts[0]);
+    
+            $image_type = $image_type_aux[1];
+    
+            $image_base64 = base64_decode($image_parts[1]);
+            
+            
+            $uniqid=uniqid();
+         
+
+            $file="{$uniqid}.{$image_type}";
+            
+            // -> Stores the new photo
+
+            Storage::put($folderPath.$file, $image_base64);
+
+
+            $product->photo_url = $file;
 
         }
         else{
@@ -62,11 +86,35 @@ class ProductController extends Controller
             if(Storage::disk('public')->exists($product->photo_url)) {
                 Storage::delete($product->photo_url);
             }
+            /*
             // -> Stores the new photo
             $photo = $request->file('photo_url');
             $photo_id = $photo->hashName();
             Storage::putFileAs('public/products', $photo, $photo_id);
             $product->photo_url = $photo_id;
+            */
+            $folderPath = "public/products/";
+
+            $image_parts = explode(";base64,", $product->photo_url);
+    
+            $image_type_aux = explode("image/", $image_parts[0]);
+    
+            $image_type = $image_type_aux[1];
+    
+            $image_base64 = base64_decode($image_parts[1]);
+            
+            
+            $uniqid=uniqid();
+         
+
+            $file="{$uniqid}.{$image_type}";
+            
+            // -> Stores the new photo
+
+            Storage::put($folderPath.$file, $image_base64);
+
+
+            $product->photo_url = $file;
         }
 
         $product->save();

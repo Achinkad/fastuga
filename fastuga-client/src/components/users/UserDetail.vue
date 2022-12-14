@@ -2,8 +2,12 @@
 import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useUserStore } from '../../stores/user.js'
+//import { useUploadStore } from '../../stores/upload.js'
+
 
 const userStore = useUserStore()
+
+//const uploadStore = useUploadStore()
 
 const serverBaseUrl = inject("serverBaseUrl")
 var product_photo_intermediary = undefined
