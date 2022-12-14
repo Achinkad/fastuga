@@ -1,7 +1,9 @@
 <script setup>
-  import { ref, inject, onMounted} from 'vue'
+  import { ref, inject, onMounted,computed} from 'vue'
   import { useRouter } from 'vue-router'
   import { useUserStore } from '../../stores/user.js'
+  import avatarNoneUrl from '@/assets/avatar-none.png'
+
 
 
   const router = useRouter()
@@ -29,8 +31,17 @@
       photo_url: null,
       }
   })
+  var previewImage = null
 
-
+  const handleUpload = (e) => {
+                const image = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = e =>{
+                    previewImage = e.target.result;
+                    console.log(previewImage);
+                }
+}
 
   const customer = ref(newCustomer)
 
@@ -69,6 +80,9 @@
         }else{
           formData.append('blocked', 1);
         }
+    if (previewImage != null) {
+        formData.append('photo_url', previewImage);
+    }
 
     formData.append('_method', 'PUT');
 
@@ -76,6 +90,11 @@
 
     }
 
+  const photoFullUrl = computed(() => {
+    return customer.value.user.photo_url
+    ? serverBaseUrl + "/storage/fotos/" + customer.value.user.photo_url
+    : avatarNoneUrl
+})
   
  
 onMounted(() => {
@@ -212,7 +231,15 @@ const updateCostumer = () => {
         </div>
     </div>
 
-
+    <div class="w-25">
+                <label class="form-label">Photo</label>
+                <div class="mb-3">
+                    <img :src="photoFullUrl" class="img-thumbnail" />
+                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                        required>
+                    <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
+                </div>
+            </div>
 
 
     

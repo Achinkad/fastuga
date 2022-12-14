@@ -96,9 +96,6 @@ class UserController extends Controller
                 Storage::delete($user->photo_url);
             }
             
-
-    
-
           
             $folderPath = "public/fotos/";
 
@@ -121,12 +118,9 @@ class UserController extends Controller
             $file="{$id_user}_ {$uniqid}.{$image_type}";
             
             // -> Stores the new photo
-            //$photo = $request->file('photo_url');
-            //$photo_id = $photo->hashName();
-            //Storage::putFile('public/fotos', $file);
+
             Storage::put($folderPath.$file, $image_base64);
-            //file_put_contents($file, $image_base64);
-            //Storage::disk('local')->put($file, $image_base64);
+
 
             $user->photo_url = $file;
             

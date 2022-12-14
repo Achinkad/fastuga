@@ -86,8 +86,8 @@ const save = () => {
         formData.append('blocked', 0);
         }else{
           formData.append('blocked', 1);
-        }
-        if (previewImage != null) {
+    }
+    if (previewImage != null) {
         formData.append('photo_url', previewImage);
     }
     formData.append('_method', 'PUT');
@@ -146,7 +146,7 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-         <div class="mb-3" v-if="user.type != 'C'">
+         <div class="mb-3" >
             <label  for="type">Role:</label>
             <select id="type" name="type"  v-model="editingUser.type">
               <option value="EM">Manager</option>

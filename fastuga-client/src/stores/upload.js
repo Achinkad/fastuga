@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useUploadStore = defineStore('upload', () => {
     
 
-    //var previewImage = null
+    var previewImage = null
 
     const handleUpload = (e) => {
         const image = e.target.files[0];
@@ -14,6 +14,6 @@ export const useUploadStore = defineStore('upload', () => {
             console.log(previewImage);
         }
 }
-return {handleUpload}
+return {previewImage,handleUpload}
 
 })
