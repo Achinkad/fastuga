@@ -46,7 +46,7 @@ const photoFullUrl = () => {
                 </li>
                 <div class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
                 <li class="nav-item dropdown nav-user" v-if="userStore.user" id="dropdown-user">
-                    <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                    <a class="nav-link" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span class="account-user-avatar">
                             <img alt="user image" :src="photoFullUrl()" class="rounded-circle img_photo">

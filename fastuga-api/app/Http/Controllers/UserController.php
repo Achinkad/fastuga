@@ -29,6 +29,39 @@ class UserController extends Controller
             $user = User::create($request->validated());
             $password_hashed = Hash::make($request->input('password'));
             $user->password = $password_hashed;
+            
+            if ($request->has('photo_url')) {
+
+                /*
+
+                // -> Check if a previous file exists and deletes it
+                //This isn't working
+                if(Storage::disk('public')->exists($user->photo_url)) {
+                    Storage::delete($user->photo_url);
+                }
+                  */        
+                $folderPath = "public/fotos/";
+    
+                $image_parts = explode(";base64,", $user->photo_url);
+        
+                $image_type_aux = explode("image/", $image_parts[0]);
+        
+                $image_type = $image_type_aux[1];
+        
+                $image_base64 = base64_decode($image_parts[1]);
+                
+                $uniqid=uniqid();
+                $id_user=$user->id;
+             
+    
+                $file="{$id_user}_ {$uniqid}.{$image_type}";
+                
+                Storage::put($folderPath.$file, $image_base64);
+
+    
+                $user->photo_url = $file;
+                
+            }
             $user->save();
             return $user;
         });
@@ -48,26 +81,17 @@ class UserController extends Controller
 
         if ($request->has('photo_url')) {
 
+            
 
             // -> Check if a previous file exists and deletes it
+            //This isn't working
             if(Storage::disk('public')->exists($user->photo_url)) {
                 Storage::delete($user->photo_url);
             }
-/*
-            $image = $user->photo_url;  // your base64 encoded
-            $image = str_replace('data:image/png;base64,', '', $image);
-            $image = str_replace(' ', '+', $image);
-            dd(base64_decode($image));
-
-            $imageName = str_random(10) . '.png';
             
-
-  
-          Storage::disk('public/fotos')->put($imageName, base64_decode($image));
-          */ 
           
-            //$folderPath = "fotos/";
-/*
+            $folderPath = "public/fotos/";
+
             $image_parts = explode(";base64,", $user->photo_url);
     
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -75,23 +99,22 @@ class UserController extends Controller
             $image_type = $image_type_aux[1];
     
             $image_base64 = base64_decode($image_parts[1]);
-            */
             
-            //$image_base64 = base64_decode($user->photo_url);
+            
 
-            dd($image_base64);
-            /*
+          
+            
             $uniqid=uniqid();
             $id_user=$user->id;
-            //$photo_id = $photo->hashName();
+         
 
             $file="{$id_user}_ {$uniqid}.{$image_type}";
             
             // -> Stores the new photo
-            //$photo = $request->file('photo_url');
-            //$photo_id = $photo->hashName();
-            Storage::putFile('public/fotos', $file)->put($imageName, base64_decode($image));
-            */
+
+            Storage::put($folderPath.$file, $image_base64);
+
+
             $user->photo_url = $file;
             
         }

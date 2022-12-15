@@ -1,7 +1,9 @@
 <script setup>
-  import { ref, inject, onMounted} from 'vue'
+  import { ref, inject, onMounted,computed} from 'vue'
   import { useRouter } from 'vue-router'
   import { useUserStore } from '../../stores/user.js'
+  import avatarNoneUrl from '@/assets/avatar-none.png'
+
 
 
   const router = useRouter()
@@ -29,8 +31,17 @@
       photo_url: null,
       }
   })
+  var previewImage = null
 
-
+  const handleUpload = (e) => {
+                const image = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = e =>{
+                    previewImage = e.target.result;
+                    console.log(previewImage);
+                }
+}
 
   const customer = ref(newCustomer)
 
@@ -39,11 +50,10 @@
     return JSON.stringify(customer.value)
   }
 
-  
+  let originalValueStr='';
   const loadCustomer = () => {
     errors.value = null
-    if(userStore.user.type == "C"){
-    originalValueStr = ''
+    if(userStore.user && userStore.user.type == "C"){
         axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
           .then((response) => {
             customer.value = response.data.data
@@ -69,6 +79,9 @@
         }else{
           formData.append('blocked', 1);
         }
+    if (previewImage != null) {
+        formData.append('photo_url', previewImage);
+    }
 
     formData.append('_method', 'PUT');
 
@@ -76,6 +89,11 @@
 
     }
 
+  const photoFullUrl = computed(() => {
+    return customer.value.user.photo_url
+    ? serverBaseUrl + "/storage/fotos/" + customer.value.user.photo_url
+    : avatarNoneUrl
+})
   
  
 onMounted(() => {
@@ -97,6 +115,9 @@ const updateCostumer = () => {
         if(customer.value.default_payment_reference!=undefined){
             formData.append('default_payment_reference', customer.value.default_payment_reference);
         }
+        if (previewImage != null) {
+        formData.append('photo_url', previewImage);
+    }
         formData.append('name', customer.value.user.name);
         formData.append('email', customer.value.user.email);
         formData.append('type', customer.value.user.type);
@@ -168,7 +189,7 @@ const updateCostumer = () => {
         </div>
         
       
-        <div class="mb-3 px-1" v-if="userStore.user.type == 'C'">
+        <div class="mb-3 px-1" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputPhone" class="form-label">Phone</label>
           <input
             type="text"
@@ -181,7 +202,7 @@ const updateCostumer = () => {
           <field-error-message :errors="errors" fieldName="phone"></field-error-message>
         </div>
 
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputNif" class="form-label">NIF</label>
           <input
             type="text"
@@ -193,7 +214,7 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
             <label for="payment_type">Payment Type</label>
             <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
                 <option value="VISA">Visa</option>
@@ -202,7 +223,7 @@ const updateCostumer = () => {
             </select>
         <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
         </div>
-        <div class="mb-3" v-if="userStore.user.type == 'C'">
+        <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" v-model="customer.default_payment_reference"/>
@@ -212,7 +233,15 @@ const updateCostumer = () => {
         </div>
     </div>
 
-
+    <div class="w-25">
+                <label class="form-label">Photo</label>
+                <div class="mb-3">
+                    <img :src="photoFullUrl" class="img-thumbnail" />
+                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                        required>
+                    <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
+                </div>
+      </div>
 
 
     

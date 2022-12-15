@@ -128,29 +128,27 @@ onMounted(() => {
         </div>
         <div class="row">
             <div class="d-flex">
-                <div v-if="!onlyCurrentOrders && userStore.user &&userStore.user.type == 'EM'">
-                    <div>
-                        <div class="col-3">
-                            <label for="selectCompleted" class="form-label">Filter by status:</label>
-                            <select class="form-select" id="selectCompleted" v-model="value_status">
-                                <option value="all" selected>Any</option>
-                                <option value="P">Preparing Orders</option>
-                                <option value="R">Ready Orders</option>
-                                <option value="D">Delivered Orders</option>
-                                <option value="C">Canceled Orders</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="col-3" v-if="userStore.user && userStore.user.type=='EM'">
+                    <label for="selectCompleted" class="form-label">Filter by status:</label>
+                    <select class="form-select" id="selectCompleted" v-model="value_status">
+                        <option value="all" selected>Any</option>
+                        <option value="P">Preparing Orders</option>
+                        <option value="R">Ready Orders</option>
+                        <option value="D">Delivered Orders</option>
+                        <option value="C">Canceled Orders</option>
+                    </select>
+                  </div>
                 </div>
+              </div> 
                 <div class="ms-auto align-self-center">
-                    <div class="mx-0 mt-2" v-if="!userStore.user || userStore.user.type == 'EM' || userStore.user.type == 'C'">
-                        <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
-                            <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
-                        </button>
+                    <div class="mx-0 mt-2" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
+                          <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
+                              <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
+                          </button>
                     </div>
                 </div>
-            </div>
-        </div>
+          
+       
 
         <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
         <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject ,watch} from 'vue'
 import { useUserStore } from '../stores/user.js'
 
 const axios = inject('axios')
@@ -23,13 +23,21 @@ const loadOrders = () => {
             })
     }
 }
-
 onMounted(() => {
-    timer = setInterval(function () {
+  loadOrders();
+
+  watch(
+    () => userStore.userId,
+    (userId) => {
+      if (userId) {
         loadOrders();
-        clearInterval(timer)
-    }, 10)
-})
+      }
+    },
+  );
+});
+
+
+
 </script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">

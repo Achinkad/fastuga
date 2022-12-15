@@ -27,7 +27,7 @@ class StoreProductRequest extends FormRequest
             'name' => ['required', 'min:3', 'max:255', Rule::unique('products')->ignore($this->product)],
             'type' => 'required|in:hot dish,cold dish,drink,dessert',
             'description' => 'required|max:255',
-            'photo_url' => 'sometimes|image',
+            'photo_url' => 'nullable',
             'price' => 'required|numeric',
             'custom' => 'nullable'
         ];

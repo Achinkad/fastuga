@@ -6,7 +6,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")
-var product_photo_intermediary = undefined
+//var product_photo_intermediary = undefined
+var previewImage = null
+
 
 const props = defineProps({
     product: {
@@ -24,6 +26,15 @@ const emit = defineEmits(["save", "cancel", "add"]);
 
 const editingProduct = ref(props.product);
 
+const handleUpload = (e) => {
+                const image = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = e =>{
+                    previewImage = e.target.result;
+                    console.log(previewImage);
+                }
+}
 
 watch(
 
@@ -34,11 +45,12 @@ watch(
 )
 
 
-
+/*
 const handleUpload = (files) => {
     product_photo_intermediary = files[0]
 
 }
+*/
 
 
 
@@ -57,8 +69,8 @@ const save = () => {
         formData.append('description', editingProduct.value.description);
     }
 
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
+    if (previewImage != null) {
+        formData.append('photo_url', previewImage);
     }
 
     formData.append('_method', 'PUT');
@@ -80,10 +92,9 @@ const add = () => {
         formData.append('description', editingProduct.value.description);
     }
 
-    if (product_photo_intermediary != undefined) {
-        formData.append('photo_url', product_photo_intermediary);
-    }
-
+    if (previewImage != null) {
+        formData.append('photo_url', previewImage);
+        }
 
     emit("add", formData);
   
@@ -145,7 +156,7 @@ const photoFullUrl = computed(() => {
                 <div class="mb-3">
                     <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name == 'newProduct'" />
                     <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'" />
-                    <input type="file" class="form-control" name='upload' @change="handleUpload($event.target.files)"
+                    <input type="file" class="form-control" name='upload' @change="handleUpload"
                         required>
                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>

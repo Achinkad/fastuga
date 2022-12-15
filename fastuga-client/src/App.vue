@@ -9,16 +9,20 @@ const configStore = useConfigStore()
 </script>
 
 <template>
+
+    <head>
+        <meta name="description" content="FastugaApp">
+    </head>
     <div class="wrapper">
-        <Navbar v-if="configStore.showNavbar"/>
-        <Sidebar v-if="configStore.showSidebar"/>
+        <Navbar v-if="configStore.showNavbar" />
+        <Sidebar v-if="configStore.showSidebar" />
         <main v-if="configStore.showMain">
             <div class="content">
-                <router-view/>
+                <router-view />
             </div>
         </main>
         <section v-if="!configStore.showMain">
-            <router-view/>
+            <router-view />
         </section>
         <footer class="footer" v-if="configStore.showFooter">
             <div class="container-fluid">

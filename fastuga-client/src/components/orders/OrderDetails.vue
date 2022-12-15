@@ -1,21 +1,27 @@
 <script setup>
-import { onMounted, ref, watch, inject } from "vue";
-import avatarNoneUrl from '@/assets/avatar-none.png'
-import productNoneUrl from '@/assets/product-none.png'
+import { inject,onMounted, ref, watch } from "vue";
+import avatarNoneUrl from '@/assets/avatar-none.png';
+import productNoneUrl from '@/assets/product-none.png';
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
-import { useUserStore } from '../../stores/user.js'
-import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user.js';
+import { useRouter } from 'vue-router';
+
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
+const currentCustomer= ref({});
 const toast = inject('toast')
 const router = useRouter()
-axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
+
 const userStore = useUserStore()
 
 const props = defineProps({
     order: {
+        type: Object,
+        required: true,
+    },
+    currentCustomer: {
         type: Object,
         required: true,
     },
@@ -35,22 +41,32 @@ const newOrderItem = () => {
     };
 };
 
-const emit = defineEmits(["cancel", "add"]);
+const emit = defineEmits(["cancel", "add","getCurrentCustomer"]);
 const products = ref([]);
 
 var value_type = ref("all");
 const editingOrder = ref(props.order);
-var currentCustomer = ref();
+const customer= ref(props.currentCustomer);
 
 editingOrder.value.points_used_to_pay="0";
 
 watch(
+
     () => props.order,
     (newOrder) => {
         editingOrder.value = newOrder;
    
     }
 );
+
+watch(
+    () => props.currentCustomer,
+    (newCustomer) => {
+        customer.value = newCustomer;
+   
+    }
+);
+
 watch(value_type, () => {
     getProducts();
     totalPrice();
@@ -72,30 +88,10 @@ const getProducts = (page = 1) => {
         });
 };
 
-const getCurrentCustomer = () => {
-
-    axios.get(serverBaseUrl + '/api/customers/user/' + userStore.user.id)
-        .then((response) => {
-            console.log(response)
-            if (response.data) {
-                currentCustomer = response.data.data
-            console.log(currentCustomer)
-            }
-
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem());
-
     orderItem.value.product_id = product.id;
-
     orderItem.value.price = product.price
-
     orderItem.value.product = product;
     editingOrder.value.order_item.push(orderItem.value);
 
@@ -105,7 +101,7 @@ const add = () => {
     fillOrder();
 
     let formData = new FormData()
- 
+
     formData.append('total_price', editingOrder.value.total_price);
 
     if (editingOrder.value.payment_type != undefined) {
@@ -118,35 +114,32 @@ const add = () => {
 
     if (editingOrder.value.customer_id != undefined) {
         formData.append('customer_id', editingOrder.value.customer_id);
+       
     }
    if(userStore.user && userStore.user.type=='EM'){
     editingOrder.value.points_used_to_pay=0;
    }
     formData.append('points_used_to_pay',editingOrder.value.points_used_to_pay)
-    console.log("points used to pay:"+editingOrder.value.points_used_to_pay)
+
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item))});
     
     emit("add", formData);
 
+     
 }
 
 const fillOrder = () => {
     editingOrder.value.total_price = totalPrice();
 
 
-    editingOrder.value.status='P';
-    editingOrder.value.ticket_number=1;
-    if(userStore.user && currentCustomer){
-        editingOrder.value.customer_id=currentCustomer.id;
-        console.log(currentCustomer)
-    }
+    editingOrder.value.status = 'P';
+    editingOrder.value.ticket_number = 1;
 
     editingOrder.value.total_paid=editingOrder.value.total_price; //ver como funciona realmente o pagamento
 
 }
 
-const deleteProduct = (product, position) => {
-
+const deleteProduct = (position) => {
     editingOrder.value.order_item.splice(position - 1, 1)
 
 };
@@ -169,14 +162,12 @@ const deleteProductInAdd = (product) => {
 const totalPrice = () => {
     var total = 0;
     editingOrder.value.order_item.forEach((value) => {
-        //console.log(value.price)
+       
         total += parseFloat(value.price)
     });
     return total.toFixed(2);
 };
-const points = () => {
-   return currentCustomer.points;
-};
+
 
 const countProduct = (product) => {
     let count = 0
@@ -185,9 +176,13 @@ const countProduct = (product) => {
             count++
         }
     })
-    //console.log(count)
     return count
 }
+
+const points = () => {
+    return customer.value.points;
+};
+
 const cancel = () => {
     emit("cancel", editingOrder.value);
 };
@@ -205,9 +200,10 @@ const productPhotoFullUrl = (product) => {
 
 onMounted(() => {
     getProducts();
+    
     if (userStore.user && userStore.user.type == 'C') {
-        getCurrentCustomer();
-        points();
+        emit("getCurrentCustomer")
+        points()
     }
 
 });
@@ -238,29 +234,35 @@ onMounted(() => {
 
             <div class="mb-3">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
-                <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
+                
+                    <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
+                        required v-model="editingOrder.payment_reference" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
+                
+                    <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
+                        required v-model="editingOrder.payment_reference" readonly v-if="userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C') && $route.name == 'Order'" />
 
-                <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
-                    required v-model="editingOrder.payment_reference" readonly v-if="userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C') && $route.name == 'Order'" />
-
-                <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
-
+                    <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
+                
             </div>
+
+            <div v-if="userStore.user && userStore.user.type == 'C'">
+            <div v-if="$route.name == 'NewOrder'">
             
-            <span style="font-size: large;"> Total Price: {{ totalPrice() }} €</span>
-            <br>
-            
-            <div v-if="userStore.user && userStore.user.type=='C'">
-                <span style="font-size: large;">Points available: {{ points() }} <br></span>
-                <br>
-                <span style="font-size: large;">Points Used:</span>
-         
-                <input type="range" min="0" :max="points()" step="10" v-model="editingOrder.points_used_to_pay" oninput="this.nextElementSibling.value = this.value" v-if="$route.name == 'NewOrder'">
-                <output>{{editingOrder.points_used_to_pay}}</output>
-       
+                <span style="font-size: large;" >Points available: {{points() }} </span>
+    
                 <br>
                 <br>
+            </div>
+                    <span id="slider" style="font-size: large;">Points Used:</span>   
+            <div v-if="$route.name == 'NewOrder'">
+                    <input id="slider" type="range" min="0" :max="points()" step="10"
+                        oninput="this.nextElementSibling.value = this.value" v-model="editingOrder.points_used_to_pay" >
+                    <output>0</output>
+                
+                <br>
+                <br>
+            </div>
+                    <output v-if="$route.name == 'Order'">{{editingOrder.points_used_to_pay}}</output>
             </div>
             <div v-if="userStore.user && userStore.user.type == 'EM' && $route.name == 'Order'">
                 <div class="mb-3">
@@ -284,9 +286,9 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-
-        <field-error-message :errors="errors" fieldName="order_item"></field-error-message>
-
+        
+        <field-error-message :errors="errors" fieldName="items"></field-error-message>
+        <span style="font-size: 35px; font-weight: 1000; "> Total Price: {{ totalPrice() }} €</span>
         <div class="container">
             <div class="row">
 
@@ -313,10 +315,10 @@ onMounted(() => {
                             <label for="inputNotes" style="color:white" class="form-label">Notes</label>
                             <textarea class="form-control" id="inputNotes" rows="1"
                                 v-model="editingOrder.order_item[n - 1].notes"
-                                v-if="userStore.user && userStore.user.type == 'C'"></textarea>
+                                v-if="$route.name == 'NewOrder'"></textarea>
                             <textarea class="form-control" id="inputNotes" rows="1"
-                                v-model="editingOrder.order_item[n - 1].notes" v-if="userStore.user && userStore.user.type == 'EM'"
-                                readonly></textarea>
+                                v-model="editingOrder.order_item[n - 1].notes"
+                                v-if="$route.name == 'Order'" readonly></textarea>
                             <field-error-message :errors="errors" fieldName="notes"></field-error-message>
                         </div>
                     </div>
@@ -348,15 +350,16 @@ onMounted(() => {
                                 @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
                             <hr id="hr" />
 
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
-
-
         </div>
-    </div>
-</div>
 
         <div class="mb-3 d-flex justify-content-end">
+        
             <button type="button" id="button" class="btn btn-primary px-5" @click="add"
                 v-if="$route.name == 'NewOrder'">
                 Add Order
@@ -378,10 +381,12 @@ onMounted(() => {
     border: 3px solid #dc9c37ed;
     border-radius: 25px;
 }
-#nota{
-    opacity: 0.4;
-    color:red;
+
+#slider {
+    display: inline-block;
+    vertical-align: middle;
 }
+
 .child {
     display: flex;
     border: 3px solid #dc9c37ed;
