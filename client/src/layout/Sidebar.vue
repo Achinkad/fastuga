@@ -15,8 +15,6 @@ const loadOrders = () => {
         axios.get(serverBaseUrl + '/api/users/' + userStore.userId + '/orders')
             .then((response) => {
                 orders.value = response.data.data
-                console.log(orders.value)
-
             })
             .catch((error) => {
                 console.log(error)

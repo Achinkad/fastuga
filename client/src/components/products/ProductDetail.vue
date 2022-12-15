@@ -95,7 +95,7 @@ const add = () => {
     if (previewImage != null) {
         formData.append('photo_url', previewImage);
         }
-
+    
     emit("add", formData);
   
 }

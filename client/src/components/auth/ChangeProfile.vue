@@ -50,8 +50,9 @@
     return JSON.stringify(customer.value)
   }
 
-  let originalValueStr='';
+   let originalValueStr='';
   const loadCustomer = () => {
+  
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
         axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)

@@ -73,7 +73,9 @@ const add = (product_values) => {
     axios.post(serverBaseUrl + '/api/products', product_values)
         .then((response) => {
             console.log("feito")
+    
             toast.success("Product added successfuly")
+            router.push({ name: 'Products' })
         })
         .catch((error) => {
             if (error.response.status == 422) {
@@ -97,6 +99,7 @@ const dataAsString = () => {
 }
 
 let nextCallBack = null
+/*
 const leaveConfirmed = () => {
     if (nextCallBack) {
         nextCallBack()
@@ -112,8 +115,7 @@ onBeforeRouteLeave((to, from, next) => {
     } else {
         next()
     }
-})
-
+})*/
 
 
 const product = ref(newProduct())
@@ -132,9 +134,11 @@ watch(
 </script>
 
 <template>
-    <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
+    <!--
+        Needed? Orders dont(?)
+        <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
         msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-    </confirmation-dialog>
+    </confirmation-dialog>-->
 
     <product-detail :product="product" :errors="errors" @save="save" @cancel="cancel" @add="add"></product-detail>
 </template>

@@ -1,7 +1,8 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 export const useUserStore = defineStore('user', () => {
     const toast = inject("toast")
     const axios = inject('axios')
