@@ -50,7 +50,7 @@
     return JSON.stringify(customer.value)
   }
 
-  let originalValueStr='';
+ 
   const loadCustomer = () => {
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
