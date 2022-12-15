@@ -11,9 +11,9 @@ const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")
 
 const credentials = ref({
-        username: '',
-        password: '',
-        confirmpassword: ''
+    username: '',
+    password: '',
+    confirmpassword: ''
 })
 
 const saveCustomer = ref({
@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
                 <div class="col-xxl-7 col-lg-7">
                     <div class="card">
                         <div class="card-header text-center">
-                            <span>FASTUGA</span>
+                            <span>Fastuga.</span>
                         </div>
                         <div class="card-body">
                             <div class="text-center w-75 m-auto">
@@ -167,8 +167,8 @@ onBeforeUnmount(() => {
                     <div class="row" id="signup">
                         <div class="col-12 text-center">
                             <p class="text-muted">Already have an account?
-                                <router-link class="text-muted ms-1" :to="{ name: 'Login' }">
-                                    <b>Log In</b>
+                                <router-link class="text-muted" :to="{ name: 'Login' }">
+                                    <b>Log In.</b>
                                 </router-link>
                             </p>
                         </div>
@@ -190,10 +190,11 @@ onBeforeUnmount(() => {
     }
 
     .card-header {
-        background-color: #ffa500;
+        background: rgb(255,165,0);
+        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
         color: #fff !important;
         font-weight: 800;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         padding-top: 2.25rem !important;
         padding-bottom: 2.25rem !important;
         border: 0;
@@ -234,7 +235,8 @@ onBeforeUnmount(() => {
     }
 
     button[type="button"] {
-        background-color: #ffa500 !important;
+        background: rgb(255,165,0);
+        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
         color: #fff;
         border-color: #727cf5;
         border-radius: 0.15rem;
