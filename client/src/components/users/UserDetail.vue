@@ -105,7 +105,7 @@ const cancel = () => {
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
     <h3 class="mt-5 mb-3" v-if="$route.name == 'User'">User #{{ editingUser.id }}</h3>
     <h3 class="mt-5 mb-3" v-if="$route.name == 'newUser'">Adding New User</h3>
-    <hr />
+   
     <hr />
     <div class="d-flex flex-wrap justify-content-between">
       <div class="w-75 pe-4">
@@ -148,7 +148,7 @@ const cancel = () => {
         </div>
          <div class="mb-3" >
             <label  for="type">Role:</label>
-            <select id="type" name="type"  v-model="editingUser.type">
+            <select id="type" name="type" class="form-select" v-model="editingUser.type">
               <option value="EM">Manager</option>
               <option value="EC">Chef</option>
               <option value="ED">Delivery</option>
@@ -158,7 +158,7 @@ const cancel = () => {
 
         <div v-if="$route.name == 'User'" class="mb-3">
             <label for="blocked">Blocked:</label>
-            <select id="blocked" name="blocked"  v-model="editingUser.blocked">
+            <select id="blocked" name="blocked"  class="form-select" v-model="editingUser.blocked">
               <option value="false">Unblocked</option>
               <option value="true">Blocked</option>
             </select>

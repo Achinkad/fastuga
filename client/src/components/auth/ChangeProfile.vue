@@ -216,7 +216,7 @@ const updateCostumer = () => {
         </div>
         <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
             <label for="payment_type">Payment Type</label>
-            <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
+            <select id="payment_type" name="payment_type" class="form-select" v-model="customer.default_payment_type">
                 <option value="VISA">Visa</option>
                 <option value="PAYPAL">PayPal</option>
                 <option value="MBWAY">MBWay</option>

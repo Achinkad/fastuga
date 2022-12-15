@@ -105,8 +105,10 @@ const deleteClick = (user) => {
     <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete user"
     :msg="`Do you really want to delete the user ${userToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
-  <table class="table">
-    <thead>
+  <div class="table-responsive">
+    <table class="table align-middle mt-4">
+        <thead class="table-light">
+
       <tr>
         <th v-if="showId" class="align-middle">#</th>
         <th v-if="showPhoto" class="align-middle">Photo</th>
@@ -114,6 +116,7 @@ const deleteClick = (user) => {
         <th v-if="showEmail" class="align-middle">Email</th>
         <th v-if="showRole" class="align-middle">Role</th>
         <th v-if="showBlockButton" class="align-middle">Blocked?</th>
+        <th class="align-middle"></th>
       </tr>
     </thead>
     <tbody>
@@ -169,6 +172,7 @@ const deleteClick = (user) => {
       </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <style scoped>

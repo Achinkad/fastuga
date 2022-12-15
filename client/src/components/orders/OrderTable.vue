@@ -96,7 +96,7 @@ const deleteClick = (order) => {
 </confirmation-dialog>
 <div class="table-responsive">
     <table class="table align-middle mt-4">
-        <thead>
+        <thead class="table-light">
             <tr>
                 <th v-if="showTicketNumber">Ticket Number</th>
                 <th v-if="showPrice">Total Price</th>
@@ -149,4 +149,5 @@ td {
 table {
     table-layout: fixed;
 }
+
 </style>

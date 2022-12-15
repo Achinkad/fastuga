@@ -48,8 +48,9 @@ const photoFullUrl = (product) => {
 
 <template>
   
-  <table class="table">
-    <thead>
+  <div class="table-responsive">
+    <table class="table align-middle mt-4">
+        <thead class="table-light">
       <tr>
         <th v-if="showProductPhoto">Product Photo</th>
         <th v-if="showProductPhoto">Product Name</th>
@@ -73,7 +74,7 @@ const photoFullUrl = (product) => {
       </tr>
     </tbody>
   </table>
-
+</div>
 </template>
 
 <style scoped>

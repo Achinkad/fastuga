@@ -1,0 +1,33 @@
+.btn-addOrder {
+    margin-top: 1.85rem;
+  }
+  
+  button[type="button"].btn-add {
+      background-color: #727cf5 !important;
+      color: #fff;
+      border-color: #727cf5;
+      border-radius: 0.15rem;
+      box-shadow: 0px 2px 6px 0px rgba(114, 124, 245, 0.5);
+      border: 1px #727cf5;
+      font-size: 15px;
+      padding: .5rem 0;
+  }
+  
+  button[type="button"]:hover.btn-add  {
+      color: #fff;
+  }
+  
+  button[type="button"]:focus.btn-add  {
+      color: #fff;
+      box-shadow: 0 0 0 .15rem rgba(135, 144, 247, 0.5);
+  }
+  
+  .btn-add {
+      position: relative;
+      top: .775rem;
+  }
+  .card {
+    border: none !important;
+    margin-bottom: 24px;
+  }
+

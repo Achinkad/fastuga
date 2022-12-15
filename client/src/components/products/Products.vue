@@ -69,9 +69,29 @@ onMounted(() => {
 </script>
 
 <template>
-    <h3 class="mt-5 mb-3">Products</h3>
-    <hr>
-    <div class="mx-2 mt-2 flex-grow-1 filter-div">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex">
+                    <div class="p-title-box">
+
+                        <div class="p-title-right">
+
+                    <h4 class="p-title">Products</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-xl-10">
+        <div class="d-flex">
+        <div class="col-3">
         <label for="selectType" class="form-label">Filter by type:</label>
         <select class="form-select" id="selectType" v-model="value_type">
             <option value="all" selected>Any</option>
@@ -80,17 +100,37 @@ onMounted(() => {
             <option value="drink">Drinks</option>
             <option value="dessert">Desserts</option>
         </select>
-        <div class="mx-0 mt-2">
-            <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addProduct">
-                <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Product</button>
         </div>
     </div>
-   <br>
+</div>
+
+
+<div class="col-xl-2">
+
+    <div class="ms-auto align-self-center">
+                    <div class="mx-0 mt-2" >
+                          <button type="button" class="btn btn-warning px-5 btn-add" @click="addProduct">
+                              <i class="bi bi-xs bi-plus-circle"></i>&nbsp;Add Product
+                          </button>
+                    </div>
+                </div>
+            </div>
+
+   
     <product-table :products="products" :showId="true" @edit="editProduct" @forceRerender="forceRerender"
         @deleted="deletedProduct"></product-table>
 
-    <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
-    <hr>
+
+    <div class="d-flex justify-content-end mt-3">
+        <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
+    </div>
+    </div>
+</div> 
+            </div> 
+    </div>
+    </div>
+    </div>
+    
 </template>
 
 <style scoped>

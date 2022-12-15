@@ -54,9 +54,31 @@ const forceRerender = () => {
 </script>
 
 <template>
-  <h3 class="mt-5 mb-3">Users</h3>
-  <hr>
-  <div class="mx-2 mt-2 flex-grow-1 filter-div">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex">
+          <div class="p-title-box">
+            <div class="p-title-right">
+
+            <h4 class="p-title">Users</h4>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-xl-10">
+
+
+
+
+  <div class="d-flex">
+    <div class="col-3">
       <label for="selectRole" class="form-label">Filter by role:</label>
       <select class="form-select" id="selectRole" v-model="value_role">
         <option value="all" selected>Any</option>
@@ -65,11 +87,19 @@ const forceRerender = () => {
         <option value="ED">Employees Delivery</option>
         <option value="EM">Employees Manager</option>
       </select>
+    </div>
+  </div>
+        </div>
+ <div class="col-xl-2">
+  <div class="ms-auto align-self-center">
+
       <div class="mx-0 mt-2">
-        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addUser"><i
+        <button type="button" class="btn btn-warning px-4 btn-add" @click="addUser"><i
             class="bi bi-xs bi-plus-circle"></i>&nbsp; Add User</button>
       </div>
-  </div>
+    </div>
+ </div>
+     
   <user-table
     :users="users"
     :showId="false"
@@ -77,7 +107,14 @@ const forceRerender = () => {
     @forceRerender="forceRerender"
   ></user-table>
   <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
-  <hr>
+  
+       
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+  </div>
 </template>
 
 <style scoped>

@@ -86,8 +86,9 @@ const deleteClick = (product) => {
   <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete product"
     :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
   </confirmation-dialog>
-  <table class="table">
-    <thead>
+  <table class="table-responsive">
+    <table class="table align-middle mt-4">
+        <thead class="table-light">
       <tr>
         <th v-if="showId">ID</th>
         <th v-if="showPhoto">Photo</th>
@@ -108,15 +109,17 @@ const deleteClick = (product) => {
         <td class="align-middle">{{ product.price }}€</td>
         <td>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
-            <i class="bi bi-trash3"></i>
-          </button>
           <button class="btn btn-xs btn-light" @click="editClick(product)" v-if="showEditButton">
             <i class="bi bi-pencil"></i>
           </button>
+          <button class="btn btn-xs btn-light" @click="deleteClick(product)" v-if="showDeleteButton">
+            <i class="bi bi-trash3"></i>
+          </button>
+
         </div></td>
       </tr>
     </tbody>
+  </table>
   </table>
 
 </template>
