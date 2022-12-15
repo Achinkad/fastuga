@@ -137,30 +137,6 @@ onMounted(() => {
 .filter-div {
     min-width: 12rem;
 }
-button[type="button"] {
-    background-color: rgb(255,165,0) !important;
-    color: #fff;
-    border-color: rgb(255,165,0);
-    border-radius: 0.15rem;
-    box-shadow: 0px 2px 6px 0px rgb(255,165,0);
-    border: 1px #727cf5;
-    font-size: 15px;
-    padding: .5rem 0;
-}
-
-button[type="button"]:hover {
-    color: #fff;
-}
-
-button[type="button"]:focus {
-    color: #fff;
-    box-shadow: 0 0 0 .15rem rgba(135, 144, 247, 0.5);
-}
-
-.btn-add {
-    position: relative;
-    top: .775rem;
-}
 .total-filtro {
     margin-top: 2.3rem;
 }
