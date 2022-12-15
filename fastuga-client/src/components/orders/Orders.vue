@@ -128,7 +128,7 @@ onMounted(() => {
         </div>
         <div class="row">
             <div class="d-flex">
-                <div class="col-3">
+                <div class="col-3" v-if="userStore.user && userStore.user.type=='EM'">
                     <label for="selectCompleted" class="form-label">Filter by status:</label>
                     <select class="form-select" id="selectCompleted" v-model="value_status">
                         <option value="all" selected>Any</option>
