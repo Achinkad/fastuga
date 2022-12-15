@@ -172,7 +172,17 @@ router.beforeEach(async (to, from, next) => {
             return
         }
     }
-
+    if (to.name == 'NewOrder') {
+        if (userStore.user.type == 'EC' || userStore.user.type == 'ED' ) {
+            next({
+                name: 'Forbidden',
+                params: { pathMatch: to.path.substring(1).split('/') },
+                query: to.query,
+                hash: to.hash
+            })
+            return
+        }
+    }
     if (to.name == 'User') {
         if ((userStore.user.type == 'EM') || (userStore.user.id == to.params.id)) {
             next()

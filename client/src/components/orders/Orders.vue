@@ -119,6 +119,8 @@ onMounted(() => {
                 <div class="d-flex">
                     <div class="p-title-box">
                         <div class="p-title-right">
+
+                          <!-- Total 83 ???? -->
                             <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: 83)</h4>
                             <h4 class="p-title" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
                         </div>
@@ -165,11 +167,11 @@ onMounted(() => {
 }
 
 button[type="button"] {
-    background-color: #727cf5 !important;
+    background-color: rgb(255,165,0) !important;
     color: #fff;
-    border-color: #727cf5;
+    border-color: rgb(255,165,0);
     border-radius: 0.15rem;
-    box-shadow: 0px 2px 6px 0px rgba(114, 124, 245, 0.5);
+    box-shadow: 0px 2px 6px 0px rgb(255,165,0);
     border: 1px #727cf5;
     font-size: 15px;
     padding: .5rem 0;
