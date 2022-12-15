@@ -26,7 +26,7 @@ const login = async () => {
         router.push({name: "Dashboard"})
     } else {
         credentials.value.password = ''
-        toast.error('User credentials are invalid!')
+        toast.error('The credentials were invalid. Try again.')
     }
 }
 
@@ -34,12 +34,14 @@ onBeforeMount(() => {
     configStore.showNavbar = false
     configStore.showSidebar = false
     configStore.showMain = false
+    configStore.showFooter = false
 })
 
 onBeforeUnmount(() => {
     configStore.showNavbar = true
     configStore.showSidebar = true
     configStore.showMain = true
+    configStore.showFooter = true
 })
 </script>
 
@@ -51,7 +53,7 @@ onBeforeUnmount(() => {
                 <div class="col-xxl-4 col-lg-5">
                     <div class="card">
                         <div class="card-header text-center">
-                            <span>FASTUGA</span>
+                            <span>Fastuga.</span>
                         </div>
                         <div class="card-body">
                             <div class="text-center w-75 m-auto">
@@ -75,9 +77,14 @@ onBeforeUnmount(() => {
                     </div>
                     <div class="row" id="signup">
                         <div class="col-12 text-center">
-                            <p class="text-muted">Don't have an account?
-                                <router-link class="text-muted ms-1" :to="{ name: 'Register' }">
-                                    <b>Sign Up</b>
+                            <p class="text-muted" style="margin-bottom:.5rem!important;">Don't have an account?
+                                <router-link class="text-muted" :to="{ name: 'Register' }">
+                                    <b>Sign Up.</b>
+                                </router-link>
+                            </p>
+                            <p class="text-muted">You can also shop
+                                <router-link class="text-muted" :to="{ name: 'Dashboard' }">
+                                    <b>anonymous.</b>
                                 </router-link>
                             </p>
                         </div>
@@ -87,7 +94,7 @@ onBeforeUnmount(() => {
         </div>
     </div>
     <footer  class="footer footer-alt">
-        Distributed Applications Development - 2022 Project
+        2022 © Project - Distributed Applications Development
     </footer>
 </template>
 
@@ -99,10 +106,11 @@ onBeforeUnmount(() => {
     }
 
     .card-header {
-        background-color: #ffa500;
+        background: rgb(255,165,0);
+        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
         color: #fff !important;
         font-weight: 800;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         padding-top: 2.25rem !important;
         padding-bottom: 2.25rem !important;
         border: 0;
@@ -123,7 +131,7 @@ onBeforeUnmount(() => {
     h4 {
         font-size: 1.125rem;
     }
-    
+
     .text-muted {
         color: #6c757d !important;
         margin-bottom: 1.5rem !important;
@@ -143,7 +151,8 @@ onBeforeUnmount(() => {
     }
 
     button[type="button"] {
-        background-color: #ffa500 !important;
+        background: rgb(255,165,0);
+        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
         color: #fff;
         border-color: #727cf5;
         border-radius: 0.15rem;
@@ -171,17 +180,10 @@ onBeforeUnmount(() => {
     }
 
     .footer-alt {
-        left: 0;
+        left: 0 !important;
+        width: 100% !important;
         border: none;
         text-align: center;
         font-size: 14px;
-    }
-
-    .footer {
-        bottom: 0;
-        padding: 19px 24px 20px;
-        position: absolute;
-        right: 0;
-        transition: all .2s ease-in-out;
     }
 </style>

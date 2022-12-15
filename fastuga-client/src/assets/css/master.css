@@ -19,7 +19,7 @@ body {
 }
 
 main {
-    width: calc(100% - 280px) !important;
+    width: calc(100% - 260px) !important;
     margin-left: 260px;
     overflow: hidden;
     min-height: 100vh;
@@ -50,8 +50,6 @@ main {
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
 }
-
-
 
 .sidebar .nav-link.active {
     font-weight: 500;
@@ -112,4 +110,23 @@ main {
 
 .page-link {
     color: #727cf5 !important;
+}
+
+.footer {
+    width: calc(100% - 260px) !important;
+    border-top: 1px solid rgba(138,150,156,.2);
+    bottom: 0;
+    padding: 19px 24px 20px;
+    position: relative;
+    right: 0;
+    left: 260px;
+    transition: all .2s ease-in-out;
+    color: #8a969c !important;
+    font-size: .85rem;
+}
+
+.footer .footer-links a {
+    text-decoration: none;
+    margin-left: 1.5rem;
+    color: #8a969c !important;
 }
