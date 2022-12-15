@@ -62,21 +62,16 @@ class CustomerController extends Controller
         $updated_customer = DB::Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
             // -> Updates User
             $updated_user = (new UserController)->update($user_request, $customer->user);
-
-            // -> Updates Customer
-            $customer->fill($customer_request->validated());
-            
-            //dd($customer);
-            if ($customer_request->has('photo_url')) {
-                /*
+            if ($user_request->has('photo_url')) {
+                
                 if(Storage::disk('public')->exists($customer->photo_url)) {
                     Storage::delete($customer->photo_url);
                 }
-                */
+                
                 // -> Stores the new photo
                 $folderPath = "public/fotos/";
 
-                $image_parts = explode(";base64,", $customer->photo_url);
+                $image_parts = explode(";base64,", $updated_user->photo_url);
         
                 $image_type_aux = explode("image/", $image_parts[0]);
         
@@ -89,7 +84,7 @@ class CustomerController extends Controller
               
                 
                 $uniqid=uniqid();
-                $id_user=$customer->user_id;
+                $id_user=$updated_user->id;
              
     
                 $file="{$id_user}_ {$uniqid}.{$image_type}";
@@ -99,8 +94,14 @@ class CustomerController extends Controller
                 Storage::put($folderPath.$file, $image_base64);
     
     
-                $customer->photo_url = $file;
+                $updated_user->photo_url = $file;
             }
+
+            // -> Updates Customer
+            $customer->fill($customer_request->validated());
+            
+            //dd($customer);
+
 
             $customer->save();
             return $customer;

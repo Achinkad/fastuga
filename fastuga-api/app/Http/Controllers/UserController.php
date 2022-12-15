@@ -49,6 +49,8 @@ class UserController extends Controller
                 $image_type = $image_type_aux[1];
         
                 $image_base64 = base64_decode($image_parts[1]);
+
+                dd($image_base64);
                 
                 $uniqid=uniqid();
                 $id_user=$user->id;
