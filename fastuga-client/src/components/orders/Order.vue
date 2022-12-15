@@ -1,23 +1,29 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
-
+import { useUserStore } from '../../stores/user.js';
 import OrderDetail from "./OrderDetails.vue"
 
 const serverBaseUrl = inject("serverBaseUrl")
 
 const router = useRouter()
 const axios = inject('axios')
-
+const userStore = useUserStore()
 const toast = inject('toast')
+
 
 const props = defineProps({
     id: {
         type: Number,
         default: null
+    },
+    user_id: {
+        type: Number,
+        default: null
     }
 })
 
+const currentCustomer= ref({});
 const newOrder = () => {
     return {
         id: null,
@@ -68,27 +74,51 @@ const add = (order_value) => {
     .then((response) => {
         console.log("feito")
         toast.success("Order added successfuly")
+        router.push({ name: 'Orders' })
         
     })
     .catch((error) => {
         if (error.response.status == 422) {
-            toast.error('order #' + props.id + ' was not updated due to validation errors!')
+            toast.error('Couldn\'t add the order due to validation errors!')
             errors.value = error.response.data.data
         } else {
-            toast.error('order #' + props.id + ' was not updated due to unknown server error!')
+            toast.error('Couldn\'t add the order due to unknown server error!')
         }
     })
 }
 
 const cancel = () => {
     originalValueStr = dataAsString()
-    router.back()
+    router.push({ name: 'Orders' })
+}
+
+
+const getCurrentCustomer = () => {
+
+    axios.get(serverBaseUrl + '/api/customers/user/' + userStore.user.id)
+        .then((response) => {
+        
+            if (response.data) {
+                currentCustomer.value = response.data.data
+
+                order.value.payment_reference=currentCustomer.value.default_payment_reference;
+                order.value.payment_type=currentCustomer.value.default_payment_type;
+
+                order.value.customer_id = currentCustomer.value.id;
+                
+
+            }
+
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 
 const dataAsString = () => {
     return JSON.stringify(order.value)
 }
-
+/*
 let nextCallBack = null
 const leaveConfirmed = () => {
     if (nextCallBack) {
@@ -98,6 +128,7 @@ const leaveConfirmed = () => {
 
 onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
+    
     let newValueStr = dataAsString()
     if (originalValueStr != newValueStr) {
         nextCallBack = next
@@ -106,10 +137,10 @@ onBeforeRouteLeave((to, from, next) => {
         next()
     }
 })
-
+*/
 const order = ref(newOrder())
 const errors = ref(null)
-const confirmationLeaveDialog = ref(null)
+//const confirmationLeaveDialog = ref(null)
 
 // beforeRouteUpdate was not fired correctly
 // Used this watcher instead to update the ID
@@ -120,12 +151,16 @@ watch(
     },
     { immediate: true }
 )
+
 </script>
 
 
 <template>
-    <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
+
+    <!--<confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-    </confirmation-dialog>
-    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add"></order-detail>
+   
+    </confirmation-dialog>-->
+   
+    <order-detail :currentCustomer="currentCustomer" :order="order" :errors="errors" @cancel="cancel" @add="add" @getCurrentCustomer="getCurrentCustomer"></order-detail>
 </template>

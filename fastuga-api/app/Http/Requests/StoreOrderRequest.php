@@ -37,7 +37,7 @@ class StoreOrderRequest extends FormRequest
             'total_paid_with_points' => 'nullable',
             'points_gained' => 'nullable',
             'points_used_to_pay' => 'required',
-            'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
+            'payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
             'date' => 'nullable|date',
             'delivered_by' => 'nullable',
             'custom' => 'nullable',
