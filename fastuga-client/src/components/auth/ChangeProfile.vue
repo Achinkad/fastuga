@@ -54,7 +54,6 @@
   const loadCustomer = () => {
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
-    originalValueStr = ''
         axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
           .then((response) => {
             customer.value = response.data.data
@@ -116,6 +115,9 @@ const updateCostumer = () => {
         if(customer.value.default_payment_reference!=undefined){
             formData.append('default_payment_reference', customer.value.default_payment_reference);
         }
+        if (previewImage != null) {
+        formData.append('photo_url', previewImage);
+    }
         formData.append('name', customer.value.user.name);
         formData.append('email', customer.value.user.email);
         formData.append('type', customer.value.user.type);
@@ -239,7 +241,7 @@ const updateCostumer = () => {
                         required>
                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
-            </div>
+      </div>
 
 
     
