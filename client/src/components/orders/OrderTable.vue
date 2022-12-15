@@ -101,7 +101,7 @@ const deleteClick = (order) => {
                 <th v-if="showTicketNumber">Ticket Number</th>
                 <th v-if="showPrice">Total Price</th>
                 <th v-if="showStatus">Status</th>
-                <th class="text-center" v-if="userStore.user && userStore.user.type=='EM'" style="width:10%">Options</th>
+                <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Options</th>
             </tr>
         </thead>
         <tbody>
@@ -114,13 +114,14 @@ const deleteClick = (order) => {
                     <span v-if="order.status == 'D'">Delivered</span>
                     <span v-if="order.status == 'C'">Cancelled</span>
                 </td>
-                <td class="text-center" v-if="userStore.user.type == 'EM'">
+                <td class="text-center" v-if="userStore.user.type == 'EM' ||  userStore.user.type=='C'">
                     <div class="d-flex justify-content-center">
+                        <div  v-if="userStore.user.type == 'EM'">
                         <div v-if="order.status != 'C'">
                             <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
                                 <i class="bi bi-x-lg"></i>
                             </button>
-                        </div>
+                        </div></div>
                         <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
                             <i class="bi bi-eye"></i>
                         </button>

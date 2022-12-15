@@ -119,7 +119,6 @@ onMounted(() => {
                 <div class="d-flex">
                     <div class="p-title-box">
                         <div class="p-title-right">
-
                           <!-- Total 83 ???? -->
                             <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: 83)</h4>
                             <h4 class="p-title" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
@@ -130,7 +129,7 @@ onMounted(() => {
         </div>
         <div class="row">
             <div class="d-flex">
-                <div class="col-3" v-if="userStore.user && userStore.user.type=='EM'">
+                <div class="col-3" v-if="userStore.user ">
                     <label for="selectCompleted" class="form-label">Filter by status:</label>
                     <select class="form-select" id="selectCompleted" v-model="value_status">
                         <option value="all" selected>Any</option>
