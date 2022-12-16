@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\File;
@@ -150,7 +151,7 @@ class UserController extends Controller
         return new UserResource($request->user());
     }
 
-    public function new_password(Request $request, User $user) {
+    public function new_password(UpdateUserPasswordRequest $request, User $user) {
 
         $user = User::where(['id' => $user->id], ['deleted_at' => null])->firstOrFail();
         $password_hashed = Hash::make($request->input('password'));

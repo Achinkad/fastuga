@@ -106,8 +106,9 @@ const forceRerender = () => {
     @edit="editUser"
     @forceRerender="forceRerender"
   ></user-table>
+  <div class="d-flex justify-content-end mt-3">
   <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
-  
+</div>
        
       </div>
     </div>

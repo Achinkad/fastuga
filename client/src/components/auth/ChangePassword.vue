@@ -9,6 +9,7 @@
   const serverBaseUrl = inject("serverBaseUrl")
 
 
+  const errors = ref(null)
 
   const passwords = ref({
         //current_password: '',
@@ -74,6 +75,8 @@
           required
           v-model="passwords.password"
         >
+        <field-error-message :errors="errors" fieldName="password"></field-error-message>
+
       </div>
     </div>
     <div class="mb-3">

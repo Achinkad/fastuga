@@ -144,7 +144,7 @@ const cancel = () => {
             required
             v-model="editingUser.password"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
          <div class="mb-3" >
             <label  for="type">Role:</label>
