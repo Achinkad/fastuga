@@ -77,7 +77,7 @@ const dialogConfirmedDelete = () => {
     .patch(serverBaseUrl + "/api/orders/" + orderToDelete.value.id + "/status", { status: 'C' })
     .then((response) => {
         emit("forceRerender");
-        toast.info("Order " + orderToDeleteDescription.value + " was deleted")
+        toast.info("Order " + orderToDeleteDescription.value + " was canceled")
     })
     .catch((error) => {
       console.log(error);
@@ -91,8 +91,8 @@ const deleteClick = (order) => {
 </script>
 
 <template>
-    <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete order"
-    :msg="`Do you really want to delete the order ${orderToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
+    <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Confirm Cancel order"
+    :msg="`Do you really want to cancel the order ${orderToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
 </confirmation-dialog>
 <div class="table-responsive">
     <table class="table align-middle mt-4">
@@ -116,12 +116,13 @@ const deleteClick = (order) => {
                 </td>
                 <td class="text-center" v-if="userStore.user.type == 'EM' ||  userStore.user.type=='C'">
                     <div class="d-flex justify-content-center">
-                        <div  v-if="userStore.user.type == 'EM'">
-                        <div v-if="order.status != 'C'">
-                            <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
-                                <i class="bi bi-x-lg"></i>
-                            </button>
-                        </div></div>
+                        <div  v-if="userStore && userStore.user.type == 'EM'">
+                            <div v-if="order.status != 'C' && order.status != 'D'">
+                                <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
                         <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
                             <i class="bi bi-eye"></i>
                         </button>

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Foundation\Application;
 
 /*
@@ -17,6 +18,7 @@ $app = new Illuminate\Foundation\Application(
 );
 
 /*
+
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------

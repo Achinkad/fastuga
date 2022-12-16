@@ -53,7 +53,7 @@ const serverBaseUrl = inject("serverBaseUrl")
   const user = ref(newUser())
 
   const add = (user_values) => {
-    errors.value = null
+  
     axios.post(serverBaseUrl + '/api/users', user_values)
         .then((response) => {
         user.value = response.data.data
@@ -62,11 +62,12 @@ const serverBaseUrl = inject("serverBaseUrl")
         router.back()
       })
       .catch((error) => {
+       
         if (error.response.status == 422) {
-          toast.error('order was not created due to validation errors!')
+          toast.error('user was not created due to validation errors!')
           errors.value = error.response.data.data
         } else {
-          toast.error('order was not created due to unknown server error!')
+          toast.error('user was not created due to unknown server error!')
         }
       })
 }
