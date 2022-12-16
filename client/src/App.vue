@@ -9,7 +9,6 @@ const configStore = useConfigStore()
 </script>
 
 <template>
-
     <head>
         <meta name="description" content="FastugaApp">
     </head>

@@ -2,15 +2,17 @@
 import { ref, watch, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
+import { useOrderStore } from '../../stores/orders.js';
 import OrderDetail from "./OrderDetails.vue"
 
 const serverBaseUrl = inject("serverBaseUrl")
 
 const router = useRouter()
-const axios = inject('axios')
 const userStore = useUserStore()
-const toast = inject('toast')
+const orderStore = useOrderStore()
 
+const axios = inject('axios')
+const toast = inject('toast')
 
 const props = defineProps({
     id: {
@@ -23,7 +25,8 @@ const props = defineProps({
     }
 })
 
-const currentCustomer= ref({});
+const currentCustomer= ref({})
+
 const newOrder = () => {
     return {
         id: null,
@@ -65,17 +68,11 @@ const loadOrder = (id) => {
     }
 }
 
-const add = (order_value) => {
-    axios({
-        method: 'POST',
-        url: serverBaseUrl + '/api/orders',
-        data: order_value
-    })
+const add = (order) => {
+    orderStore.insert_order(order)
     .then((response) => {
-        console.log("feito")
-        toast.success("Order added successfuly")
+        toast.success("Order added successfuly!")
         router.push({ name: 'Orders' })
-        
     })
     .catch((error) => {
         if (error.response.status == 422) {
@@ -97,7 +94,7 @@ const getCurrentCustomer = () => {
 
     axios.get(serverBaseUrl + '/api/customers/user/' + userStore.user.id)
         .then((response) => {
-        
+
             if (response.data) {
                 currentCustomer.value = response.data.data
 
@@ -105,7 +102,7 @@ const getCurrentCustomer = () => {
                 order.value.payment_type=currentCustomer.value.default_payment_type;
 
                 order.value.customer_id = currentCustomer.value.id;
-                
+
 
             }
 
@@ -128,7 +125,7 @@ const leaveConfirmed = () => {
 
 onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
-    
+
     let newValueStr = dataAsString()
     if (originalValueStr != newValueStr) {
         nextCallBack = next
@@ -159,8 +156,8 @@ watch(
 
     <!--<confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-   
+
     </confirmation-dialog>-->
-   
+
     <order-detail :currentCustomer="currentCustomer" :order="order" :errors="errors" @cancel="cancel" @add="add" @getCurrentCustomer="getCurrentCustomer"></order-detail>
 </template>
