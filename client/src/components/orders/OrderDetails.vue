@@ -212,15 +212,35 @@ onMounted(() => {
 <template>
 
     <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-        <div class="box_form">
-            <h3 class="mt-5 mb-3" v-if="$route.name == 'Order'">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex">
+                        <div class="p-title-box">
+                            <div class="p-title-right">
+
+
+
+            <h4 class="p-title" v-if="$route.name == 'Order'">
                 Order #{{ editingOrder.id }} Details
-            </h3>
-            <h3 class="mt-5 mb-3" v-if="$route.name == 'NewOrder'">Adding New Order</h3>
-            <hr style="color:beige" />
+            </h4>
+            <h4 class="p-title" v-if="$route.name == 'NewOrder'">Adding New Order</h4>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+
+
+
+            </div>
             <div class="mb-3">
                 <label for="payment_type">Payment Type </label>
-                <select id="payment_type" name="payment_type" v-model="editingOrder.payment_type"
+                <select id="payment_type" name="payment_type" class="form-select"  v-model="editingOrder.payment_type"
                     v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" >
                     <option value="VISA">Visa</option>
                     <option value="PAYPAL">PayPal</option>
@@ -232,7 +252,7 @@ onMounted(() => {
                 <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 px-1">
                 <label for="inputPaymentReference" class="form-label">Payment Reference</label>
                 
                     <input type="text" class="form-control" id="inputPaymentReference" placeholder="Payment Reference"
@@ -285,16 +305,28 @@ onMounted(() => {
                     <span style="padding-left: 10px;">{{ editingOrder.user.name }}</span>
                 </div>
             </div>
-        </div>
+        
         
         <field-error-message :errors="errors" fieldName="items"></field-error-message>
-        <span style="font-size: 35px; font-weight: 1000; "> Total Price: {{ totalPrice() }} €</span>
+        <span style="font-size: 35px; font-weight: 500; "> Total Price: {{ totalPrice() }} €</span>
+        </div>   
+        </div> 
+    </div>
+    </div>
+            </div>
         <div class="container">
             <div class="row">
+                <div class="col-6">
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-2">
 
-                <div class="col-md child">
-                    <label class="form-label" style="font-size: xx-large;color:white;">Products In the Order: </label>
-                    <div v-for="n in editingOrder.order_item.length">
+
+                
+                <div class="col-md ">
+                    <label class="form-label" style="font-size: xx-large">Products In the Order: </label>
+                    <div class="item-order" v-for="n in editingOrder.order_item.length">
                         <br>
                         <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)"
                             class="rounded-circle img_photo" />
@@ -312,7 +344,7 @@ onMounted(() => {
                         }}</span>
 
                         <div>
-                            <label for="inputNotes" style="color:white" class="form-label">Notes</label>
+                            <label for="inputNotes" class="form-label">Notes</label>
                             <textarea class="form-control" id="inputNotes" rows="1"
                                 v-model="editingOrder.order_item[n - 1].notes"
                                 v-if="$route.name == 'NewOrder'"></textarea>
@@ -323,11 +355,18 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    </div>
+                    <div class="col-6" v-if="(editingOrder.status == 'C' || editingOrder.status == 'EM') || $route.name == 'NewOrder'">
+                        <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-2">
 
-                <div class="col-md twin "
-                    v-if="(editingOrder.status == 'C' || editingOrder.status == 'EM') || $route.name == 'NewOrder'">
-                    <label style="font-size: xx-large;color:white" class="form-label">Menu: </label>
+                <div class="col-md">
+                    <label style="font-size: xx-large" class="form-label">Menu: </label>
                     <br>
                     <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5">
                     </Bootstrap5Pagination>
@@ -352,10 +391,13 @@ onMounted(() => {
 
                         </div>
                     </div>
-
-
                 </div>
-            </div>
+                </div>
+                        </div>
+                        </div>
+                </div>
+          
+        </div>
         </div>
 
         <div class="mb-3 d-flex justify-content-end">
@@ -365,9 +407,10 @@ onMounted(() => {
                 Add Order
             </button>
 
-            <button type="button" class="btn btn-light px-5" @click="cancel">
+            <button type="button" class="btn btn-light px-5" @click="cancel" v-if="$route.name == 'NewOrder'">
                 Cancel
             </button>
+        </div>
         </div>
     </form>
 </template>
@@ -437,14 +480,12 @@ onMounted(() => {
     font-size: 20px;
     padding-left: 10px;
     padding-right: 20px;
-    color: beige;
+    
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: large;
 }
 
-.form-label {
-    font-size: 20px;
-}
+
 
 #add {
     margin: 2px;
@@ -454,5 +495,10 @@ onMounted(() => {
 .img_photo {
     width: 3.2rem;
     height: 3.2rem;
+}
+
+.item-order{
+    border: #dc9c37ed;
+    border-width: 30px;
 }
 </style>
