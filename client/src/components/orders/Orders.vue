@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
+import { useOrderStore } from '../../stores/orders.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 import OrderTable from "./OrderTable.vue"
@@ -11,105 +12,41 @@ const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl")
 
 const userStore = useUserStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
+const order_items = ref([])
 const pagination = ref({})
-
-//variável usada no filtro
-var value_status = ref("all");
-
-//WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
-watch(value_status, () => {
-  console.log(value_status.value)
-  loadOrders()
-})
-
-//funcao a implementar com filtros para historicos de negocio
-
-const loadOrders = (page = 1) => {
-
-    if(userStore.user && userStore.user.type == 'EM'){
-
-      axios.get(serverBaseUrl + '/api/orders?page=' + page, {
-        params: {
-          status: value_status.value
-        }
-      })
-      .then((response) => {
-
-        orders.value = response.data.data
-        pagination.value = response.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-
-    if(userStore.user && (userStore.user.type == 'ED' || userStore.user.type == 'C')){
-
-      axios.get(serverBaseUrl+'/api/users/'+ userStore.userId +'/orders?page='+page)
-      .then((response) => {
-
-        orders.value = response.data.data
-        pagination.value = response.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-    if(userStore.user && userStore.user.type == 'EC'){
-      console.log("aaaa")
-      axios.get(serverBaseUrl+'/api/users/'+ userStore.userId +'/order-items?page='+page)
-      .then((response) => {
-        order_items.value = response.data.data
-        pagination.value = response.data
-
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-
-
-    }
-
-const addOrder = () => {
-  router.push({ name: "NewOrder" });
-};
-
-const editOrder = (order) => {
-  router.push({ name: "Order", params: { id: order.id } });
-};
-
-const deletedOrder = (deletedOrder) => {
-  let idx = orders.value.findIndex((o) => o.id === deletedOrder.id)
-  if (idx >= 0) {
-    orders.value.splice(idx, 1);
-  }
-};
+const status = ref("all")
 
 const props = defineProps({
-  onlyCurrentOrders: {
-    type: Boolean,
-    default: false,
-  },
-});
+    onlyCurrentOrders: {
+        type: Boolean,
+        default: false
+    }
+})
 
-const forceRerender = () => {
-    loadOrders()
-
+const loadOrders = (page = 1) => {
+    orderStore.load_orders(page, status.value)
 }
 
-const orders = ref([])
-const order_items = ref([])
-
-onMounted(() => {
-  if(userStore.user){
-    loadOrders()
-  }
-
-
+const orders = computed(() => {
+    pagination.value = orderStore.get_page()
+    return orderStore.get_orders()
 })
+
+const addOrder = () => {
+    router.push({ name: "NewOrder" });
+}
+
+const editOrder = (order) => {
+    router.push({ name: "Order", params: { id: order.id } });
+}
+
+watch(status, () => { loadOrders() })
+
+onMounted(() => { loadOrders() })
+
 </script>
 
 <template>
@@ -138,7 +75,7 @@ onMounted(() => {
             <div class="d-flex">
                 <div class="col-3" v-if="userStore.user ">
                     <label for="selectCompleted" class="form-label">Filter by status:</label>
-                    <select class="form-select" id="selectCompleted" v-model="value_status">
+                    <select class="form-select" id="selectCompleted" v-model="status">
                         <option value="all" selected>Any</option>
                         <option value="P">Preparing Orders</option>
                         <option value="R">Ready Orders</option>
@@ -148,7 +85,7 @@ onMounted(() => {
                   </div>
                 </div>
                 </div>
-             
+
                 <div class="col-xl-2">
                 <div class="ms-auto align-self-center">
                     <div class="mx-0 mt-2" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
@@ -158,23 +95,23 @@ onMounted(() => {
                     </div>
                 </div>
                 </div>
-                
 
 
-                
-          
-       
 
-        <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
-        <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
-        <div v-if="userStore.user && !onlyCurrentOrders" class="d-flex justify-content-end mt-3">
+
+
+
+        <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
+        <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
+
+        <div v-if="userStore.user" class="d-flex justify-content-end mt-3">
             <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
         </div>
       </div>
             </div>
-              </div> 
-            </div> 
+              </div>
+            </div>
     </div>
     </div>
 </template>
