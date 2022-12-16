@@ -1,33 +1,86 @@
-.btn-addOrder {
-    margin-top: 1.85rem;
-  }
-  
-  button[type="button"].btn-add {
-      background-color: #727cf5 !important;
-      color: #fff;
-      border-color: #727cf5;
-      border-radius: 0.15rem;
-      box-shadow: 0px 2px 6px 0px rgba(114, 124, 245, 0.5);
-      border: 1px #727cf5;
-      font-size: 15px;
-      padding: .5rem 0;
-  }
-  
-  button[type="button"]:hover.btn-add  {
-      color: #fff;
-  }
-  
-  button[type="button"]:focus.btn-add  {
-      color: #fff;
-      box-shadow: 0 0 0 .15rem rgba(135, 144, 247, 0.5);
-  }
-  
-  .btn-add {
-      position: relative;
-      top: .775rem;
-  }
-  .card {
+button[type="button"].btn-add {
+    background-color: #f0bc74 !important;
+    border-color: #f0bc74;
+    border-radius: 0.2rem;
+    border: 1px #727cf5;
+    font-size: 15px;
+    padding: .5rem .5rem;
+    font-weight: 600;
+}
+
+button[type="button"].btn-add:hover {
+    background-color: #eeb15d !important;
+    border: 1px #eeb15d;
+}
+
+.card {
     border: none !important;
     margin-bottom: 24px;
-  }
+}
 
+.card-body {
+    padding: 1.125rem 1.5rem !important;
+}
+
+table {
+    font-size: 0.9rem !important;
+    padding: 1.5rem !important;
+}
+
+thead tr th {
+    padding: .95rem .95rem !important;
+    color: #1f2937 !important;
+}
+
+tbody tr td {
+    padding: .5rem .95rem !important;
+    color: #374151 !important;
+}
+
+.badge {
+    vertical-align: middle;
+}
+
+.badge-success-lighten {
+    color: #0acf97 !important;
+    background-color: rgba(10,207,151,.18);
+}
+
+.badge-danger-lighten {
+  color: #fa5c7c !important;
+  background-color: rgba(250,92,124,.18);
+}
+
+.badge-info-lighten {
+  color: #39afd1 !important;
+  background-color: rgba(57,175,209,.18);
+}
+
+.badge-warning-lighten {
+  color: #ffc35a !important;
+  background-color: rgba(255,195,90,.18);
+}
+
+.badge {
+    padding: 0.4em 0.125rem;
+    font-size: 0.75em;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 0.25rem;
+    display: inline-block;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+}
+
+.active > .page-link, .page-link.active {
+    z-index: 3;
+    color: #fff !important;
+    background-color: #1f2937 !important;
+    border-color: #1f2937 !important;
+}
+
+.page-link {
+    color: #1f2937 !important;
+}
