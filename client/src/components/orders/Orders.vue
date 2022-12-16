@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, watch, computed  } from 'vue'
+import { ref, onMounted, inject, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/orders.js'
@@ -18,7 +18,6 @@ const router = useRouter()
 const order_items = ref([])
 const pagination = ref({})
 const status = ref("all")
-var total_orders=0;
 
 const props = defineProps({
     onlyCurrentOrders: {
@@ -31,17 +30,8 @@ const loadOrders = (page = 1) => {
     orderStore.load_orders(page, status.value)
 }
 
-const total = computed(() => {
-    pagination.value = orderStore.get_page()
-   if(pagination.value.meta!=undefined){
-        total_orders=pagination.value.meta.total
-   }
-
-    return total_orders
-})
-
 const orders = computed(() => {
-
+    pagination.value = orderStore.get_page()
     return orderStore.get_orders()
 })
 
@@ -55,10 +45,7 @@ const editOrder = (order) => {
 
 watch(status, () => { loadOrders() })
 
-
-onMounted(() => {
-     loadOrders()
-})
+onMounted(() => { loadOrders() })
 
 </script>
 
