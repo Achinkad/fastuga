@@ -83,18 +83,19 @@ export const useUserStore = defineStore('user', () => {
     }
 
     function save (user_values, user_id) {
-        errors.value = null
+
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
           .then((response) => {
             //user.value = response.data.data
             //originalValueStr = dataAsString()
             toast.success('User #' + user_id + ' was updated successfully.')
-            router.back()
+          
           })
           .catch((error) => {
+            console.log(error)
             if (error.response.status == 422) {
                 toast.error('User #' + user_id + ' was not updated due to validation errors!')
-                //errors.value = error.response.data
+                errors.value = error.response.data.data
               } else {
                 toast.error('User #' + user_id + ' was not updated due to unknown server error!')
               }

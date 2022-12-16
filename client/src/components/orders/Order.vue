@@ -78,6 +78,7 @@ const add = (order_value) => {
         
     })
     .catch((error) => {
+        
         if (error.response.status == 422) {
             toast.error('Couldn\'t add the order due to validation errors!')
             errors.value = error.response.data.data
