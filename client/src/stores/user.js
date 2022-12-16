@@ -94,7 +94,7 @@ export const useUserStore = defineStore('user', () => {
           .catch((error) => {
             if (error.response.status == 422) {
                 toast.error('User #' + user_id + ' was not updated due to validation errors!')
-                errors.value = error.response.data.errors
+                //errors.value = error.response.data
               } else {
                 toast.error('User #' + user_id + ' was not updated due to unknown server error!')
               }
