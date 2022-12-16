@@ -38,7 +38,7 @@ class OrderController extends Controller
         if ($order->customer_id) {
             $discount_value = $order->points_used_to_pay / 2;
 
-            if (!$order->points_used_to_pay % 2) { return response()->json(["msg" => "Invalid number of points!"], 422); }
+            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay !=0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
             if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
 
             $order->total_paid_with_points = $discount_value;
