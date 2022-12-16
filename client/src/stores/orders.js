@@ -27,8 +27,10 @@ export const useOrderStore = defineStore('orders', () => {
                     status: status
                 }
             })
+        
             orders.value = response.data.data
             pagination.value = response.data
+           
             return orders.value
         } catch (error) {
             clear_orders()

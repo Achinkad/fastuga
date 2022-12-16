@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, watch, computed } from 'vue'
+import { ref, onMounted, inject, watch, computed  } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/orders.js'
@@ -18,6 +18,7 @@ const router = useRouter()
 const order_items = ref([])
 const pagination = ref({})
 const status = ref("all")
+var total_orders=0;
 
 const props = defineProps({
     onlyCurrentOrders: {
@@ -30,8 +31,17 @@ const loadOrders = (page = 1) => {
     orderStore.load_orders(page, status.value)
 }
 
-const orders = computed(() => {
+const total = computed(() => {
     pagination.value = orderStore.get_page()
+   if(pagination.value.meta!=undefined){
+        total_orders=pagination.value.meta.total
+   }
+       
+    return total_orders
+})
+
+const orders = computed(() => {
+   
     return orderStore.get_orders()
 })
 
@@ -45,7 +55,10 @@ const editOrder = (order) => {
 
 watch(status, () => { loadOrders() })
 
-onMounted(() => { loadOrders() })
+
+onMounted(() => {
+     loadOrders() 
+})
 
 </script>
 
@@ -56,8 +69,7 @@ onMounted(() => { loadOrders() })
                 <div class="d-flex">
                     <div class="p-title-box">
                         <div class="p-title-right">
-                          <!-- Total 83 ???? -->
-                            <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: 83)</h4>
+                            <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: {{total}} )</h4>
                             <h4 class="p-title" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
                         </div>
                     </div>
