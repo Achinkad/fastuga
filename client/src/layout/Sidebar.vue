@@ -54,8 +54,8 @@ onMounted(() => {
                         Dashboard
                     </router-link>
                 </li>
-                <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-                    <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Orders' }"
+                <li class="nav-item">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Orders' }"
                         :to="{ name: 'Orders' }">
                         <div v-if="userStore.user && userStore.user.type == 'EC'">
                             <i class="bi bi-bag" style="font-size: 17px!important;"></i>
@@ -66,23 +66,16 @@ onMounted(() => {
                             Orders
                         </div>
                     </router-link>
-                    <!-- <router-link class="link-secondary" :to="{ name: 'NewOrder' }" aria-label="Add a new order"
-                        v-if="(userStore.user && userStore.user.type != 'EC' && userStore.user.type != 'ED') || !userStore.user">
-                        <i class="bi bi-xs bi-plus-circle"></i>
-                    </router-link> -->
                 </li>
 
                 <div v-if="userStore.user && userStore.user.type == 'EM'">
                     <li class="nav-item nav-item-title mt-3">Administration</li>
-                    <li class="nav-item d-flex justify-content-between align-items-center pe-3">
-                        <router-link class="nav-link w-100 me-3" :class="{ active: $route.name === 'Products' }"
+                    <li class="nav-item">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Products' }"
                             :to="{ name: 'Products' }">
                             <i class="bi bi-egg-fried"></i>
                             Products
                         </router-link>
-                        <!-- <router-link class="link-secondary" :to="{ name: 'newProduct' }" aria-label="Add a new order">
-                            <i class="bi bi-xs bi-plus-circle"></i>
-                        </router-link> -->
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link" :class="{ active: $route.name === 'Users' }"
@@ -97,7 +90,7 @@ onMounted(() => {
                     <li class="nav-item nav-item-title mt-3">In preparation</li>
                     <li class="nav-item" v-for="order in orders" :key="order.id">
                         <div v-if="order.status == 'P'">
-                            <router-link class="nav-link w-100 me-3"
+                            <router-link class="nav-link"
                                 :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
                                 :to="{ name: 'Order', params: { id: order.id } }">
                                 <i class="bi bi-ticket"></i>
@@ -116,7 +109,7 @@ onMounted(() => {
     width: 260px;
     min-width: 260px;
     overflow-y: auto;
-    background-color: #fff;
+    background-color: #1f2937;
     z-index: 2000;
     box-shadow: 0 0 35px 0 rgba(154, 161, 171, .15) !important;
 }
@@ -128,8 +121,6 @@ onMounted(() => {
     position: fixed;
     top: 0;
     color: #fff !important;
-    background: rgb(255,165,0);
-    background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
     text-decoration: none !important;
 }
 
@@ -145,7 +136,9 @@ onMounted(() => {
 }
 
 .nav-link:hover {
-    color: #656a71;
+    color: #f2f4f6;
+    background-color: #374151;
+    border-radius: 5px;
 }
 
 ul {
@@ -172,12 +165,12 @@ ul > :first-child {
     padding: 10px 20px;
     font-size: .9375rem;
     position: relative;
-    color: #7e8d9f;
+    color: #ccc;
     font-weight: 600;
 }
 
 .sidebar .nav-link.active {
-    color: orange;
+    color: #f0bc74;
     font-weight: 700;
 }
 

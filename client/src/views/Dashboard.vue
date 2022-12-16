@@ -13,7 +13,6 @@ const loadOrders = () => {
     })
         .then((response) => {
             orders.value = response.data.data
-         
 
         })
         .catch((error) => {
@@ -59,7 +58,7 @@ const options = {
         enabled: false
     },
     fill: {
-        colors: '#ffa500'
+        colors: '#f0bc74'
     },
     grid: {
         borderColor: '#f9f9f9',
@@ -74,7 +73,7 @@ const series = [{
 </script>
 
 <template>
-     
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -184,32 +183,6 @@ const series = [{
 </template>
 
 <style scoped>
-h5 {
-    font-size: .9375rem;
-}
-
-h4 {
-    font-weight: 700;
-    line-height: 1.1;
-}
-
-h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: rgb(108, 117, 125);
-}
-
-.p-title-box .p-title {
-    font-size: 1.235rem;
-    margin: 0;
-    line-height: 75px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: #6c757d;
-    font-weight: 600;
-}
-
 .widget-flat {
     position: relative;
     overflow: hidden;
@@ -242,7 +215,7 @@ h3 {
 }
 
 .card-icon {
-    color: #ffa500;
+    color: #f0bc74;
     font-size: 16px;
     background-color: rgba(255, 240, 155, 0.25);
     height: 40px;
