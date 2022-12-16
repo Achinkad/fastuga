@@ -1,6 +1,6 @@
-const httpServer = require('http').createServer()
+const http = require('http').createServer()
 
-const io = require("socket.io")(httpServer, {
+const io = require("socket.io")(http, {
     cors: {
         origin: "http://localhost:5173",
         methods: ["GET", "POST"],
@@ -8,10 +8,17 @@ const io = require("socket.io")(httpServer, {
     }
 })
 
-httpServer.listen(8080, () =>{
+http.listen(8080, () =>{
     console.log('listening on *:8080')
 })
 
 io.on('connection', (socket) => {
     console.log(`client ${socket.id} has connected`)
+    socket.on('newOrder', (order) => {
+        socket.broadcast.emit('newOrder', order)
+    })
+
+    socket.on('deleteOrder', (order) => {
+        socket.broadcast.emit('deleteOrder', order)
+    })
 })

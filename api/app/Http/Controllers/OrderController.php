@@ -99,9 +99,11 @@ class OrderController extends Controller
     {
         return DB::transaction(function () use ($id) {
             $order = Order::where('id', $id)->firstOrFail();
-            if ($order->customer) { $order->customer()->detach(); }
-            if ($order->delivered_by) { $order->delivered_by_user()->detach(); }
-            return $order->delete();
+            if ($order->customer) { $order->customer()->dissociate(); }
+            if ($order->delivered_by) { $order->delivered_by_user()->dissociate(); }
+            foreach ($order->order_item as $item) { $item->delete(); }
+            $order->delete();
+            return new OrderResource($order);
         });
     }
 

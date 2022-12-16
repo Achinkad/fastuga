@@ -1,12 +1,16 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue"
 import { useUserStore } from '../../stores/user.js'
+import { useOrderStore } from '../../stores/orders.js'
 
 const userStore = useUserStore()
+const orderStore = useOrderStore()
+
 const axios = inject("axios")
 const toast = inject("toast")
-
 const serverBaseUrl = inject("serverBaseUrl")
+
+const emit = defineEmits(["completeToggled", "edit"])
 
 const props = defineProps({
     orders: {
@@ -44,15 +48,14 @@ const props = defineProps({
     showDeleteButton: {
         type: Boolean,
         default: true,
-    },
-
+    }
 })
-
-const emit = defineEmits(["completeToggled", "edit", "deleted", "forceRerender"])
 
 const editingOrders = ref(props.orders)
 const orderToDelete = ref(null)
 const deleteConfirmationDialog = ref(null)
+
+const editClick = (order) => { emit("edit", order) }
 
 const orderToDeleteDescription = computed(() => {
     return orderToDelete.value
@@ -60,34 +63,27 @@ const orderToDeleteDescription = computed(() => {
     : ""
 })
 
-watch(
-    () => props.orders,
-    (newOrders) => {
-        editingOrders.value = newOrders
-    }
-)
-
-const editClick = (order) => {
-    emit("edit", order)
-}
-
 const dialogConfirmedDelete = () => {
-    console.log(orderToDelete.value)
-    axios
-    .patch(serverBaseUrl + "/api/orders/" + orderToDelete.value.id + "/status", { status: 'C' })
+    orderStore.delete_order(orderToDelete.value)
     .then((response) => {
-        emit("forceRerender");
-        toast.info("Order " + orderToDeleteDescription.value + " was canceled")
+        toast.info("Order " + orderToDeleteDescription.value + " was deleted!")
     })
     .catch((error) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 
 const deleteClick = (order) => {
     orderToDelete.value = order
     deleteConfirmationDialog.value.show()
 }
+
+watch(
+    () => props.orders,
+    (newOrders) => {
+        editingOrders.value = newOrders
+    }
+)
 </script>
 
 <template>
@@ -105,7 +101,7 @@ const deleteClick = (order) => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="order in editingOrders" :key="order.id">
+            <tr v-for="order in orders" :key="order.id">
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
                 <td v-if="showPrice">{{ order.total_price }}€</td>
                 <td v-if="showStatus">
