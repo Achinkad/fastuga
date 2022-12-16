@@ -16,8 +16,8 @@ export const useOrderStore = defineStore('orders', () => {
 
     async function load_orders(page, status) {
         // URL builder
-        if (userStore.user.type == "EM") url = `orders?page=${page}`
-        if (userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}orders?page=${page}`
+        if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
+        if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}orders?page=${page}`
 
         try {
             const response = await axios({
