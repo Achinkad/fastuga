@@ -1,41 +1,9 @@
 <script setup>
-import { ref, onMounted, inject ,watch} from 'vue'
+import { computed, watch } from 'vue'
 import { useUserStore } from '../stores/user.js'
-
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
+import { useOrderStore } from '../stores/orders.js'
 
 const userStore = useUserStore()
-const orders = ref([])
-
-var timer = null
-
-const loadOrders = () => {
-    if (userStore.user && userStore.user.type == 'C') {
-        axios.get(serverBaseUrl + '/api/users/' + userStore.userId + '/orders')
-            .then((response) => {
-                orders.value = response.data.data
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-}
-onMounted(() => {
-  loadOrders();
-
-  watch(
-    () => userStore.userId,
-    (userId) => {
-      if (userId) {
-        loadOrders();
-      }
-    },
-  );
-});
-
-
-
 </script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
@@ -48,7 +16,8 @@ onMounted(() => {
             <ul class="nav flex-column">
                 <li class="nav-item nav-item-title">Navigation</li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
+                    <router-link class="nav-link"
+                        :class="{ active: $route.name === 'Dashboard' || $route.name === 'CustomerDashboard' }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>
                         Dashboard
@@ -85,20 +54,6 @@ onMounted(() => {
                             <i class="bi bi-people-fill"></i>
                             Users
                         </router-link>
-                    </li>
-                </div>
-
-                <div v-if="userStore.user && userStore.user.type == 'C'">
-                    <li class="nav-item nav-item-title mt-3">In preparation</li>
-                    <li class="nav-item" v-for="order in orders" :key="order.id">
-                        <div v-if="order.status == 'P'">
-                            <router-link class="nav-link"
-                                :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
-                                :to="{ name: 'Order', params: { id: order.id } }">
-                                <i class="bi bi-ticket"></i>
-                                <span> Ticket nº {{ order.ticket_number }}</span>
-                            </router-link>
-                        </div>
                     </li>
                 </div>
             </ul>
@@ -200,5 +155,28 @@ svg {
     font-size: 1.1rem;
     vertical-align: middle;
     width: 20px;
+}
+
+.nav-item span {
+    position: relative;
+    float: right;
+    bottom: 4px;
+}
+
+.text-gray-800, .text-gray-800:hover {
+    color: #1f2937 !important;
+}
+
+.badge-md {
+    padding: .25rem .4rem;
+}
+
+.badge {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.bg-secondary {
+    background-color: #f0bc74 !important;
 }
 </style>

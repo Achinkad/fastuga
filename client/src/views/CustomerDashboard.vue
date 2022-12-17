@@ -1,29 +1,24 @@
 <script setup>
-import { ref,onMounted, inject} from 'vue'
+import { computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user.js'
+import { useOrderStore } from '../stores/orders.js'
 
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
+const userStore = useUserStore()
+const orderStore = useOrderStore()
+const router = useRouter()
 
-const orders = ref([])
-
-const loadOrders = () => {
-    axios.get(serverBaseUrl + '/api/orders', {
-        params: {
-            status: value_status.value
-        }
-    })
-        .then((response) => {
-            orders.value = response.data.data
-
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+const loadOrders = (page = 1) => {
+    orderStore.load_orders(page, "P")
 }
 
-onMounted(() => {
-    loadOrders()
+const orders_from_user = computed(() => {
+    return orderStore.my_orders
 })
+
+const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
+
+watch(() => userStore.user, function() { loadOrders() })
 </script>
 
 <template>
@@ -32,8 +27,8 @@ onMounted(() => {
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
-                    <div class="p-title-right">
-                        <h4 class="p-title">Dashboard</h4>
+                    <div>
+                        <h4 class="p-title">Welcome back {{ userStore.user.name }}!</h4>
                     </div>
                 </div>
             </div>
@@ -122,13 +117,39 @@ onMounted(() => {
             <div class="col-xl-7 col-lg-6">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title">Orders Per Month</h4>
+                        <h4 class="header-title">Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
-                        <div class="chart">
-                            <apexchart width="100%" height="247px" type="bar" :options="options" :series="series">
-                            </apexchart>
-                        </div>
+                        <table class="table table-responsive align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Ticket Number</th>
+                                    <th>Price</th>
+                                    <th class="text-center" style="width:20%">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="orders_from_user.length==0">
+                                    <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+                                </tr>
+                                <tr v-for="order in orders_from_user" :key="order.id">
+                                    <td>{{order.id}}</td>
+                                    <td>{{order.ticket_number}}</td>
+                                    <td>{{order.total_price}}€</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-xs btn-light me-1" title="Cancel Order" @click="deleteClick(order)">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                            <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

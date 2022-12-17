@@ -85,7 +85,7 @@ const options = {
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
-                    <div class="p-title-right">
+                    <div>
                         <h4 class="p-title">Dashboard</h4>
                     </div>
                 </div>

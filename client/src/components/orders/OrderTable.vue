@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue"
+import { ref, watch, computed, inject, onMounted } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/orders.js'
 
@@ -96,15 +96,25 @@ watch(
             <tr>
                 <th v-if="showId">Order ID</th>
                 <th v-if="showTicketNumber">Ticket Number</th>
+                <th v-if="showCustomer">Customer ID</th>
                 <th v-if="showPrice">Price</th>
                 <th v-if="showStatus">Order Status</th>
                 <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Actions</th>
             </tr>
         </thead>
         <tbody>
+            <tr v-if="orders.length==0">
+                <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+            </tr>
             <tr v-for="order in orders" :key="order.id">
                 <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
+                <td v-if="order.customer">
+                    <router-link :to="{ name: 'User', params: { id: order.customer.user.id } }" :title="`View profile of ${order.customer.user.name}`">
+                        #{{ order.customer_id }}
+                    </router-link>
+                </td>
+                <td v-if="!order.customer"> -- </td>
                 <td v-if="showPrice">{{ order.total_price }}€</td>
                 <td v-if="showStatus">
                     <span v-if="order.status == 'P'">
@@ -141,15 +151,6 @@ watch(
 </template>
 
 <style scoped>
-.completed {
-    text-decoration: line-through;
-}
-
-button {
-    margin-left: 3px;
-    margin-right: 3px;
-}
-
 td {
     word-wrap: break-word;
 }
@@ -157,5 +158,4 @@ td {
 table {
     table-layout: fixed;
 }
-
 </style>

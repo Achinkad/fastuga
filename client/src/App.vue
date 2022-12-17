@@ -4,6 +4,7 @@ import { useConfigStore } from './stores/config.js'
 
 import Navbar from "@/layout/Navbar.vue"
 import Sidebar from "@/layout/Sidebar.vue"
+import Footer from "@/layout/Footer.vue"
 
 const configStore = useConfigStore()
 </script>
@@ -13,32 +14,17 @@ const configStore = useConfigStore()
         <meta name="description" content="FastugaApp">
     </head>
     <div class="wrapper">
-        <Navbar v-if="configStore.showNavbar" />
-        <Sidebar v-if="configStore.showSidebar" />
+        <Navbar v-if="configStore.showNavbar"/>
+        <Sidebar v-if="configStore.showSidebar"/>
         <main v-if="configStore.showMain">
             <div class="content">
-                <router-view />
+                <router-view/>
             </div>
         </main>
         <section v-if="!configStore.showMain">
             <router-view />
         </section>
-        <footer class="footer" v-if="configStore.showFooter">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        2022 © Project - Distributed Applications Development
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-end footer-links d-none d-md-block">
-                            <a target="_blank" href="https://github.com/joseareia/fastuga/">Code</a>
-                            <a href="#">Contacts</a>
-                            <a href="#">About Us</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <Footer v-if="configStore.showFooter"/>
     </div>
 </template>
 

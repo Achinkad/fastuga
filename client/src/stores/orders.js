@@ -17,8 +17,8 @@ export const useOrderStore = defineStore('orders', () => {
 
     async function load_orders(page, status) {
         // URL builder
-        if (userStore.user.type == "EM") url = `orders?page=${page}`
-        if (userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}orders?page=${page}`
+        if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
+        if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}/orders?page=${page}`
 
         try {
             const response = await axios({
@@ -28,10 +28,10 @@ export const useOrderStore = defineStore('orders', () => {
                     status: status
                 }
             })
-        
+
             orders.value = response.data.data
             pagination.value = response.data
-           
+
             return orders.value
         } catch (error) {
             clear_orders()
@@ -63,8 +63,11 @@ export const useOrderStore = defineStore('orders', () => {
 
     const clear_orders = (() => { orders.value = [] })
 
+    const total_orders = computed(() => { return orders.value.length })
 
-    //const total_orders = computed(() => { return orders.value.length })
+    const my_orders = computed(() => { return orders.value.filter(or => or.customer.user.id == userStore.userId) })
+
+    const total_my_orders = computed(() => { return my_orders.value.length })
 
     async function insert_order(order) {
         const response = await axios.post('/orders', order)
@@ -95,5 +98,15 @@ export const useOrderStore = defineStore('orders', () => {
         toast.info(`The Order (#${order.id}) was deleted!`)
     })
 
-    return { orders, load_orders, get_page, get_orders,loadNumberOrdersMonth,get_number_orders,insert_order, delete_order}
+    return {
+        orders,
+        my_orders,
+        total_my_orders,
+        load_orders,
+        get_page,
+        get_orders,
+        total_orders,
+        insert_order,
+        delete_order
+    }
 })

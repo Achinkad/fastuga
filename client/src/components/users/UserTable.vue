@@ -61,7 +61,7 @@ const photoFullUrl = (user) => {
 };
 
 const editClick = (user) => {
-    emit("edit", user);
+    emit("edit", user)
 };
 
 const toogleClick = (user) => {
