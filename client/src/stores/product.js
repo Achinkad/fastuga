@@ -18,7 +18,7 @@ export const useProductStore = defineStore('products', () => {
             best_products.value = response.data.data
             return best_products.value
         } catch (error) {
-            clear_orders()
+           
             throw error
         }
     }

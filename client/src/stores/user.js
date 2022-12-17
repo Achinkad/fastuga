@@ -106,12 +106,12 @@ export const useUserStore = defineStore('user', () => {
             }
         }
 
-        async function loadCustomersCreatedThisMonth(month) {
+        async function loadCustomersCreatedThisMonth() {
       
             try {
                 const response = await axios({
                     method: 'GET',
-                    url: 'customers/'+month+'/this_month'
+                    url: 'customers/numbers'
                 })
             
                 number_customers_this_month.value = response.data

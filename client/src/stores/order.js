@@ -42,11 +42,11 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
-    async function loadNumberOrdersMonth(year) {
+    async function loadNumberOrdersMonth() {
         try {
             const response = await axios({
                 method: 'GET',
-                url: 'orders/' + year + '/numbers'
+                url: 'orders/numbers'
             })
             number_orders.value = response.data
             return number_orders.value
@@ -56,12 +56,12 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
-    async function loadNumberOrdersThisMonth(month) {
+    async function loadNumberOrdersThisMonth() {
         
         try {
             const response = await axios({
                 method: 'GET',
-                url: 'orders/'+month+'/this_month'
+                url: 'orders/this_month'
             })
         
             number_orders_this_month.value = response.data
@@ -72,12 +72,12 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
-    async function loadRevenueOrders(month) {
+    async function loadRevenueOrders() {
       
         try {
             const response = await axios({
                 method: 'GET',
-                url: 'orders/'+month+'/revenue'
+                url: 'orders/revenue'
             })
         
             revenue_orders.value = response.data

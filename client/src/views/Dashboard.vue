@@ -20,11 +20,10 @@ const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" 
 
 const loadBestProducts = () => { productStore.load_best_products() }
 const best_products = computed(() => { return productStore.best_products })
-const loadCustomersCreatedThisMonth = () => {
-    var currentTime = new Date()
-    var month = currentTime.getMonth()+1;
 
-    userStore.loadCustomersCreatedThisMonth(month)
+const loadCustomersCreatedThisMonth = () => {
+
+    userStore.loadCustomersCreatedThisMonth()
 
 }
 
@@ -33,28 +32,22 @@ const customers_this_month = computed(() => {
 })
 
 const loadNumberOrdersMonth = async() => {
-    var currentTime = new Date()
-    var year = currentTime.getFullYear()
 
-    const numbers = await orderStore.loadNumberOrdersMonth(year)
+    const numbers = await orderStore.loadNumberOrdersMonth()
 
     series.value[0].data=numbers
 
 }
 
 const loadRevenueOrders = () => {
-    var currentTime = new Date()
-    var month = currentTime.getMonth()+1;
 
-    orderStore.loadRevenueOrders(month)
+    orderStore.loadRevenueOrders()
 
 }
 
 const loadNumberOrdersThisMonth = () => {
-    var currentTime = new Date()
-    var month = currentTime.getMonth()+1;
 
-    orderStore.loadNumberOrdersThisMonth(month)
+    orderStore.loadNumberOrdersThisMonth()
 
 }
 

@@ -116,12 +116,12 @@ class CustomerController extends Controller
         });
     }
 
-    public function get_number_customers_created_this_month($month){
+    public function get_number_customers_created_this_month(){
         
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
             $number_costumers=Customer::count();
-            $customers_created_last_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',$month-1)->count();
-            $customers_created_this_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',$month)->count();
+            $customers_created_last_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',date('m')-1)->count();
+            $customers_created_this_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',date('m'))->count();
             $percent_difference=0;
             if($customers_created_last_month!=0){
                 $percent_difference=($customers_created_this_month-$customers_created_last_month)/$customers_created_last_month*100;
