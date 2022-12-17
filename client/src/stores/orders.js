@@ -11,9 +11,12 @@ export const useOrderStore = defineStore('orders', () => {
 
     const orders = ref([])
     const number_orders = ref([])
+    const number_orders_this_month = ref([])
+    const revenue_orders = ref([])
     const pagination = ref([])
 
     let url = null
+
 
     async function load_orders(page, status) {
         // URL builder
@@ -50,13 +53,46 @@ export const useOrderStore = defineStore('orders', () => {
 
             return number_orders.value
         } catch (error) {
-            clear_orders()
+
+            throw error
+        }
+    }
+
+    async function loadNumberOrdersThisMonth(month) {
+        
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'orders/'+month+'/this_month'
+            })
+        
+            number_orders_this_month.value = response.data
+            return number_orders_this_month.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
+    async function loadRevenueOrders(month) {
+      
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'orders/'+month+'/revenue'
+            })
+        
+            revenue_orders.value = response.data
+            return revenue_orders.value
+        } catch (error) {
+
             throw error
         }
     }
 
     const get_orders = (() => { return orders.value })
-
+    const get_orders_this_month = (() => { return number_orders_this_month.value })
+    const get_revenue_orders = (() => { return revenue_orders.value })
     const get_page = (() => { return pagination.value })
 
     const clear_orders = (() => { orders.value = [] })
@@ -106,6 +142,11 @@ export const useOrderStore = defineStore('orders', () => {
         total_orders,
         insert_order,
         delete_order,
-        loadNumberOrdersMonth
+        loadNumberOrdersMonth,
+        loadRevenueOrders,
+        get_revenue_orders,
+        loadNumberOrdersThisMonth,
+        get_orders_this_month
+        
     }
 })

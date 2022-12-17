@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
     const errors = ref(null)
-
+    const number_customers_this_month= ref([])
 
     const user = ref(null)
 
@@ -101,7 +101,25 @@ export const useUserStore = defineStore('user', () => {
               }
           })
         }
+
+        async function loadCustomersCreatedThisMonth(month) {
+      
+            try {
+                const response = await axios({
+                    method: 'GET',
+                    url: 'customers/'+month+'/this_month'
+                })
+            
+                number_customers_this_month.value = response.data
+    
+                return number_customers_this_month.value
+            } catch (error) {
+                throw error
+            }
+        }
+
+        const get_customers_this_month = (() => { return number_customers_this_month.value })
   
 
-    return { user, userId, userPhotoUrl, login, logout, restoreToken, save}
+    return { user, userId, userPhotoUrl, login, logout, restoreToken, save,loadCustomersCreatedThisMonth,get_customers_this_month}
 })

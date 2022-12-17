@@ -14,6 +14,19 @@ const series =  ref([{
     data:  []
 }])
 
+
+const loadCustomersCreatedThisMonth = () => {
+    var currentTime = new Date()
+    var month = currentTime.getMonth()+1;
+
+    userStore.loadCustomersCreatedThisMonth(month)
+
+}
+
+const customers_this_month = computed(() => {
+    return userStore.get_customers_this_month()
+})
+
 const loadNumberOrdersMonth = async() => {
     var currentTime = new Date()
     var year = currentTime.getFullYear()
@@ -24,11 +37,37 @@ const loadNumberOrdersMonth = async() => {
   
 }
 
+const loadRevenueOrders = () => {
+    var currentTime = new Date()
+    var month = currentTime.getMonth()+1;
+
+    orderStore.loadRevenueOrders(month)
+
+}
+
+const loadNumberOrdersThisMonth = () => {
+    var currentTime = new Date()
+    var month = currentTime.getMonth()+1;
+
+    orderStore.loadNumberOrdersThisMonth(month)
+
+}
+
+const orders_this_month = computed(() => {
+    return orderStore.get_orders_this_month()
+})
+
+
+const revenue = computed(() => {
+    return orderStore.get_revenue_orders()
+})
+
 
 onMounted(async () => {
-  
    await loadNumberOrdersMonth() 
-
+   await loadRevenueOrders()
+   await loadNumberOrdersThisMonth()
+   await loadCustomersCreatedThisMonth()
 })
 const options = {
     chart: {
@@ -100,12 +139,16 @@ const options = {
                                 <div class="float-end">
                                     <i class="bi bi-people-fill card-icon"></i>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">Customers</h5>
-                                <h3 class="mt-3 mb-3">36,254</h3>
+                                <h5 class="text-muted fw-normal mt-0">All Customers</h5>
+                                <h3 class="mt-3 mb-3">{{customers_this_month[0]}}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
+                                    <span class="text-success me-2" v-if="customers_this_month[1]>0">
                                         <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        5.27%
+                                        {{customers_this_month[1].toFixed(2)}}%
+                                    </span>
+                                     <span class="text-danger me-2" v-if="customers_this_month[1]<=0">
+                                        <i class="bi bi-arrow-down" id="arrow-icons"></i>
+                                        {{customers_this_month[1].toFixed(2)}}%
                                     </span>
                                     <span class="text-nowrap">Since last month</span>
                                 </p>
@@ -119,12 +162,16 @@ const options = {
                                 <div class="float-end">
                                     <i class="bi bi-cart-plus-fill card-icon"></i>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">Orders</h5>
-                                <h3 class="mt-3 mb-3">5,543</h3>
+                                <h5 class="text-muted fw-normal mt-0">Orders This Month</h5>
+                                <h3 class="mt-3 mb-3">{{orders_this_month[0]}}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-danger me-2">
+                                    <span class="text-success me-2" v-if="orders_this_month[1]>0">
+                                        <i class="bi bi-arrow-up" id="arrow-icons"></i>
+                                        {{orders_this_month[1].toFixed(2)}}%
+                                    </span>
+                                    <span class="text-danger me-2" v-if="orders_this_month[1]<=0">
                                         <i class="bi bi-arrow-down" id="arrow-icons"></i>
-                                        1.03%
+                                        {{orders_this_month[1].toFixed(2)}}%
                                     </span>
                                     <span class="text-nowrap">Since last month</span>
                                 </p>
@@ -138,13 +185,18 @@ const options = {
                                 <div class="float-end">
                                     <i class="bi bi-currency-euro card-icon"></i>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">Revenue</h5>
-                                <h3 class="mt-3 mb-3">6,254€</h3>
+                                <h5 class="text-muted fw-normal mt-0">Revenue This Month</h5>
+                                <h3 class="mt-3 mb-3">{{Math.floor(revenue[0])}}€</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
+                                    <span class="text-success me-2" v-if="revenue[1]>0">
                                         <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        0.23%
+                                        {{revenue[1].toFixed(2)}}%
                                     </span>
+                                     <span class="text-danger me-2" v-if="revenue[1]<=0">
+                                        <i class="bi bi-arrow-down" id="arrow-icons"></i>
+                                        {{revenue[1].toFixed(2)}}%
+                                    </span>
+
                                     <span class="text-nowrap">Since last month</span>
                                 </p>
                             </div>
@@ -157,14 +209,11 @@ const options = {
                                 <div class="float-end">
                                     <i class="bi bi-graph-up card-icon"></i>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">Growth</h5>
+                                <h5 class="text-muted fw-normal mt-0">All Products</h5>
                                 <h3 class="mt-3 mb-3">+ 30.56%</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
-                                        <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        1.98%
-                                    </span>
-                                    <span class="text-nowrap">Since last month</span>
+                                   <br>
+                                   <br>
                                 </p>
                             </div>
                         </div>
