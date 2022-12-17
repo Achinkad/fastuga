@@ -38,16 +38,14 @@ export const useOrderStore = defineStore('orders', () => {
             throw error
         }
     }
+
     async function loadNumberOrdersMonth(year) {
-      
         try {
             const response = await axios({
                 method: 'GET',
-                url: 'orders/'+year+'/numbers'
+                url: 'orders/' + year + '/numbers'
             })
-        
             number_orders.value = response.data
-
             return number_orders.value
         } catch (error) {
             clear_orders()
@@ -102,6 +100,7 @@ export const useOrderStore = defineStore('orders', () => {
         orders,
         my_orders,
         total_my_orders,
+        loadNumberOrdersMonth,
         load_orders,
         get_page,
         get_orders,

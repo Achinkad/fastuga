@@ -6,8 +6,8 @@ import App from './App.vue'
 import Toaster from "@meforma/vue-toaster";
 import VueApexCharts from 'vue3-apexcharts'
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
-
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
+
 import router from './router'
 import axios from 'axios'
 

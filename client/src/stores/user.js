@@ -1,16 +1,19 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
-import avatarNoneUrl from '@/assets/avatar-none.png'
 import { useRouter } from 'vue-router'
+
+import avatarNoneUrl from '@/assets/avatar-none.png'
+
 const router = useRouter()
+
 export const useUserStore = defineStore('user', () => {
     const toast = inject("toast")
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
+
     const errors = ref(null)
-
-
     const user = ref(null)
+    const customer = ref(null)
 
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
@@ -22,14 +25,6 @@ export const useUserStore = defineStore('user', () => {
     const userId = computed(() => {
         return user.value?.id ?? -1
     })
-
-    /*const userName = computed(() => {
-        return user.value?.name ?? -1
-    })
-
-    const userType = computed(() => {
-        return user.value?.type ?? -1
-    })*/
 
     async function loadUser () {
         try {
@@ -83,25 +78,42 @@ export const useUserStore = defineStore('user', () => {
     }
 
     function save (user_values, user_id) {
-
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
-          .then((response) => {
+        .then((response) => {
             //user.value = response.data.data
             //originalValueStr = dataAsString()
             toast.success('User #' + user_id + ' was updated successfully.')
-          
-          })
-          .catch((error) => {
+
+        })
+        .catch((error) => {
             console.log(error)
             if (error.response.status == 422) {
                 toast.error('User #' + user_id + ' was not updated due to validation errors!')
                 errors.value = error.response.data.data
-              } else {
+            } else {
                 toast.error('User #' + user_id + ' was not updated due to unknown server error!')
-              }
-          })
-        }
-  
+            }
+        })
+    }
 
-    return { user, userId, userPhotoUrl, login, logout, restoreToken, save}
+    async function get_customer(user) {
+        try {
+            const response = await axios.get('customers/users/' + user.id)
+            customer.value = response.data.data
+        } catch (error) {
+            throw error
+        }
+    }
+
+    return {
+        user,
+        userId,
+        customer,
+        get_customer,
+        userPhotoUrl,
+        login,
+        logout,
+        restoreToken,
+        save
+    }
 })

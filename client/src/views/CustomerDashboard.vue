@@ -1,123 +1,100 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, onBeforeMount, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user.js'
-import { useOrderStore } from '../stores/orders.js'
+import { useOrderStore } from '../stores/order.js'
+import { useProductStore } from '../stores/product.js'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
+const productStore = useProductStore()
 const router = useRouter()
 
-const loadOrders = (page = 1) => {
-    orderStore.load_orders(page, "P")
-}
+const serverBaseUrl = inject("serverBaseUrl")
 
-const orders_from_user = computed(() => {
-    return orderStore.my_orders
-})
+const loadOrders = (page = 1) => { orderStore.load_orders(page, "P") }
+const loadCustomer = () => { userStore.get_customer(userStore.user) }
+const loadBestProducts = () => { productStore.load_best_products() }
+
+const orders_from_user = computed(() => { return orderStore.my_orders })
+const customer = computed(() => { return userStore.customer })
+const best_products = computed(() => { return productStore.best_products })
 
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 
-watch(() => userStore.user, function() { loadOrders() })
+const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
+
+const capitalize = (word) => {
+    const capitalizedFirst = word[0].toUpperCase()
+    const rest = word.slice(1)
+    return capitalizedFirst + rest
+}
+
+watch(() => userStore.user, function() {
+    loadOrders()
+    loadCustomer()
+})
+
+onBeforeMount(() => {
+    loadOrders()
+    loadCustomer()
+    loadBestProducts()
+})
 </script>
 
 <template>
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
                     <div>
-                        <h4 class="p-title">Welcome back {{ userStore.user.name }}!</h4>
+                        <h4 class="p-title">Welcome to Fastuga, {{ userStore.user.name }}</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-5 col-lg-6">
+            <div class="col-xl-4 col-lg-4">
                 <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card widget-flat">
+                    <div class="col-sm-12">
+                        <div class="card widget-flat orange-bg">
                             <div class="card-body">
-                                <div class="float-end">
-                                    <i class="bi bi-people-fill card-icon"></i>
-                                </div>
-                                <h5 class="text-muted fw-normal mt-0">Customers</h5>
-                                <h3 class="mt-3 mb-3">36,254</h3>
+                                <h3 class="mt-2 mb-2 fw-bold">You've {{ customer.points }} Points!</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
-                                        <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        5.27%
+                                    <span class="text-muted me-2">
+                                        You can discount until {{ (customer.points / 2  - customer.points / 2 % 10) / 2 }}€ in your next order.
                                     </span>
-                                    <span class="text-nowrap">Since last month</span>
                                 </p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-6">
-                        <div class="card widget-flat">
-                            <div class="card-body">
-                                <div class="float-end">
-                                    <i class="bi bi-cart-plus-fill card-icon"></i>
-                                </div>
-                                <h5 class="text-muted fw-normal mt-0">Orders</h5>
-                                <h3 class="mt-3 mb-3">5,543</h3>
-                                <p class="mb-0 text-muted">
-                                    <span class="text-danger me-2">
-                                        <i class="bi bi-arrow-down" id="arrow-icons"></i>
-                                        1.03%
-                                    </span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>
+                        <div class="card">
+                            <div class="d-flex card-header justify-content-between align-items-center">
+                                <h4 class="header-title">Best selled products</h4>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="card widget-flat">
-                            <div class="card-body">
-                                <div class="float-end">
-                                    <i class="bi bi-currency-euro card-icon"></i>
+                            <div class="card-body pt-0">
+                                <div class="best-products">
+                                    <div class="row mb-3 align-items-center" v-for="product in best_products" :key="product.id">
+                                        <div class="col-auto image">
+                                            <img :src="photoFullUrl(product)" class="product-photo"/>
+                                        </div>
+                                        <div class="col-auto">
+                                            <span>{{product.name}}</span> <br>
+                                            <span>{{capitalize(product.type)}}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">Revenue</h5>
-                                <h3 class="mt-3 mb-3">6,254€</h3>
-                                <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
-                                        <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        0.23%
-                                    </span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="card widget-flat">
-                            <div class="card-body">
-                                <div class="float-end">
-                                    <i class="bi bi-graph-up card-icon"></i>
-                                </div>
-                                <h5 class="text-muted fw-normal mt-0">Growth</h5>
-                                <h3 class="mt-3 mb-3">+ 30.56%</h3>
-                                <p class="mb-0 text-muted">
-                                    <span class="text-success me-2">
-                                        <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        1.98%
-                                    </span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-7 col-lg-6">
+            <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title">Orders In Pending</h4>
+                        <h4 class="header-title" v-if="orders_from_user.length != 0">Orders In Pending ({{orders_from_user.length}})</h4>
+                        <h4 class="header-title" v-else>Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
                         <table class="table table-responsive align-middle">
@@ -125,6 +102,7 @@ watch(() => userStore.user, function() { loadOrders() })
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Ticket Number</th>
+                                    <th>Points Gained</th>
                                     <th>Price</th>
                                     <th class="text-center" style="width:20%">Actions</th>
                                 </tr>
@@ -134,8 +112,9 @@ watch(() => userStore.user, function() { loadOrders() })
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
                                 </tr>
                                 <tr v-for="order in orders_from_user" :key="order.id">
-                                    <td>{{order.id}}</td>
+                                    <td>#{{order.id}}</td>
                                     <td>{{order.ticket_number}}</td>
+                                    <td>{{order.points_gained}}</td>
                                     <td>{{order.total_price}}€</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
@@ -168,6 +147,16 @@ watch(() => userStore.user, function() { loadOrders() })
     margin-bottom: 24px;
     box-shadow: 0 0 35px 0 rgba(154, 161, 171, .15) !important;
     border-radius: 3px;
+}
+
+.card.orange-bg {
+    background-color: #ffeed6 !important;
+}
+
+.product-photo {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
 }
 
 .card-header {

@@ -1,6 +1,6 @@
 <script setup>
 import { ref,onMounted, inject,computed} from 'vue'
-import { useOrderStore } from '../stores/orders.js'
+import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 
 const userStore = useUserStore()
@@ -21,13 +21,13 @@ const loadNumberOrdersMonth = async() => {
     const numbers = await orderStore.loadNumberOrdersMonth(year)
 
     series.value[0].data=numbers
-  
+
 }
 
 
 onMounted(async () => {
-  
-   await loadNumberOrdersMonth() 
+
+   await loadNumberOrdersMonth()
 
 })
 const options = {
@@ -49,7 +49,7 @@ const options = {
     },
     yaxis: {
         labels: {
-            
+
             style: {
                 colors: '#6c757d'
             }

@@ -2,7 +2,7 @@
 import { ref, onMounted, inject, watch, computed  } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
-import { useOrderStore } from '../../stores/orders.js'
+import { useOrderStore } from '../../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 import OrderTable from "./OrderTable.vue"

@@ -2,7 +2,7 @@
 import { ref, watch, inject } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
-import { useOrderStore } from '../../stores/orders.js';
+import { useOrderStore } from '../../stores/order.js';
 import OrderDetail from "./OrderDetails.vue"
 
 const serverBaseUrl = inject("serverBaseUrl")
@@ -75,7 +75,7 @@ const add = (order) => {
         router.push({ name: 'Orders' })
     })
     .catch((error) => {
-        
+
         if (error.response.status == 422) {
             toast.error('Couldn\'t add the order due to validation errors!')
             errors.value = error.response.data.data

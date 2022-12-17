@@ -38,7 +38,7 @@ class OrderController extends Controller
         if ($order->customer_id) {
             $discount_value = $order->points_used_to_pay / 2;
 
-            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay !=0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
+            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay != 0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
             if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
 
             $order->total_paid_with_points = $discount_value;
@@ -157,7 +157,7 @@ class OrderController extends Controller
     }
 
     public function get_number_orders_by_month($year){
-        
+
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
             //$orders_this_year=Order::whereYear('date','=',$year);
 
@@ -175,7 +175,7 @@ class OrderController extends Controller
                                         Order::whereYear('date','=',$year)->whereMonth('date','=',12)->count());
 
         return $number_orders_by_month;
-                                          
+
         }
     }
 }
