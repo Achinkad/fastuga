@@ -4,18 +4,6 @@ import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/orders.js'
 
 const userStore = useUserStore()
-const orderStore = useOrderStore()
-
-const loadOrders = (page = 1) => {
-    orderStore.load_orders(page, "P")
-}
-
-const orders_from_user = computed(() => {
-    return orderStore.my_orders
-})
-
-watch(() => userStore.user, function() { loadOrders() })
-
 </script>
 <template>
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
@@ -28,7 +16,8 @@ watch(() => userStore.user, function() { loadOrders() })
             <ul class="nav flex-column">
                 <li class="nav-item nav-item-title">Navigation</li>
                 <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Dashboard' }"
+                    <router-link class="nav-link"
+                        :class="{ active: $route.name === 'Dashboard' || $route.name === 'CustomerDashboard' }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>
                         Dashboard
@@ -65,23 +54,6 @@ watch(() => userStore.user, function() { loadOrders() })
                             <i class="bi bi-people-fill"></i>
                             Users
                         </router-link>
-                    </li>
-                </div>
-
-                <div v-if="userStore.user && userStore.user.type == 'C'">
-                    <li class="nav-item nav-item-title mt-3">
-                        In preparation
-                        <span class="badge badge-md bg-secondary ms-1 text-gray-800">{{ orderStore.total_my_orders }}</span>
-                    </li>
-                    <li class="nav-item" v-for="order in orders_from_user" :key="order.id">
-                        <div v-if="order.status == 'P'">
-                            <router-link class="nav-link"
-                                :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
-                                :to="{ name: 'Order', params: { id: order.id } }">
-                                <i class="bi bi-ticket"></i>
-                                Order nº {{ order.ticket_number }}
-                            </router-link>
-                        </div>
                     </li>
                 </div>
             </ul>
