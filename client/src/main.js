@@ -16,7 +16,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "bootstrap"
 
 const app = createApp(App)
-const serverBaseUrl = import.meta.env.VITE_API_URL;
+const serverBaseUrl = import.meta.env.VITE_API_URL
 
 /* --- AXIOS --- */
 app.provide('axios', axios.create({

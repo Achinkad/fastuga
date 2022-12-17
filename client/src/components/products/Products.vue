@@ -68,11 +68,10 @@ onMounted(() => {
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="d-flex">
-                    <div class="p-title-box">
-                        <div class="p-title-right">
-                            <h4 class="p-title">Products</h4>
-                        </div>
+                <div class="d-flex p-title-box">
+                    <h4 class="p-title me-auto">Products List</h4>
+                    <div class="p-title-right">
+                        <h6 class="p-title">Viewing 0 of 0</h6>
                     </div>
                 </div>
             </div>
