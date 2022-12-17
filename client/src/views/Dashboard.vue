@@ -2,6 +2,7 @@
 import { ref,onMounted, inject,computed} from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
+import { useProductStore } from '../stores/product.js'
 
 const userStore = useUserStore()
 const axios = inject('axios')
@@ -9,12 +10,16 @@ const serverBaseUrl = inject("serverBaseUrl");
 const orders = ref([])
 const status = ref("all")
 const orderStore = useOrderStore()
+const productStore = useProductStore()
 const series =  ref([{
     name: 'Orders',
     data:  []
 }])
 
+const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
+const loadBestProducts = () => { productStore.load_best_products() }
+const best_products = computed(() => { return productStore.best_products })
 const loadCustomersCreatedThisMonth = () => {
     var currentTime = new Date()
     var month = currentTime.getMonth()+1;
@@ -62,12 +67,19 @@ const revenue = computed(() => {
     return orderStore.get_revenue_orders()
 })
 
+const capitalize = (word) => {
+    const capitalizedFirst = word[0].toUpperCase()
+    const rest = word.slice(1)
+    return capitalizedFirst + rest
+}
+
 
 onMounted(async () => {
    await loadNumberOrdersMonth() 
    await loadRevenueOrders()
    await loadNumberOrdersThisMonth()
    await loadCustomersCreatedThisMonth()
+   await loadBestProducts()
 })
 const options = {
     chart: {
@@ -209,12 +221,14 @@ const options = {
                                 <div class="float-end">
                                     <i class="bi bi-graph-up card-icon"></i>
                                 </div>
-                                <h5 class="text-muted fw-normal mt-0">All Products</h5>
-                                <h3 class="mt-3 mb-3">+ 30.56%</h3>
-                                <p class="mb-0 text-muted">
-                                   <br>
-                                   <br>
-                                </p>
+                                <h5 class="text-muted fw-normal mt-0">Best Selling Products</h5>
+                                <br>
+                                <div class="row mb-3" v-for="(product,index) in best_products" :key="product.id">  
+                               <a> {{index+1}}.</a>
+                                <router-link :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`"> 
+                                    {{product.name}}
+                                </router-link>  
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -318,5 +332,10 @@ const options = {
 .text-nowrap {
     font-size: 14.4px;
     color: rgb(138, 150, 156);
+}
+.product-photo {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
 }
 </style>
