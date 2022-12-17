@@ -55,8 +55,6 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
-    const get_number_orders = (() => { return number_orders.value })
-
     const get_orders = (() => { return orders.value })
 
     const get_page = (() => { return pagination.value })
@@ -107,6 +105,7 @@ export const useOrderStore = defineStore('orders', () => {
         get_orders,
         total_orders,
         insert_order,
-        delete_order
+        delete_order,
+        loadNumberOrdersMonth
     }
 })
