@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed, inject, onMounted } from "vue"
 import { useUserStore } from '../../stores/user.js'
-import { useOrderStore } from '../../stores/orders.js'
+import { useOrderStore } from '../../stores/order.js'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
@@ -96,7 +96,8 @@ watch(
             <tr>
                 <th v-if="showId">Order ID</th>
                 <th v-if="showTicketNumber">Ticket Number</th>
-                <th v-if="showCustomer">Customer ID</th>
+                <th v-if="showCustomer && userStore.user.type != 'C'">Customer ID</th>
+                <th v-if="userStore.user.type == 'C'">Points Gained</th>
                 <th v-if="showPrice">Price</th>
                 <th v-if="showStatus">Order Status</th>
                 <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Actions</th>
@@ -109,12 +110,13 @@ watch(
             <tr v-for="order in orders" :key="order.id">
                 <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
-                <td v-if="order.customer">
+                <td v-if="order.customer && userStore.user.type != 'C'">
                     <router-link :to="{ name: 'User', params: { id: order.customer.user.id } }" :title="`View profile of ${order.customer.user.name}`">
                         #{{ order.customer_id }}
                     </router-link>
                 </td>
-                <td v-if="!order.customer"> -- </td>
+                <td v-if="!order.customer && userStore.user.type != 'C'"> -- </td>
+                <td v-if="userStore.user.type == 'C'">{{ order.points_gained }}</td>
                 <td v-if="showPrice">{{ order.total_price }}€</td>
                 <td v-if="showStatus">
                     <span v-if="order.status == 'P'">

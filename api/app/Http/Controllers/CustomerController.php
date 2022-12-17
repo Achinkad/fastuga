@@ -6,11 +6,9 @@ use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
-
 use App\Http\Controllers\UserController;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\CustomerResource;
@@ -63,43 +61,43 @@ class CustomerController extends Controller
             // -> Updates User
             $updated_user = (new UserController)->update($user_request, $customer->user);
             if ($user_request->has('photo_url')) {
-                
+
                 if(Storage::disk('public')->exists($customer->photo_url)) {
                     Storage::delete($customer->photo_url);
                 }
-                
+
                 // -> Stores the new photo
                 $folderPath = "public/fotos/";
 
                 $image_parts = explode(";base64,", $updated_user->photo_url);
-        
+
                 $image_type_aux = explode("image/", $image_parts[0]);
-        
+
                 $image_type = $image_type_aux[1];
-        
+
                 $image_base64 = base64_decode($image_parts[1]);
-                
-                
-    
-              
-                
+
+
+
+
+
                 $uniqid=uniqid();
                 $id_user=$updated_user->id;
-             
-    
+
+
                 $file="{$id_user}_ {$uniqid}.{$image_type}";
-                
+
                 // -> Stores the new photo
-    
+
                 Storage::put($folderPath.$file, $image_base64);
-    
-    
+
+
                 $updated_user->photo_url = $file;
             }
 
             // -> Updates Customer
             $customer->fill($customer_request->validated());
-            
+
             //dd($customer);
 
 
@@ -118,27 +116,5 @@ class CustomerController extends Controller
         });
     }
 
-    public function showByUser(User $user)
-    {
-        
-        return new CustomerResource($user->customer);
-            
-    }
-
-    public function get_number_customers_created_this_month($month){
-        
-        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
-            $number_costumers=Customer::count();
-            $customers_created_last_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',$month-1)->count();
-            $customers_created_this_month=Customer::whereYear('created_at','=',date('Y'))->whereMonth('created_at','=',$month)->count();
-            $percent_difference=0;
-            if($customers_created_last_month!=0){
-                $percent_difference=($customers_created_this_month-$customers_created_last_month)/$customers_created_last_month*100;
-            }
-            
-            
-            return array($number_costumers,$percent_difference);
-                                          
-        }
-    }
+    public function show_by_user(User $user){ return new CustomerResource($user->customer); }
 }

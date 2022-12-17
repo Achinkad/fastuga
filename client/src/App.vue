@@ -22,7 +22,7 @@ const configStore = useConfigStore()
             </div>
         </main>
         <section v-if="!configStore.showMain">
-            <router-view />
+            <router-view/>
         </section>
         <Footer v-if="configStore.showFooter"/>
     </div>
@@ -32,5 +32,4 @@ const configStore = useConfigStore()
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 @import "./assets/css/master.css";
 @import "./assets/css/components.css";
-
 </style>
