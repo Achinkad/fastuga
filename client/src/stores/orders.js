@@ -10,14 +10,15 @@ export const useOrderStore = defineStore('orders', () => {
     const toast = inject("toast")
 
     const orders = ref([])
+    const number_orders = ref([])
     const pagination = ref([])
 
     let url = null
 
     async function load_orders(page, status) {
         // URL builder
-        if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
-        if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}orders?page=${page}`
+        if (userStore.user.type == "EM") url = `orders?page=${page}`
+        if (userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}orders?page=${page}`
 
         try {
             const response = await axios({
@@ -37,6 +38,24 @@ export const useOrderStore = defineStore('orders', () => {
             throw error
         }
     }
+    async function loadNumberOrdersMonth(year) {
+      
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'orders/'+year+'/numbers'
+            })
+        
+            number_orders.value = response.data
+
+            return number_orders.value
+        } catch (error) {
+            clear_orders()
+            throw error
+        }
+    }
+
+    const get_number_orders = (() => { return number_orders.value })
 
     const get_orders = (() => { return orders.value })
 
@@ -44,7 +63,8 @@ export const useOrderStore = defineStore('orders', () => {
 
     const clear_orders = (() => { orders.value = [] })
 
-    const total_orders = computed(() => { return orders.value.length })
+
+    //const total_orders = computed(() => { return orders.value.length })
 
     async function insert_order(order) {
         const response = await axios.post('/orders', order)
@@ -75,5 +95,5 @@ export const useOrderStore = defineStore('orders', () => {
         toast.info(`The Order (#${order.id}) was deleted!`)
     })
 
-    return { orders, load_orders, get_page, get_orders, total_orders, insert_order, delete_order }
+    return { orders, load_orders, get_page, get_orders,loadNumberOrdersMonth,get_number_orders,insert_order, delete_order}
 })

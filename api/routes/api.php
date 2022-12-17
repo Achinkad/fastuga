@@ -25,6 +25,8 @@ Route::patch('users/{user}/change_password', [UserController::class, 'new_passwo
 Route::resource('orders', OrderController::class);
 Route::patch('orders/{order}/status', [OrderController::class, 'status']); // -> Change Order Status
 Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']);
+Route::get('orders/{year}/numbers', [OrderController::class, 'get_number_orders_by_month']);
+//get_number_orders_by_month
 
 /* --- [API Routes] -> Products --- */
 Route::resource('products', ProductController::class);//->middleware('auth:api');

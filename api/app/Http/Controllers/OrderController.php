@@ -155,4 +155,27 @@ class OrderController extends Controller
             return OrderResource::collection($orders);
         }
     }
+
+    public function get_number_orders_by_month($year){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+            //$orders_this_year=Order::whereYear('date','=',$year);
+
+            $number_orders_by_month=array(Order::whereYear('date','=',$year)->whereMonth('date','=',1)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',2)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',3)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',4)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',5)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',6)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',7)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',8)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',9)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',10)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',11)->count(),
+                                        Order::whereYear('date','=',$year)->whereMonth('date','=',12)->count());
+
+        return $number_orders_by_month;
+                                          
+        }
+    }
 }

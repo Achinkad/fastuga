@@ -1,26 +1,34 @@
 <script setup>
-import { ref,onMounted, inject} from 'vue'
+import { ref,onMounted, inject,computed} from 'vue'
+import { useOrderStore } from '../stores/orders.js'
+import { useUserStore } from '../stores/user.js'
 
+const userStore = useUserStore()
 const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl");
 const orders = ref([])
-var value_status = ref("all");
-const loadOrders = () => {
-    axios.get(serverBaseUrl + '/api/orders', {
-        params: {
-            status: value_status.value
-        }
-    })
-        .then((response) => {
-            orders.value = response.data.data
+const status = ref("all")
+const orderStore = useOrderStore()
+const series =  ref([{
+    name: 'Orders',
+    data:  []
+}])
 
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+const loadNumberOrdersMonth = async() => {
+    var currentTime = new Date()
+    var year = currentTime.getFullYear()
+
+    const numbers = await orderStore.loadNumberOrdersMonth(year)
+
+    series.value[0].data=numbers
+  
 }
-onMounted(() => {
-    loadOrders()
+
+
+onMounted(async () => {
+  
+   await loadNumberOrdersMonth() 
+
 })
 const options = {
     chart: {
@@ -41,7 +49,7 @@ const options = {
     },
     yaxis: {
         labels: {
-            show: true,
+            
             style: {
                 colors: '#6c757d'
             }
@@ -65,10 +73,9 @@ const options = {
     }
 }
 
-const series = [{
-    name: 'Orders',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 50, 67, 75, 87]
-}]
+
+
+
 
 </script>
 
