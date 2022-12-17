@@ -1,40 +1,20 @@
 <script setup>
-import { ref, onMounted, inject ,watch} from 'vue'
+import { computed, watch } from 'vue'
 import { useUserStore } from '../stores/user.js'
-
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
+import { useOrderStore } from '../stores/orders.js'
 
 const userStore = useUserStore()
-const orders = ref([])
+const orderStore = useOrderStore()
 
-var timer = null
-
-const loadOrders = () => {
-    if (userStore.user && userStore.user.type == 'C') {
-        axios.get(serverBaseUrl + '/api/users/' + userStore.userId + '/orders')
-            .then((response) => {
-                orders.value = response.data.data
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
+const loadOrders = (page = 1) => {
+    orderStore.load_orders(page, "P")
 }
-onMounted(() => {
-  loadOrders();
 
-  watch(
-    () => userStore.userId,
-    (userId) => {
-      if (userId) {
-        loadOrders();
-      }
-    },
-  );
-});
+const orders_from_user = computed(() => {
+    return orderStore.my_orders
+})
 
-
+watch(() => userStore.user, function() { loadOrders() })
 
 </script>
 <template>
@@ -89,14 +69,17 @@ onMounted(() => {
                 </div>
 
                 <div v-if="userStore.user && userStore.user.type == 'C'">
-                    <li class="nav-item nav-item-title mt-3">In preparation</li>
-                    <li class="nav-item" v-for="order in orders" :key="order.id">
+                    <li class="nav-item nav-item-title mt-3">
+                        In preparation
+                        <span class="badge badge-md bg-secondary ms-1 text-gray-800">{{ orderStore.total_my_orders }}</span>
+                    </li>
+                    <li class="nav-item" v-for="order in orders_from_user" :key="order.id">
                         <div v-if="order.status == 'P'">
                             <router-link class="nav-link"
                                 :class="{ active: $route.name == 'Order' && $route.params.id == order.id }"
                                 :to="{ name: 'Order', params: { id: order.id } }">
                                 <i class="bi bi-ticket"></i>
-                                <span> Ticket nº {{ order.ticket_number }}</span>
+                                Order nº {{ order.ticket_number }}
                             </router-link>
                         </div>
                     </li>
@@ -200,5 +183,28 @@ svg {
     font-size: 1.1rem;
     vertical-align: middle;
     width: 20px;
+}
+
+.nav-item span {
+    position: relative;
+    float: right;
+    bottom: 4px;
+}
+
+.text-gray-800, .text-gray-800:hover {
+    color: #1f2937 !important;
+}
+
+.badge-md {
+    padding: .25rem .4rem;
+}
+
+.badge {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.bg-secondary {
+    background-color: #f0bc74 !important;
 }
 </style>

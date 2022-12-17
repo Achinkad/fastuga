@@ -151,15 +151,6 @@ watch(
 </template>
 
 <style scoped>
-.completed {
-    text-decoration: line-through;
-}
-
-button {
-    margin-left: 3px;
-    margin-right: 3px;
-}
-
 td {
     word-wrap: break-word;
 }
@@ -167,5 +158,4 @@ td {
 table {
     table-layout: fixed;
 }
-
 </style>

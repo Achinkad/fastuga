@@ -18,7 +18,8 @@ const router = useRouter()
 const order_items = ref([])
 const pagination = ref({})
 const status = ref("all")
-var total_orders=0;
+
+var total_orders = 0
 
 const props = defineProps({
     onlyCurrentOrders: {
@@ -33,7 +34,7 @@ const loadOrders = (page = 1) => {
 
 const total = computed(() => {
     pagination.value = orderStore.get_page()
-    if(pagination.value.meta != undefined) {
+    if (pagination.value.meta != undefined) {
         total_orders = pagination.value.meta.total
     }
     return total_orders
@@ -51,8 +52,10 @@ const editOrder = (order) => {
     router.push({ name: "Order", params: { id: order.id } });
 }
 
-watch(status, () => { loadOrders() })
-
+watch(status, () => {
+    console.log(status.value)
+    loadOrders()
+})
 
 onMounted(() => { loadOrders() })
 

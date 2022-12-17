@@ -1,27 +1,6 @@
 <script setup>
-import { ref,onMounted, inject} from 'vue'
+import { ref, onMounted, inject } from 'vue'
 
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl");
-const orders = ref([])
-var value_status = ref("all");
-const loadOrders = () => {
-    axios.get(serverBaseUrl + '/api/orders', {
-        params: {
-            status: value_status.value
-        }
-    })
-        .then((response) => {
-            orders.value = response.data.data
-
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-}
-onMounted(() => {
-    loadOrders()
-})
 const options = {
     chart: {
         id: 'orders-per-month',
@@ -69,7 +48,6 @@ const series = [{
     name: 'Orders',
     data: [30, 40, 45, 50, 49, 60, 70, 91, 50, 67, 75, 87]
 }]
-
 </script>
 
 <template>
@@ -78,7 +56,7 @@ const series = [{
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
-                    <div class="p-title-right">
+                    <div>
                         <h4 class="p-title">Dashboard</h4>
                     </div>
                 </div>
