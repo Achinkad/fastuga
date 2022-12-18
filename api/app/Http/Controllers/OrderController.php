@@ -38,14 +38,15 @@ class OrderController extends Controller
         if ($order->customer_id) {
             $discount_value = $order->points_used_to_pay / 2;
 
-            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay != 0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
+            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay !=0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
             if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
 
             $order->total_paid_with_points = $discount_value;
             $order->total_paid = $order->total_price - $discount_value;
 
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
-            $order->customer->points += abs($points - $order->points_used_to_pay);
+            $order->customer->points -= abs($order->points_used_to_pay);
+            $order->customer->points += $points;
             $order->points_gained = $points;
 
             $order->customer->save();
@@ -156,26 +157,55 @@ class OrderController extends Controller
         }
     }
 
-    public function get_number_orders_by_month($year){
-
+    public function get_number_orders_by_month(){
+        
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
             //$orders_this_year=Order::whereYear('date','=',$year);
 
-            $number_orders_by_month=array(Order::whereYear('date','=',$year)->whereMonth('date','=',1)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',2)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',3)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',4)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',5)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',6)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',7)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',8)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',9)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',10)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',11)->count(),
-                                        Order::whereYear('date','=',$year)->whereMonth('date','=',12)->count());
+            $number_orders_by_month=array(Order::whereYear('date','=',date('Y'))->whereMonth('date','=',1)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',2)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',3)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',4)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',5)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',6)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',7)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',8)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',9)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',10)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',11)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',12)->count());
+        
 
         return $number_orders_by_month;
+                                          
+        }
+    }
 
+    public function get_revenue_orders(){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+
+            $sum_orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->sum('total_paid');
+            $sum_orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->sum('total_paid');
+
+            $percent_difference=($sum_orders_this_month-$sum_orders_last_month)/$sum_orders_last_month*100;
+            
+            return array($sum_orders_this_month,$percent_difference);
+                                          
+        }
+    }
+
+    public function get_number_orders_this_month(){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+
+            $orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->count();
+            $orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->count();
+
+            $percent_difference=($orders_this_month-$orders_last_month)/$orders_last_month*100;
+            
+            return array($orders_this_month,$percent_difference);
+                                          
         }
     }
 }
