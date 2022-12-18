@@ -22,8 +22,8 @@ const selectType = (type) => {
     active_page.value = pagination.value
 }
 
-const loadMoreProducts = (page_url, type) => {
-    axios.get(page_url, { params: { type: type } })
+const loadMoreProducts = async (page_url, type) => {
+    await axios.get(page_url, { params: { type: type } })
     .then((response) => {
         response.data.data.forEach(i => {
             products.value.push(i)
@@ -42,7 +42,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="active_page != null">
         <div class="row">
             <div class="col-12">
                 <div class="d-flex p-title-box justify-content-center align-items-center">

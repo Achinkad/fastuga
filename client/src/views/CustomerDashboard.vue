@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch, onBeforeMount, inject } from 'vue'
+import { computed, watch, onBeforeMount, onMounted, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
@@ -12,12 +12,23 @@ const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-const loadOrders = (page = 1) => { orderStore.load_orders(page, "P") }
-const loadCustomer = () => { userStore.get_customer(userStore.user) }
-const loadBestProducts = () => { productStore.load_best_products() }
+const user = ref(userStore.user)
+
+const loadOrders = (page = 1) => {
+    orderStore.load_orders(page, "P")
+    .catch((error) => {
+        console.log(error)
+    })
+}
+
+const loadBestProducts = () => {
+    productStore.load_best_products()
+    .catch((error) => {
+        console.log(error)
+    })
+}
 
 const orders_from_user = computed(() => { return orderStore.my_orders })
-const customer = computed(() => { return userStore.customer })
 const best_products = computed(() => { return productStore.best_products })
 
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
@@ -30,14 +41,10 @@ const capitalize = (word) => {
     return capitalizedFirst + rest
 }
 
-watch(() => userStore.user, function() {
-    loadOrders()
-    loadCustomer()
-})
+watch(() => userStore.user, function() { loadOrders() })
 
 onBeforeMount(() => {
     loadOrders()
-    loadCustomer()
     loadBestProducts()
 })
 </script>
@@ -48,7 +55,7 @@ onBeforeMount(() => {
             <div class="col-12">
                 <div class="p-title-box">
                     <div>
-                        <h4 class="p-title">Welcome to Fastuga, {{ userStore.user.name }}</h4>
+                        <h4 class="p-title">Welcome to Fastuga, {{ user.name }}</h4>
                     </div>
                 </div>
             </div>
@@ -59,10 +66,10 @@ onBeforeMount(() => {
                     <div class="col-sm-12">
                         <div class="card widget-flat orange-bg">
                             <div class="card-body">
-                                <h3 class="mt-2 mb-2 fw-bold">You've {{ customer.points }} Points!</h3>
+                                <h3 class="mt-2 mb-2 fw-bold">You've {{ userStore.customer.points }} Points!</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-muted me-2">
-                                        You can discount until {{ (customer.points / 2  - customer.points / 2 % 10) / 2 }}€ in your next order.
+                                        You can discount until {{ (userStore.customer.points / 2  - userStore.customer.points / 2 % 10) / 2 }}€ in your next order.
                                     </span>
                                 </p>
                             </div>
