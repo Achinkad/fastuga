@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import axios from 'axios'
 

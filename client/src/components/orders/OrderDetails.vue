@@ -10,9 +10,7 @@ import { useRouter } from 'vue-router';
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
-const currentCustomer = ref({});
-const toast = inject('toast')
-const router = useRouter()
+
 
 const userStore = useUserStore()
 

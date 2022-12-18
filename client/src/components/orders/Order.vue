@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
 import OrderDetail from "./OrderDetails.vue"

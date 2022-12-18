@@ -21,4 +21,7 @@ io.on('connection', (socket) => {
     socket.on('deleteOrder', (order) => {
         socket.broadcast.emit('deleteOrder', order)
     })
+    socket.on('acceptedOrder', (order) => {
+        socket.broadcast.emit('acceptedOrder', order)
+    })
 })

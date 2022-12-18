@@ -98,7 +98,7 @@ export const useOrderStore = defineStore('orders', () => {
     const total_orders = computed(() => { return orders.value.length })
 
     const my_orders = computed(() => { return orders.value.filter(or => or.customer.user.id == userStore.userId) })
-
+    const my_orders_delivery = computed(() => { return orders.value.filter(or =>  userStore.userId) })
     const total_my_orders = computed(() => { return my_orders.value.length })
 
     async function insert_order(order) {
@@ -145,7 +145,7 @@ export const useOrderStore = defineStore('orders', () => {
         loadRevenueOrders,
         get_revenue_orders,
         loadNumberOrdersThisMonth,
-        get_orders_this_month
-        
+        get_orders_this_month,
+        my_orders_delivery
     }
 })

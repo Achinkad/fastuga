@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watch, inject, computed} from 'vue'
+  import { ref, watch, inject} from 'vue'
   import UserDetail from "./UserDetail.vue"
   import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
