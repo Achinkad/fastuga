@@ -13,6 +13,7 @@ import User from "../components/users/User.vue";
 import Register from "../components/auth/Register.vue";
 import Products from "../components/products/Products.vue";
 import Product from "../components/products/Product.vue";
+import Menu from "../components/menu/Menu.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
             path: "/products",
             name: "Products",
             component: Products,
+        },
+        {
+            path: "/menu",
+            name: "Menu",
+            component: Menu,
         },
         {
             path: "/users/:id",

@@ -61,18 +61,15 @@ const photoFullUrl = () => {
                     </a>
                     <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                         <li>
-                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                                :to="{ name: 'ChangePassword' }">
-                                Change password
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                :to="{ name: 'ChangeProfile' }">
+                                Profile
                             </router-link>
                         </li>
                         <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
-                                :to="{ name: 'ChangeProfile' }">
-                                Change profile
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                                :to="{ name: 'ChangePassword' }">
+                                Change password
                             </router-link>
                         </li>
                         <li>
@@ -113,8 +110,6 @@ const photoFullUrl = () => {
     padding: calc(31px * .5) 20px calc(31px * .5) 57px !important;
     text-align: left !important;
     position: relative;
-    background-color: rgb(250, 250, 253);
-    border: 1px solid #eef2f7;
     border-width: 0 1px;
     min-height: 70px;
     transition: none;

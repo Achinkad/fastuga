@@ -52,10 +52,7 @@ const editOrder = (order) => {
     router.push({ name: "Order", params: { id: order.id } });
 }
 
-watch(status, () => {
-    console.log(status.value)
-    loadOrders()
-})
+watch(status, () => { loadOrders() })
 
 onMounted(() => { loadOrders() })
 

@@ -80,7 +80,7 @@ onBeforeMount(() => {
                                         </div>
                                         <div class="col-auto">
                                             <span>{{product.name}}</span> <br>
-                                            <span>{{capitalize(product.type)}}</span>
+                                            <span style="font-size:14px;">{{capitalize(product.type)}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -118,9 +118,6 @@ onBeforeMount(() => {
                                     <td>{{order.total_price}}€</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-xs btn-light me-1" title="Cancel Order" @click="deleteClick(order)">
-                                                <i class="bi bi-x-lg"></i>
-                                            </button>
                                             <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
