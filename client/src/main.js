@@ -6,8 +6,8 @@ import App from './App.vue'
 import Toaster from "@meforma/vue-toaster";
 import VueApexCharts from 'vue3-apexcharts'
 import FieldErrorMessage from './components/global/FieldErrorMessage.vue'
-
 import ConfirmationDialog from './components/global/ConfirmationDialog.vue'
+
 import router from './router'
 import axios from 'axios'
 
@@ -16,7 +16,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import "bootstrap"
 
 const app = createApp(App)
-const serverBaseUrl = import.meta.env.VITE_API_URL;
+const serverBaseUrl = import.meta.env.VITE_API_URL
 
 /* --- AXIOS --- */
 app.provide('axios', axios.create({

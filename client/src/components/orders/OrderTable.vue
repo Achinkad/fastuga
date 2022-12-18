@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, computed, inject } from "vue"
+import { ref, watch, computed, inject, onMounted } from "vue"
 import { useUserStore } from '../../stores/user.js'
-import { useOrderStore } from '../../stores/orders.js'
+import { useOrderStore } from '../../stores/order.js'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
@@ -94,32 +94,54 @@ watch(
     <table class="table align-middle mt-4">
         <thead class="table-light">
             <tr>
+                <th v-if="showId">Order ID</th>
                 <th v-if="showTicketNumber">Ticket Number</th>
-                <th v-if="showPrice">Total Price</th>
-                <th v-if="showStatus">Status</th>
-                <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Options</th>
+                <th v-if="showCustomer && userStore.user.type != 'C'">Customer ID</th>
+                <th v-if="userStore.user.type == 'C'">Points Gained</th>
+                <th v-if="showPrice">Price</th>
+                <th v-if="showStatus">Order Status</th>
+                <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Actions</th>
             </tr>
         </thead>
         <tbody>
+            <tr v-if="orders.length==0">
+                <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+            </tr>
             <tr v-for="order in orders" :key="order.id">
+                <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
+                <td v-if="order.customer && userStore.user.type != 'C'">
+                    <router-link :to="{ name: 'User', params: { id: order.customer.user.id } }" :title="`View profile of ${order.customer.user.name}`">
+                        #{{ order.customer_id }}
+                    </router-link>
+                </td>
+                <td v-if="!order.customer && userStore.user.type != 'C'"> -- </td>
+                <td v-if="userStore.user.type == 'C'">{{ order.points_gained }}</td>
                 <td v-if="showPrice">{{ order.total_price }}€</td>
                 <td v-if="showStatus">
-                    <span v-if="order.status == 'P'">Preparing</span>
-                    <span v-if="order.status == 'R'">Ready</span>
-                    <span v-if="order.status == 'D'">Delivered</span>
-                    <span v-if="order.status == 'C'">Cancelled</span>
+                    <span v-if="order.status == 'P'">
+                        <span class="badge badge-info-lighten">Pending</span>
+                    </span>
+                    <span v-if="order.status == 'R'">
+                        <span class="badge badge-warning-lighten">Ready</span>
+                    </span>
+                    <span v-if="order.status == 'D'">
+                        <span class="badge badge-success-lighten">Delivered</span>
+                    </span>
+                    <span v-if="order.status == 'C'">
+                        <span class="badge badge-danger-lighten">Cancelled</span>
+                    </span>
                 </td>
                 <td class="text-center" v-if="userStore.user.type == 'EM' ||  userStore.user.type=='C'">
                     <div class="d-flex justify-content-center">
                         <div  v-if="userStore && userStore.user.type == 'EM'">
                             <div v-if="order.status != 'C' && order.status != 'D'">
-                                <button class="btn btn-xs btn-light" @click="deleteClick(order)" v-if="showDeleteButton">
+                                <button class="btn btn-xs btn-light" title="Delete Order" @click="deleteClick(order)" v-if="showDeleteButton">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
                         </div>
-                        <button class="btn btn-xs btn-light" @click="editClick(order)" v-if="showEditButton">
+                        <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)" v-if="showEditButton">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
@@ -131,15 +153,6 @@ watch(
 </template>
 
 <style scoped>
-.completed {
-    text-decoration: line-through;
-}
-
-button {
-    margin-left: 3px;
-    margin-right: 3px;
-}
-
 td {
     word-wrap: break-word;
 }
@@ -147,5 +160,4 @@ td {
 table {
     table-layout: fixed;
 }
-
 </style>

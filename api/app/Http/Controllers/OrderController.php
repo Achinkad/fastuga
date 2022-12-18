@@ -45,7 +45,8 @@ class OrderController extends Controller
             $order->total_paid = $order->total_price - $discount_value;
 
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
-            $order->customer->points += abs($points - $order->points_used_to_pay);
+            $order->customer->points -= abs($order->points_used_to_pay);
+            $order->customer->points += $points;
             $order->points_gained = $points;
 
             $order->customer->save();
@@ -153,6 +154,58 @@ class OrderController extends Controller
             $customer = Customer::where('user_id', $id)->firstOrFail();
             $orders = Order::where('customer_id', $customer->id)->paginate(20);
             return OrderResource::collection($orders);
+        }
+    }
+
+    public function get_number_orders_by_month(){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+            //$orders_this_year=Order::whereYear('date','=',$year);
+
+            $number_orders_by_month=array(Order::whereYear('date','=',date('Y'))->whereMonth('date','=',1)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',2)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',3)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',4)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',5)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',6)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',7)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',8)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',9)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',10)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',11)->count(),
+                                        Order::whereYear('date','=',date('Y'))->whereMonth('date','=',12)->count());
+        
+
+        return $number_orders_by_month;
+                                          
+        }
+    }
+
+    public function get_revenue_orders(){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+
+            $sum_orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->sum('total_paid');
+            $sum_orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->sum('total_paid');
+
+            $percent_difference=($sum_orders_this_month-$sum_orders_last_month)/$sum_orders_last_month*100;
+            
+            return array($sum_orders_this_month,$percent_difference);
+                                          
+        }
+    }
+
+    public function get_number_orders_this_month(){
+        
+        if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
+
+            $orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->count();
+            $orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->count();
+
+            $percent_difference=($orders_this_month-$orders_last_month)/$orders_last_month*100;
+            
+            return array($orders_this_month,$percent_difference);
+                                          
         }
     }
 }

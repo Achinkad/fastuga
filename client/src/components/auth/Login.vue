@@ -46,7 +46,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    
+
     <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -106,8 +106,8 @@ onBeforeUnmount(() => {
     }
 
     .card-header {
-        background: rgb(255,165,0);
-        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
+        background: rgb(238,155,39);
+        background: linear-gradient(40deg, rgba(238,155,39,1) 50%, rgba(232,180,109,1) 100%);
         color: #fff !important;
         font-weight: 800;
         font-size: 1.5rem;
@@ -151,8 +151,8 @@ onBeforeUnmount(() => {
     }
 
     button[type="button"] {
-        background: rgb(255,165,0);
-        background: linear-gradient(40deg, rgba(255,165,0,1) 40%, rgba(255,191,71,1) 100%);
+        background: rgb(238,155,39);
+        background: linear-gradient(40deg, rgba(238,155,39,1) 50%, rgba(232,180,109,1) 100%);
         color: #fff;
         border-color: #727cf5;
         border-radius: 0.15rem;

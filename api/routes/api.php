@@ -11,23 +11,30 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 
 /* --- [API Routes] -> Customers --- */
+Route::get('customers/numbers', [CustomerController::class, 'get_number_customers_created_this_month']);
+Route::get('customers/users/{user}', [CustomerController::class, 'show_by_user']); // -> Get Customer From User
 Route::resource('customers', CustomerController::class);
-Route::get('customers/user/{user}', [CustomerController::class, 'showByUser']); // -> Get Customer From User
+Route::get('customers/user/{user}', [CustomerController::class, 'show_by_user']); // -> Get Customer From User
+
 
 
 /* --- [API Routes] -> Users --- */
-Route::resource('users', UserController::class);
 Route::patch('users/block/{id}', [UserController::class, 'toogle']); // -> Block / Unblock User
 Route::get('user', [UserController::class, 'show_me'])->middleware('auth:api');
 Route::patch('users/{user}/change_password', [UserController::class, 'new_password']); // -> Block / Unblock User
+Route::resource('users', UserController::class);
 
 /* --- [API Routes] -> Orders --- */
-Route::resource('orders', OrderController::class);
 Route::patch('orders/{order}/status', [OrderController::class, 'status']); // -> Change Order Status
 Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']);
+Route::get('orders/numbers', [OrderController::class, 'get_number_orders_by_month']);
+Route::get('orders/revenue', [OrderController::class, 'get_revenue_orders']);
+Route::get('orders/this_month', [OrderController::class, 'get_number_orders_this_month']);
+Route::resource('orders',OrderController::class);
 
 /* --- [API Routes] -> Products --- */
-Route::resource('products', ProductController::class);//->middleware('auth:api');
+Route::get('products/best-selling', [ProductController::class, 'get_best_selling_product']);
+Route::resource('products', ProductController::class);
 
 /* --- [API Routes] -> Order Items --- */
 Route::patch('order-items/{order_item}/status', [OrderItemController::class, 'status']); // -> Change Order Item Status
