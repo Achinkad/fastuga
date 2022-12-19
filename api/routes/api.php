@@ -26,6 +26,8 @@ Route::resource('users', UserController::class);
 
 /* --- [API Routes] -> Orders --- */
 Route::patch('orders/{order}/status', [OrderController::class, 'status']); // -> Change Order Status
+Route::get('orders/status', [OrderController::class, 'get_count_order_status']); // -> Change Order Status
+
 Route::get('users/{id}/orders', [OrderController::class, 'get_orders_user']);
 Route::get('orders/numbers', [OrderController::class, 'get_number_orders_by_month']);
 Route::get('orders/revenue', [OrderController::class, 'get_revenue_orders']);

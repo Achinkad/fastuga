@@ -112,11 +112,16 @@ class OrderController extends Controller
 
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
-
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+           
+        if ($request->has('delivered_by') && $request->input('status') == "D") {
+            $order->status = "D";
+            $order->delivered_by = $request->input('delivered_by');
+            $order->save();
+        }
 
         if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
-
+            
 
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
@@ -139,12 +144,20 @@ class OrderController extends Controller
             $order->save();
 
         }
+
         return new OrderResource($order);
 
     }
 
-    public function get_orders_user($id)
+    public function get_orders_user(Request $request, $id)
     {
+        if(auth()->guard('api')->user()->type == "ED") {
+            if($request->has('status')) {
+                $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
+                return OrderResource::collection($orders);
+            }
+        }
+
         if(auth()->guard('api')->user()->type == "ED"){
             $orders = Order::where('delivered_by', $id)->paginate(20);
             return OrderResource::collection($orders);
@@ -155,6 +168,7 @@ class OrderController extends Controller
             $orders = Order::where('customer_id', $customer->id)->paginate(20);
             return OrderResource::collection($orders);
         }
+
     }
 
     public function get_number_orders_by_month(){
@@ -207,5 +221,10 @@ class OrderController extends Controller
             return array($orders_this_month,$percent_difference);
                                           
         }
+    }
+    public function get_count_order_status(Request $request){
+        $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+        $count_orders = Order::where('status', $request->input('status'))->count();
+        return $count_orders;
     }
 }

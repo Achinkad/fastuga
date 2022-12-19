@@ -10,9 +10,7 @@ import { useRouter } from 'vue-router';
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 const paginationNewOrder = ref({})
-const currentCustomer = ref({});
-const toast = inject('toast')
-const router = useRouter()
+
 
 const userStore = useUserStore()
 
@@ -344,7 +342,7 @@ onMounted(() => {
 
                                             </tr>
                                             <tr style="text-align: center;" class="item-order"
-                                                v-for="n in editingOrder.order_item.length">
+                                                v-for="n in editingOrder.order_item.length" >
                                                 <td> <img
                                                         :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)"
                                                         class="rounded-circle img_photo" /><span class="item">{{

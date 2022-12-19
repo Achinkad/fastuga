@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount, inject, watch } from 'vue'
+import { ref, computed, onBeforeMount, inject } from 'vue'
 import { useProductStore } from '../../stores/product.js'
 
 const productStore = useProductStore()
