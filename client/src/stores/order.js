@@ -57,6 +57,23 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
+    const count_orders = ref(null)
+
+    async function count_orders_by_status(status) {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'orders/status',
+                params: { status }
+            })
+            count_orders.value = response.data
+            console.log(response.data.data)
+            return number_orders.value
+        } catch (error) {
+
+            throw error
+        }
+    }
     async function loadNumberOrdersThisMonth() {
 
         try {
@@ -147,7 +164,7 @@ export const useOrderStore = defineStore('orders', () => {
             params: data
         })
         
-
+        remove_order(response.data.data)
         return response.data.data
     }
  
@@ -168,6 +185,8 @@ export const useOrderStore = defineStore('orders', () => {
         loadNumberOrdersThisMonth,
         get_orders_this_month,
        my_orders_delivery,
-       update_order_status
+       update_order_status,
+       count_orders,
+        count_orders_by_status
     }
 })

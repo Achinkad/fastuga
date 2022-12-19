@@ -222,4 +222,9 @@ class OrderController extends Controller
                                           
         }
     }
+    public function get_count_order_status(Request $request){
+        $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+        $count_orders = Order::where('status', $request->input('status'))->count();
+        return $count_orders;
+    }
 }
