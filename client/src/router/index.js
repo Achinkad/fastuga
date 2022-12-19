@@ -3,6 +3,7 @@ import { useUserStore } from "../stores/user.js";
 
 import Dashboard from "../views/Dashboard.vue";
 import CustomerDashboard from "../views/CustomerDashboard.vue";
+import DeliveryDashboard from "../views/DeliveryDashboard.vue";
 import AnonymousDashboard from "../views/AnonymousDashboard.vue";
 import Orders from "../components/orders/Orders.vue";
 import Order from "../components/orders/Order.vue";
@@ -28,6 +29,11 @@ const router = createRouter({
             path: "/",
             name: "CustomerDashboard",
             component: CustomerDashboard,
+        },
+        {
+            path: "/",
+            name: "DeliveryDashboard",
+            component: DeliveryDashboard,
         },
         {
             path: "/",
@@ -141,6 +147,12 @@ router.beforeEach(async (to, from, next) => {
         })
         return
     }
+    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "ED")) {
+        next({
+            name: "DeliveryDashboard"
+        })
+        return
+    }
 
     if (to.name == "Dashboard" && !userStore.user) {
         next({
@@ -235,11 +247,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "User") {
-        if (
-            userStore.user === null ||
-            userStore.user.type != "EM" ||
-            userStore.user.id == to.params.id
-        ) {
+        if (userStore.user === null ||userStore.user.type != "EM" /*|| userStore.user.id == to.params.id*/ ) {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },

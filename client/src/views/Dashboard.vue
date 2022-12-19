@@ -11,9 +11,9 @@ const orders = ref([])
 const status = ref("all")
 const orderStore = useOrderStore()
 const productStore = useProductStore()
-const series =  ref([{
+const series = ref([{
     name: 'Orders',
-    data:  []
+    data: []
 }])
 
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
@@ -31,11 +31,11 @@ const customers_this_month = computed(() => {
     return userStore.get_customers_this_month()
 })
 
-const loadNumberOrdersMonth = async() => {
+const loadNumberOrdersMonth = async () => {
 
     const numbers = await orderStore.loadNumberOrdersMonth()
 
-    series.value[0].data=numbers
+    series.value[0].data = numbers
 
 }
 
@@ -145,15 +145,15 @@ const options = {
                                     <i class="bi bi-people-fill card-icon"></i>
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">All Customers</h5>
-                                <h3 class="mt-3 mb-3">{{customers_this_month[0]}}</h3>
+                                <h3 class="mt-3 mb-3">{{ customers_this_month[0] }}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2" v-if="customers_this_month[1]>0">
+                                    <span class="text-success me-2" v-if="customers_this_month[1] > 0">
                                         <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        {{customers_this_month[1].toFixed(2)}}%
+                                        {{ customers_this_month[1].toFixed(2) }}%
                                     </span>
-                                     <span class="text-danger me-2" v-if="customers_this_month[1]<=0">
+                                    <span class="text-danger me-2" v-if="customers_this_month[1] <= 0">
                                         <i class="bi bi-arrow-down" id="arrow-icons"></i>
-                                        {{customers_this_month[1].toFixed(2)}}%
+                                        {{ customers_this_month[1].toFixed(2) }}%
                                     </span>
                                     <span class="text-nowrap">Since last month</span>
                                 </p>
@@ -168,15 +168,15 @@ const options = {
                                     <i class="bi bi-cart-plus-fill card-icon"></i>
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">Orders This Month</h5>
-                                <h3 class="mt-3 mb-3">{{orders_this_month[0]}}</h3>
+                                <h3 class="mt-3 mb-3">{{ orders_this_month[0] }}</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2" v-if="orders_this_month[1]>0">
+                                    <span class="text-success me-2" v-if="orders_this_month[1] > 0">
                                         <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        {{orders_this_month[1].toFixed(2)}}%
+                                        {{ orders_this_month[1].toFixed(2) }}%
                                     </span>
-                                    <span class="text-danger me-2" v-if="orders_this_month[1]<=0">
+                                    <span class="text-danger me-2" v-if="orders_this_month[1] <= 0">
                                         <i class="bi bi-arrow-down" id="arrow-icons"></i>
-                                        {{orders_this_month[1].toFixed(2)}}%
+                                        {{ orders_this_month[1].toFixed(2) }}%
                                     </span>
                                     <span class="text-nowrap">Since last month</span>
                                 </p>
@@ -191,15 +191,15 @@ const options = {
                                     <i class="bi bi-currency-euro card-icon"></i>
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">Revenue This Month</h5>
-                                <h3 class="mt-3 mb-3">{{Math.floor(revenue[0])}}€</h3>
+                                <h3 class="mt-3 mb-3">{{ Math.floor(revenue[0]) }}€</h3>
                                 <p class="mb-0 text-muted">
-                                    <span class="text-success me-2" v-if="revenue[1]>0">
+                                    <span class="text-success me-2" v-if="revenue[1] > 0">
                                         <i class="bi bi-arrow-up" id="arrow-icons"></i>
-                                        {{revenue[1].toFixed(2)}}%
+                                        {{ revenue[1].toFixed(2) }}%
                                     </span>
-                                     <span class="text-danger me-2" v-if="revenue[1]<=0">
+                                    <span class="text-danger me-2" v-if="revenue[1] <= 0">
                                         <i class="bi bi-arrow-down" id="arrow-icons"></i>
-                                        {{revenue[1].toFixed(2)}}%
+                                        {{ revenue[1].toFixed(2) }}%
                                     </span>
 
                                     <span class="text-nowrap">Since last month</span>
@@ -326,6 +326,7 @@ const options = {
     font-size: 14.4px;
     color: rgb(138, 150, 156);
 }
+
 .product-photo {
     width: 2.8rem;
     height: 2.8rem;
