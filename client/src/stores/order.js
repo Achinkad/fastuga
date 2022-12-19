@@ -22,7 +22,7 @@ export const useOrderStore = defineStore('orders', () => {
         // URL builder
         if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
         if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}/orders?page=${page}`
-
+       
         try {
             const response = await axios({
                 method: 'GET',
@@ -31,10 +31,11 @@ export const useOrderStore = defineStore('orders', () => {
                     status: status
                 }
             })
-
+           
             orders.value = response.data.data
             pagination.value = response.data
-
+            
+ 
             return orders.value
         } catch (error) {
             clear_orders()
@@ -56,6 +57,23 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
+    const count_orders = ref(null)
+
+    async function count_orders_by_status(status) {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'orders/status',
+                params: { status }
+            })
+            count_orders.value = response.data
+            console.log(response.data.data)
+            return number_orders.value
+        } catch (error) {
+
+            throw error
+        }
+    }
     async function loadNumberOrdersThisMonth() {
 
         try {
@@ -130,6 +148,30 @@ export const useOrderStore = defineStore('orders', () => {
         toast.info(`The Order (#${order.id}) was deleted!`)
     })
 
+    let data = {}
+
+    async function update_order_status(order,status) {
+        if(userStore.user && userStore.user.type == "ED"){
+            data = {
+                'status': status,
+                'delivered_by': userStore.user.id
+            }
+
+        }
+        const response = await axios({
+            method: 'PATCH',
+            url: 'orders/' + order.id + '/status',
+            params: data
+        })
+        
+        remove_order(response.data.data)
+        socket.emit('updateOrder', response.data.data)
+        return response.data.data
+    }
+    socket.on('updateOrder', (order) => {
+        remove_order(order)
+        toast.info(`The Order (#${order.id}) was updated!`)
+    })
     return {
         orders,
         my_orders,
@@ -146,6 +188,9 @@ export const useOrderStore = defineStore('orders', () => {
         get_revenue_orders,
         loadNumberOrdersThisMonth,
         get_orders_this_month,
-       my_orders_delivery
+       my_orders_delivery,
+       update_order_status,
+       count_orders,
+        count_orders_by_status
     }
 })
