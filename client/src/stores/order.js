@@ -192,8 +192,8 @@ export const useOrderStore = defineStore('orders', () => {
     }
 
     socket.on('newOrder', (order) => {
-        remove_order(order)
-        toast.info(`A new order has arrived. Check your order menu. (#${order.id})`)
+        orders.value.push(order)
+        toast.success(`A new order has arrived. Check your order menu. (#${order.id})`)
     })
 
     const remove_order = ((order) => {
@@ -269,7 +269,7 @@ export const useOrderStore = defineStore('orders', () => {
 
     }
  
-    socket.on('updateOrder', (order) => {
+    socket.on('updatedOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated!`)
     })
