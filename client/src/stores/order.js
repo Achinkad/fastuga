@@ -35,7 +35,7 @@ export const useOrderStore = defineStore('orders', () => {
             orders.value = response.data.data
             pagination.value = response.data
             
- console.log(orders.value,status)
+ 
             return orders.value
         } catch (error) {
             clear_orders()
@@ -130,10 +130,27 @@ export const useOrderStore = defineStore('orders', () => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was deleted!`)
     })
+
+    let data = {}
+
     async function update_order_status(order,status) {
-        const response = await axios.patch('orders/' + order.id + '/status',status)
+        if(userStore.user && userStore.user.type == "ED"){
+            data = {
+                'status': status,
+                'delivered_by': userStore.user.id
+            }
+
+        }
+        const response = await axios({
+            method: 'PATCH',
+            url: 'orders/' + order.id + '/status',
+            params: data
+        })
+        
+
         return response.data.data
     }
+ 
     return {
         orders,
         my_orders,

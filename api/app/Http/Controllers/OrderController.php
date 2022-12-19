@@ -112,11 +112,16 @@ class OrderController extends Controller
 
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
-
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+           
+        if ($request->has('delivered_by') && $request->input('status') == "D") {
+            $order->status = "D";
+            $order->delivered_by = $request->input('delivered_by');
+            $order->save();
+        }
 
         if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
-
+            
 
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
@@ -139,6 +144,7 @@ class OrderController extends Controller
             $order->save();
 
         }
+
         return new OrderResource($order);
 
     }
