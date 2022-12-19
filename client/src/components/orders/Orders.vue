@@ -27,9 +27,8 @@ const props = defineProps({
 })
 
 const loadOrders = (page = 1) => {
-    if(userStore.user.type=='EM'){
-        orderStore.load_orders(page, status.value)
-    }
+
+    orderStore.load_orders(page, status.value)
     
 }
 
@@ -46,10 +45,9 @@ const total = computed(() => {
 })
 
 const orders = computed(() => {
-    if(userStore.user.type=='EM'){
-        return orderStore.get_orders()
-    }
-    
+
+    return orderStore.get_orders()
+ 
 })
 
 const pagination = computed(() => {
@@ -73,8 +71,14 @@ const editOrder = (order) => {
 watch(status, () => { loadOrders() })
 
 onMounted(() => { 
-    loadOrders()
-    loadOrderItems()
+    if(userStore.user.type!='EC'){
+        loadOrders()
+    }
+
+    if(userStore.user && userStore.user.type=='EC'){
+        loadOrderItems()
+    }
+    
 })
 
 </script>
@@ -99,7 +103,7 @@ onMounted(() => {
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div class="d-flex align-items-center" v-if="userStore.user">
+                                    <div class="d-flex align-items-center" v-if="userStore.user && userStore.user.type=='EM'">
                                         <label for="selectCompleted" class="me-2">Status</label>
                                         <select class="form-select" id="selectCompleted" v-model="status">
                                             <option value="all" selected>Any</option>
@@ -122,7 +126,7 @@ onMounted(() => {
                             <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
                             <div v-if="userStore.user && userStore.user.type != 'EC'" class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrder" :limit="5"></Bootstrap5Pagination>
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
                             </div>
                              <div v-if="userStore.user && userStore.user.type=='EC'" class="d-flex justify-content-end mt-3">
                                 <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItems" :limit="5"></Bootstrap5Pagination>

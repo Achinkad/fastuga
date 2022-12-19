@@ -39,6 +39,7 @@ class OrderItemController extends Controller
     {
         $request->validate(['status' => 'required|in:W,P,R']);
         $order_item->status = $request->input('status');
+        $order_item->preparation_by=$request->prepared_by;
         $order_item->save();
         return new OrderItemResource($order_item);
     }
@@ -54,10 +55,18 @@ class OrderItemController extends Controller
 
     public function get_order_items_waiting() // -> Gets All Order Items From a Chef
     {
-       // if (auth()->guard('api')->user()->type == "EC") { abort(403); }
+        //if (auth()->guard('api')->user()->type == "EC") { abort(403); }
 
         $order_items = OrderItem::where('status', 'W')->paginate(10);
         
+        return OrderItemResource::collection($order_items);
+    }
+
+    public function get_order_items_by_chef_preparing(User $user)
+    {
+
+        $order_items = OrderItem::where('preparation_by', $user->id)->where('status', 'P')->paginate(10);
+
         return OrderItemResource::collection($order_items);
     }
 }

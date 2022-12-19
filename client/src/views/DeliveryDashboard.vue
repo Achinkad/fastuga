@@ -14,7 +14,6 @@ const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-
 const pagination = computed(() => { return orderStore.get_page() })
 
 const loadOrders = (page = 1) => {
