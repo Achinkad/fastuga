@@ -134,7 +134,7 @@ watch(
                 </td>
                 <td class="text-center" v-if="userStore.user.type == 'EM' ||  userStore.user.type=='C'">
                     <div class="d-flex justify-content-center">
-                        <div  v-if="userStore && userStore.user.type == 'EM'">
+                        <div v-if="userStore && userStore.user.type == 'EM'">
                             <div v-if="order.status != 'C' && order.status != 'D'">
                                 <button class="btn btn-xs btn-light" title="Delete Order" @click="deleteClick(order)" v-if="showDeleteButton">
                                     <i class="bi bi-x-lg"></i>

@@ -17,7 +17,7 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
-    
+
     public function __construct()
     {
         $this->middleware('auth.manager', ['except' => [
@@ -28,7 +28,7 @@ class OrderController extends Controller
             'get_count_order_status'
         ]]);
     }
-    
+
     public function index(Request $request)
     {
         $orders = $request->status != 'all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
@@ -96,7 +96,7 @@ class OrderController extends Controller
             if ($x == 0) {
                 $order->status = "R";
             }
-        
+
         $order->save();
 
 
@@ -140,15 +140,20 @@ class OrderController extends Controller
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
-           
+
         if ($request->has('delivered_by') && $request->input('status') == "D") {
             $order->status = "D";
             $order->delivered_by = $request->input('delivered_by');
             $order->save();
         }
 
+        if ($request->has('delivered_by') && $request->input('status') == "R") {
+            $order->status = "R";
+            $order->delivered_by = $request->input('delivered_by');
+            $order->save();
+        }
+
         if ($request->input('status') == "C" && $order->status != "C" && $order->status != "D"){
-            
 
             /* --- Handle Payment Gateway (Revoke Points & Refund) --- */
             $payment_response = Http::withoutVerifying()->post('https://dad-202223-payments-api.vercel.app/api/refunds', [
@@ -199,7 +204,7 @@ class OrderController extends Controller
     }
 
     public function get_number_orders_by_month(){
-        
+
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
             //$orders_this_year=Order::whereYear('date','=',$year);
 
@@ -215,38 +220,38 @@ class OrderController extends Controller
                                         Order::whereYear('date','=',date('Y'))->whereMonth('date','=',10)->count(),
                                         Order::whereYear('date','=',date('Y'))->whereMonth('date','=',11)->count(),
                                         Order::whereYear('date','=',date('Y'))->whereMonth('date','=',12)->count());
-        
+
 
         return $number_orders_by_month;
-                                          
+
         }
     }
 
     public function get_revenue_orders(){
-        
+
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
 
             $sum_orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->sum('total_paid');
             $sum_orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->sum('total_paid');
 
             $percent_difference=($sum_orders_this_month-$sum_orders_last_month)/$sum_orders_last_month*100;
-            
+
             return array($sum_orders_this_month,$percent_difference);
-                                          
+
         }
     }
 
     public function get_number_orders_this_month(){
-        
+
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
 
             $orders_last_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m')-1)->count();
             $orders_this_month=Order::whereYear('date','=',date('Y'))->whereMonth('date','=',date('m'))->count();
 
             $percent_difference=($orders_this_month-$orders_last_month)/$orders_last_month*100;
-            
+
             return array($orders_this_month,$percent_difference);
-                                          
+
         }
     }
     public function get_count_order_status(Request $request){
