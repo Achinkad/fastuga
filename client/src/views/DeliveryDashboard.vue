@@ -1,19 +1,13 @@
 <script setup>
-import { computed, watch, onBeforeMount, inject, ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, watch, onBeforeMount, inject, onMounted } from 'vue'
+
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
-const toast = inject("toast")
 
+const toast = inject("toast")
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
-
-const router = useRouter()
-
-const serverBaseUrl = inject("serverBaseUrl")
-
 
 const pagination = computed(() => { return orderStore.get_page() })
 
@@ -42,15 +36,7 @@ const acceptOrder = (order) => {
         .catch((error) => {
             console.log(error)
         })
-    console.log(order)
-}
 
-const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
-
-const capitalize = (word) => {
-    const capitalizedFirst = word[0].toUpperCase()
-    const rest = word.slice(1)
-    return capitalizedFirst + rest
 }
 
 watch(() => userStore.user, function () {

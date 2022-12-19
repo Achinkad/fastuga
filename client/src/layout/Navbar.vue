@@ -12,7 +12,7 @@ const toast = inject("toast")
 const logout = () => {
     if (userStore.logout()) {
         router.push({ name: 'Login' })
-        toast.success("User has logged out of the application.")
+        
     } else {
         toast.error("There was a problem logging out of the application!")
     }

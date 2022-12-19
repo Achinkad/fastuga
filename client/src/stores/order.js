@@ -165,10 +165,10 @@ export const useOrderStore = defineStore('orders', () => {
         })
         
         remove_order(response.data.data)
-        socket.emit('updateOrder', response.data.data)
+        socket.to("Manager").to("Delivery").emit('updatedOrder', response.data.data)
         return response.data.data
     }
-    socket.on('updateOrder', (order) => {
+    socket.on('updatedOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated!`)
     })
