@@ -9,10 +9,10 @@ const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
-const logout = async () => {
-    if (await userStore.logout()) {
-        toast.success("User has logged out of the application.")
+const logout = () => {
+    if (userStore.logout()) {
         router.push({ name: 'Login' })
+        toast.success("User has logged out of the application.")
     } else {
         toast.error("There was a problem logging out of the application!")
     }

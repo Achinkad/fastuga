@@ -1,27 +1,27 @@
 <script setup>
-  import { ref, watch, inject, computed} from 'vue'
-  import UserDetail from "./UserDetail.vue"
-  import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { ref, watch, inject, computed} from 'vue'
+import UserDetail from "./UserDetail.vue"
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 
-  const router = useRouter()
-  const axios = inject('axios')
-  const toast = inject('toast')
+const router = useRouter()
+const axios = inject('axios')
+const toast = inject('toast')
 
 const serverBaseUrl = inject("serverBaseUrl")
 
 
-  const props = defineProps({
-      id: {
+const props = defineProps({
+    id: {
         type: Number,
         default: null
-      }
-  })
+    }
+})
 
 
 
-  const newUser = () => {
-      return {
+const newUser = () => {
+    return {
         name: '',
         email: '',
         type: 'C',
@@ -29,109 +29,109 @@ const serverBaseUrl = inject("serverBaseUrl")
         blocked: 0,
         password :'',
         custom : ''
-      }
-  }
+    }
+}
 
-  let originalValueStr = ''
-  const loadUser = (id) => {
+let originalValueStr = ''
+const loadUser = (id) => {
     originalValueStr = ''
-      errors.value = null
-      if (!id || (id < 0)) {
+    errors.value = null
+    if (!id || (id < 0)) {
         user.value = newUser()
         originalValueStr = dataAsString()
-      } else {
+    } else {
         axios.get(serverBaseUrl+'/api/users/' + id)
-          .then((response) => {
+        .then((response) => {
             user.value = response.data.data
             originalValueStr = dataAsString()
-          })
-          .catch((error) => {
+        })
+        .catch((error) => {
             console.log(error)
-          })
-      }
-  }
-  const user = ref(newUser())
+        })
+    }
+}
+const user = ref(newUser())
 
-  const add = (user_values) => {
-  
+const add = (user_values) => {
+
     axios.post(serverBaseUrl + '/api/users', user_values)
-        .then((response) => {
+    .then((response) => {
         user.value = response.data.data
         originalValueStr = dataAsString()
         toast.success('user #' + user.value.id + ' was created successfully.')
         router.back()
-      })
-      .catch((error) => {
-       
+    })
+    .catch((error) => {
+
         if (error.response.status == 422) {
-          toast.error('user was not created due to validation errors!')
-          errors.value = error.response.data.data
+            toast.error('user was not created due to validation errors!')
+            errors.value = error.response.data.data
         } else {
-          toast.error('user was not created due to unknown server error!')
+            toast.error('user was not created due to unknown server error!')
         }
-      })
+    })
 }
 
 
 
-  const cancel = () => {
+const cancel = () => {
     originalValueStr = dataAsString()
     router.back()
-  }
+}
 
-  const dataAsString = () => {
-      return JSON.stringify(user.value)
-  }
+const dataAsString = () => {
+    return JSON.stringify(user.value)
+}
 
-  let nextCallBack = null
-  const leaveConfirmed = () => {
-      if (nextCallBack) {
+let nextCallBack = null
+const leaveConfirmed = () => {
+    if (nextCallBack) {
         nextCallBack()
-      }
-  }
+    }
+}
 
-  onBeforeRouteLeave((to, from, next) => {
+onBeforeRouteLeave((to, from, next) => {
     nextCallBack = null
     let newValueStr = dataAsString()
     if (originalValueStr != newValueStr) {
-      nextCallBack = next
-      confirmationLeaveDialog.value.show()
+        nextCallBack = next
+        confirmationLeaveDialog.value.show()
     } else {
-      next()
+        next()
     }
-  })
-
-  
-  const errors = ref(null)
-  const confirmationLeaveDialog = ref(null)
+})
 
 
+const errors = ref(null)
+const confirmationLeaveDialog = ref(null)
 
-  watch(
+
+
+watch(
     () => props.id,
     (newValue) => {
         loadUser(newValue)
-      },
+    },
     {immediate: true}
-    )
+)
 
 </script>
 
 <template>
-  <confirmation-dialog
+    <confirmation-dialog
     ref="confirmationLeaveDialog"
     confirmationBtn="Discard changes and leave"
     msg="Do you really want to leave? You have unsaved changes!"
     @confirmed="leaveConfirmed"
-  >
-  </confirmation-dialog>
+    >
+</confirmation-dialog>
 
-  <user-detail
-    :user="user"
-    :errors="errors"
-    :operationType="insert"
-    @save="save"
-    @add="add"
-    @cancel="cancel"
-  ></user-detail>
+<user-detail
+:user="user"
+:errors="errors"
+:operationType="insert"
+@save="save"
+@add="add"
+@cancel="cancel"
+></user-detail>
 </template>
