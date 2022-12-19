@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
+import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
@@ -28,6 +29,7 @@ const loadBestProducts = () => {
     })
 }
 
+const pagination = computed(() => { return orderStore.get_page() })
 const orders_from_user = computed(() => { return orderStore.my_orders })
 const best_products = computed(() => { return productStore.best_products })
 
@@ -68,7 +70,7 @@ onBeforeMount(() => {
                                 <h3 class="mt-2 mb-2 fw-bold">You've {{ userStore.customer.points }} Points!</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-muted me-2">
-                                        You can discount until {{ (userStore.customer.points / 2  - userStore.customer.points / 2 % 10) / 2 }}€ in your next order.
+                                        You can discount until {{ (Math.floor(userStore.customer.points / 10)) * 5 }}€ in your next order.
                                     </span>
                                 </p>
                             </div>
@@ -133,6 +135,9 @@ onBeforeMount(() => {
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-if="userStore.user" class="d-flex justify-content-end mt-3">
+                            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+                        </div>
                     </div>
                 </div>
             </div>

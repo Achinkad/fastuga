@@ -17,7 +17,7 @@ export const useOrderStore = defineStore('orders', () => {
     const pagination_preparation = ref([])
 
     const order_items = ref([])
-   
+
 
     const order_items_preparing = ref([])
 
@@ -28,7 +28,7 @@ export const useOrderStore = defineStore('orders', () => {
         // URL builder
         if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
         if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}/orders?page=${page}`
-       
+
         try {
             const response = await axios({
                 method: 'GET',
@@ -37,11 +37,11 @@ export const useOrderStore = defineStore('orders', () => {
                     status: status
                 }
             })
-           
+
             orders.value = response.data.data
             pagination.value = response.data
-            
- 
+
+
             return orders.value
         } catch (error) {
             clear_orders()
@@ -139,7 +139,7 @@ export const useOrderStore = defineStore('orders', () => {
 
             order_items.value = response.data.data
             pagination.value = response.data
-           
+
             return order_items.value
         } catch (error) {
 
@@ -157,7 +157,7 @@ export const useOrderStore = defineStore('orders', () => {
 
             order_items_preparing.value = response.data.data
             pagination_preparation.value = response.data
-           
+
             return order_items_preparing.value
         } catch (error) {
 
@@ -176,9 +176,7 @@ export const useOrderStore = defineStore('orders', () => {
     const get_page_preparation = (() => { return pagination_preparation.value })
 
     const clear_orders = (() => { orders.value = [] })
-
     const total_orders = computed(() => { return orders.value.length })
-
     const my_orders = computed(() => { return orders.value.filter(or => or.customer.user.id == userStore.userId) })
     const my_orders_delivery = computed(() => { return orders.value.filter(or =>  userStore.userId) })
     const total_my_orders = computed(() => { return my_orders.value.length })
@@ -202,10 +200,10 @@ export const useOrderStore = defineStore('orders', () => {
     })
 
     const remove_order_item = ((order_item,order_items) => {
-        
+
         let i = order_items.value.findIndex((t) => t.id === order_item.id)
         if (i >= 0) order_items.value.splice(i, 1)
-      
+
     })
 
     async function delete_order(order) {
@@ -236,20 +234,20 @@ export const useOrderStore = defineStore('orders', () => {
             url: 'orders/' + order.id + '/status',
             params: data
         })
-        
+
         remove_order(response.data.data)
         socket.emit('updatedOrder', response.data.data)
         return response.data.data
     }
 
     async function update_order_items_status(order_item,status) {
-               
+
             if(userStore.user && userStore.user.type == "EC"){
                 data = {
                     'status': status,
                     'prepared_by': userStore.user.id
                 }
-    
+
             }
             const response = await axios({
                 method: 'PATCH',
@@ -264,7 +262,7 @@ export const useOrderStore = defineStore('orders', () => {
             if(status=='R'){
                 remove_order_item(response.data.data,order_items_preparing)
             }
-           
+
             return response.data.data
 
     }

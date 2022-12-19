@@ -66,18 +66,18 @@ onBeforeMount(() => {
 
                         <div class="card">
                             <div class="d-flex card-header justify-content-between align-items-center">
-                                <h4 class="header-title">Best selled products</h4>
+                                <h4 class="header-title">Our top 5 products</h4>
                             </div>
                             <div class="card-body pt-0">
                                 <div class="best-products">
                                     <div class="row mb-3 align-items-center" v-for="product in best_products" :key="product.id">
-                                        <div class="col-auto image">
+                                        <div class="col-2 image">
                                             <img :src="photoFullUrl(product)" class="product-photo"/>
                                         </div>
-                                        <div class="col-auto">
+                                        <div class="col-10">
                                             <span><b>{{product.name}}</b></span>
                                             <span class="ms-2"><i>{{product.price}}€</i></span> <br>
-                                            <span style="font-size:14px;">{{capitalize(product.type)}}</span>
+                                            <span style="font-size:14px;">{{capitalize(product.type)}} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -219,5 +219,10 @@ onBeforeMount(() => {
 .text-nowrap {
     font-size: 14.4px;
     color: rgb(138, 150, 156);
+}
+
+.image img {
+    position: relative;
+    left: 5px;
 }
 </style>
