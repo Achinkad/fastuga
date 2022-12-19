@@ -19,6 +19,7 @@ const userStore = useUserStore()
                         :class="{ active: $route.name === 'Dashboard'
                             || $route.name === 'CustomerDashboard'
                             || $route.name === 'AnonymousDashboard'
+                            || $route.name === 'ChefDashboard'
                         }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>

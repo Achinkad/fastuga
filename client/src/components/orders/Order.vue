@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
 import OrderDetail from "./OrderDetails.vue"
@@ -10,7 +10,7 @@ const serverBaseUrl = inject("serverBaseUrl")
 const router = useRouter()
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
+const socket = inject("socket")
 const axios = inject('axios')
 const toast = inject('toast')
 
@@ -70,7 +70,9 @@ const loadOrder = (id) => {
 
 const add = (order) => {
     orderStore.insert_order(order)
+    
     .then((response) => {
+   
         toast.success("Order added successfuly!")
         router.push({ name: 'Orders' })
     })

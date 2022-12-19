@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use App\Policies\OrderPolicy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

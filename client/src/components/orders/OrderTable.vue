@@ -111,7 +111,7 @@ watch(
                 <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
                 <td v-if="order.customer && userStore.user.type != 'C'">
-                    <router-link :to="{ name: 'User', params: { id: order.customer.user.id } }" :title="`View profile of ${order.customer.user.name}`">
+                    <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
                         #{{ order.customer_id }}
                     </router-link>
                 </td>

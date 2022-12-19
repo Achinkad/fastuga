@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,17 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'show',
+            'get_orders_user',
+            'status',
+            'store',
+        ]]);
+    }
+
     public function index(Request $request)
     {
         $orders = $request->status != 'all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
@@ -73,6 +85,19 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        $x = 0;
+        foreach($order->order_item as $i) {
+            if ($i->status != "R") { $x = 1; break; }
+            }
+
+            if ($x == 0) {
+                $order->status = "R";
+            }
+
+        $order->save();
+
+
         return new OrderResource($order);
     }
 
@@ -114,6 +139,12 @@ class OrderController extends Controller
     {
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
 
+        if ($request->has('delivered_by') && $request->input('status') == "D") {
+            $order->status = "D";
+            $order->delivered_by = $request->input('delivered_by');
+            $order->save();
+        }
+
         if ($request->has('delivered_by') && $request->input('status') == "R") {
             $order->status = "R";
             $order->delivered_by = $request->input('delivered_by');
@@ -143,12 +174,20 @@ class OrderController extends Controller
             $order->save();
 
         }
+
         return new OrderResource($order);
 
     }
 
-    public function get_orders_user($id)
+    public function get_orders_user(Request $request, $id)
     {
+        if(auth()->guard('api')->user()->type == "ED") {
+            if($request->has('status')) {
+                $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
+                return OrderResource::collection($orders);
+            }
+        }
+
         if(auth()->guard('api')->user()->type == "ED"){
             $orders = Order::where('delivered_by', $id)->paginate(20);
             return OrderResource::collection($orders);
@@ -159,6 +198,7 @@ class OrderController extends Controller
             $orders = Order::where('customer_id', $customer->id)->paginate(20);
             return OrderResource::collection($orders);
         }
+
     }
 
     public function get_number_orders_by_month(){
@@ -211,5 +251,10 @@ class OrderController extends Controller
             return array($orders_this_month,$percent_difference);
 
         }
+    }
+    public function get_count_order_status(Request $request){
+        $request->validate(['status' => 'sometimes|in:P,R,D,C']);
+        $count_orders = Order::where('status', $request->input('status'))->count();
+        return $count_orders;
     }
 }

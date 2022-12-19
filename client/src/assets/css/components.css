@@ -114,3 +114,7 @@ tbody tr td {
     border: 1px solid #d1d5db !important;
     transition: background-position .15s ease-in-out !important;
 }
+
+.img-thumbnail {
+    width: 500px;
+}

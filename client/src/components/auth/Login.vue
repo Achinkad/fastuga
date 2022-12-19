@@ -21,7 +21,7 @@ const emit = defineEmits(['login'])
 
 const login = async () => {
     if (await userStore.login(credentials.value)) {
-        toast.success('User ' + userStore.user.name + ' has entered the application.')
+        //toast.success('User ' + userStore.user.name + ' has entered the application.')
         emit('login')
         router.push({name: "Dashboard"})
     } else {

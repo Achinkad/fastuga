@@ -15,8 +15,6 @@ const userStore = useUserStore()
 const orderStore = useOrderStore()
 const router = useRouter()
 
-const order_items = ref([])
-const pagination = ref({})
 const status = ref("all")
 
 var total_orders = 0
@@ -29,7 +27,13 @@ const props = defineProps({
 })
 
 const loadOrders = (page = 1) => {
+
     orderStore.load_orders(page, status.value)
+    
+}
+
+const loadOrderItems = (page = 1) => {
+    orderStore.loadOrderItems(page)
 }
 
 const total = computed(() => {
@@ -41,7 +45,19 @@ const total = computed(() => {
 })
 
 const orders = computed(() => {
+
     return orderStore.get_orders()
+ 
+})
+
+const pagination = computed(() => {
+   
+    return orderStore.get_page()
+    
+})
+
+const order_items = computed(() => {
+    return orderStore.get_order_items()
 })
 
 const addOrder = () => {
@@ -54,7 +70,16 @@ const editOrder = (order) => {
 
 watch(status, () => { loadOrders() })
 
-onMounted(() => { loadOrders() })
+onMounted(() => { 
+    if(userStore.user.type!='EC'){
+        loadOrders()
+    }
+
+    if(userStore.user && userStore.user.type=='EC'){
+        loadOrderItems()
+    }
+    
+})
 
 </script>
 
@@ -78,7 +103,7 @@ onMounted(() => { loadOrders() })
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div class="d-flex align-items-center" v-if="userStore.user">
+                                    <div class="d-flex align-items-center" v-if="userStore.user && userStore.user.type=='EM'">
                                         <label for="selectCompleted" class="me-2">Status</label>
                                         <select class="form-select" id="selectCompleted" v-model="status">
                                             <option value="all" selected>Any</option>
@@ -100,8 +125,11 @@ onMounted(() => { loadOrders() })
                             <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
                             <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
-                            <div v-if="userStore.user" class="d-flex justify-content-end mt-3">
+                            <div v-if="userStore.user && userStore.user.type != 'EC'" class="d-flex justify-content-end mt-3">
                                 <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+                            </div>
+                             <div v-if="userStore.user && userStore.user.type=='EC'" class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItems" :limit="5"></Bootstrap5Pagination>
                             </div>
                         </div>
                     </div>

@@ -16,6 +16,16 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'show',
+            'store',
+            'status',
+            'update',
+            'show_me'
+        ]]);
+    }
     public function index(Request $request)
     {
         $users = $request->type != 'all' ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
@@ -81,7 +91,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->fill($request->validated());
-        $user->blocked = $user->blocked == 1 ? 0 : 1;
+        $user->blocked = $user->blocked==1 ? 0 : 1;
 
         if ($request->has('photo_url')) {
 
