@@ -35,6 +35,10 @@ const loadMoreProducts = async (page_url, type) => {
     })
 }
 
+const truncate = (str, n) => {
+    return (str.length > n) ? str.slice(0, n-1) + '...' : str;
+}
+
 onBeforeMount(() => {
     loadProducts(active_el.value)
     active_page.value = pagination.value
@@ -78,16 +82,27 @@ onBeforeMount(() => {
             </div>
         </div>
         <div class="row mt-2">
-            <div class="col-4" v-for="product in products" :key="product.id">
+            <div class="col-6" v-for="product in products" :key="product.id">
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
-                            <div class="col-auto image">
+                            <div class="col-2 image">
                                 <img :src="photoFullUrl(product)" class="product-photo"/>
                             </div>
-                            <div class="col-auto">
-                                <span class="fw-bold">{{product.name}}</span><br>
-                                <span>{{product.price}}€</span>
+                            <div class="col-10">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span class="fw-bold product-name">{{product.name}}</span>
+                                        <span class="ms-3">
+                                            <i>
+                                                {{product.price}}€
+                                            </i>
+                                        </span><br>
+                                    </div>
+                                    <div class="col" :title="product.description">
+                                        <span class="product-description">{{truncate(product.description, 160)}}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,9 +138,22 @@ onBeforeMount(() => {
     border-color: #1f2937 !important;
 }
 
+.image {
+    position: relative;
+    left: 5px;
+}
+
+.product-name {
+    font-size: 18px;
+}
+
+.product-description {
+    font-size: 15px;
+}
+
 .product-photo {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
 }
 

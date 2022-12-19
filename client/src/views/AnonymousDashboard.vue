@@ -1,25 +1,14 @@
 <script setup>
 import { computed, watch, onBeforeMount, onMounted, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
 
-const userStore = useUserStore()
-const orderStore = useOrderStore()
 const productStore = useProductStore()
+const orderStore = useProductStore()
 const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
-
-const user = ref(userStore.user)
-
-const loadOrders = (page = 1) => {
-    orderStore.load_orders(page, "P")
-    .catch((error) => {
-        console.log(error)
-    })
-}
 
 const loadBestProducts = () => {
     productStore.load_best_products()
@@ -40,10 +29,7 @@ const capitalize = (word) => {
     return capitalizedFirst + rest
 }
 
-watch(() => userStore.user, function() { loadOrders() })
-
 onBeforeMount(() => {
-    loadOrders()
     loadBestProducts()
 })
 </script>
@@ -54,7 +40,7 @@ onBeforeMount(() => {
             <div class="col-12">
                 <div class="p-title-box">
                     <div>
-                        <h4 class="p-title">Welcome to Fastuga, {{ user.name }}</h4>
+                        <h4 class="p-title">Welcome to Fastuga</h4>
                     </div>
                 </div>
             </div>
@@ -65,10 +51,14 @@ onBeforeMount(() => {
                     <div class="col-sm-12">
                         <div class="card widget-flat orange-bg">
                             <div class="card-body">
-                                <h3 class="mt-2 mb-2 fw-bold">You've {{ userStore.customer.points }} Points!</h3>
+                                <h3 class="mt-2 mb-2 fw-bold">
+                                    <router-link :to="{ name: 'Register' }" style="text-decoration:none!important;color:#1f2937;">
+                                        Let's create an account!
+                                    </router-link>
+                                </h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-muted me-2">
-                                        You can discount until {{ (userStore.customer.points / 2  - userStore.customer.points / 2 % 10) / 2 }}€ in your next order.
+                                        If you do, you can earn points to discount in your orders.
                                     </span>
                                 </p>
                             </div>
@@ -100,8 +90,7 @@ onBeforeMount(() => {
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="orders_from_user.length != 0">Orders In Pending ({{orders_from_user.length}})</h4>
-                        <h4 class="header-title" v-else>Orders In Pending</h4>
+                        <h4 class="header-title">Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
                         <table class="table table-responsive align-middle">
@@ -115,8 +104,8 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="orders_from_user.length==0">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+                                <tr v-if="orders_from_user == null">
+                                    <td colspan="6" class="text-center" style="height:55px!important;">You don't have any orders... yet!</td>
                                 </tr>
                                 <tr v-for="order in orders_from_user" :key="order.id">
                                     <td>#{{order.id}}</td>
