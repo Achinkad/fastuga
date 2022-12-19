@@ -17,6 +17,17 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'show',
+            'get_orders_user',
+            'status',
+            'store',
+        ]]);
+    }
+    
     public function index(Request $request)
     {
         $orders = $request->status != 'all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
@@ -74,6 +85,19 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        $x = 0;
+        foreach($order->order_item as $i) {
+            if ($i->status != "R") { $x = 1; break; }
+            }
+
+            if ($x == 0) {
+                $order->status = "R";
+            }
+        
+        $order->save();
+
+
         return new OrderResource($order);
     }
 

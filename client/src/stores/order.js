@@ -14,6 +14,12 @@ export const useOrderStore = defineStore('orders', () => {
     const number_orders_this_month = ref([])
     const revenue_orders = ref([])
     const pagination = ref([])
+    const pagination_preparation = ref([])
+
+    const order_items = ref([])
+   
+
+    const order_items_preparing = ref([])
 
     let url = null
 
@@ -106,10 +112,68 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
+    async function loadOrderItems(page) {
+
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'users/'+userStore.user.id+'/order-items?page='+page
+            })
+
+            order_items.value = response.data.data
+            pagination.value = response.data
+            return order_items.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
+    async function loadOrderItemsWaiting(page) {
+
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'order-items/waiting?page='+page
+            })
+
+            order_items.value = response.data.data
+            pagination.value = response.data
+           
+            return order_items.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
+    async function loadOrderItemsPreparing(page) {
+
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'users/'+userStore.user.id+'/order-items/preparing?page='+page
+            })
+
+            order_items_preparing.value = response.data.data
+            pagination_preparation.value = response.data
+           
+            return order_items_preparing.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
+    const get_order_items_preparing = (() => { return order_items_preparing.value })
     const get_orders = (() => { return orders.value })
+    const get_order_items = (() => { return order_items.value })
+    const get_order_items_waiting = (() => { return order_items.value})
     const get_orders_this_month = (() => { return number_orders_this_month.value })
     const get_revenue_orders = (() => { return revenue_orders.value })
+
     const get_page = (() => { return pagination.value })
+    const get_page_preparation = (() => { return pagination_preparation.value })
 
     const clear_orders = (() => { orders.value = [] })
 
@@ -137,6 +201,13 @@ export const useOrderStore = defineStore('orders', () => {
         if (i >= 0) orders.value.splice(i, 1)
     })
 
+    const remove_order_item = ((order_item,order_items) => {
+        
+        let i = order_items.value.findIndex((t) => t.id === order_item.id)
+        if (i >= 0) order_items.value.splice(i, 1)
+      
+    })
+
     async function delete_order(order) {
         const response = await axios.delete('orders/' + order.id)
         remove_order(response.data.data)
@@ -159,6 +230,7 @@ export const useOrderStore = defineStore('orders', () => {
             }
 
         }
+
         const response = await axios({
             method: 'PATCH',
             url: 'orders/' + order.id + '/status',
@@ -169,10 +241,39 @@ export const useOrderStore = defineStore('orders', () => {
         socket.emit('updatedOrder', response.data.data)
         return response.data.data
     }
-    socket.on('updatedOrder', (order) => {
+
+    async function update_order_items_status(order_item,status) {
+               
+            if(userStore.user && userStore.user.type == "EC"){
+                data = {
+                    'status': status,
+                    'prepared_by': userStore.user.id
+                }
+    
+            }
+            const response = await axios({
+                method: 'PATCH',
+                url: 'order-items/'+order_item.id+'/status',
+                params: data
+            })
+
+            if(status=='P'){
+                remove_order_item(response.data.data,order_items)
+                loadOrderItemsPreparing()
+            }
+            if(status=='R'){
+                remove_order_item(response.data.data,order_items_preparing)
+            }
+           
+            return response.data.data
+
+    }
+ 
+    socket.on('updateOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated!`)
     })
+
     return {
         orders,
         my_orders,
@@ -189,9 +290,18 @@ export const useOrderStore = defineStore('orders', () => {
         get_revenue_orders,
         loadNumberOrdersThisMonth,
         get_orders_this_month,
-       my_orders_delivery,
-       update_order_status,
-       count_orders,
-        count_orders_by_status
+        loadOrderItems,
+        get_order_items,
+        loadOrderItemsWaiting,
+        get_order_items_waiting,
+        my_orders_delivery,
+        update_order_status,
+        count_orders,
+        count_orders_by_status,
+        loadOrderItemsPreparing,
+        get_order_items_preparing,
+        update_order_items_status,
+        get_page_preparation
+
     }
 })

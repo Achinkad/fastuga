@@ -17,6 +17,16 @@ use App\Http\Requests\StoreCustomerRequest;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'store',
+            'show',
+            'update',
+            'show_by_user',
+
+        ]]);
+    }
     public function index()
     {
         return CustomerResource::collection(Customer::all());

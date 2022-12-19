@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from "vue";
+import { inject, watch,ref } from "vue";
 import { useUserStore } from '../stores/user.js'
 import { useRouter } from 'vue-router'
 import avatarNoneUrl from '@/assets/avatar-none.png'
@@ -9,6 +9,9 @@ const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
+const currentPhoto = ref(userStore.user) 
+
+
 const logout = () => {
     if (userStore.logout()) {
         router.push({ name: 'Login' })
@@ -17,9 +20,18 @@ const logout = () => {
         toast.error("There was a problem logging out of the application!")
     }
 }
+/*
 const photoFullUrl = () => {
     return userStore.user.photo_url ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
 }
+*/
+
+
+watch(currentPhoto.photo_url,
+  () => userStore.userPhotoUrl
+)
+
+
 </script>
 
 <template>
@@ -49,7 +61,7 @@ const photoFullUrl = () => {
                     <a class="nav-link" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span class="account-user-avatar">
-                            <img alt="user image" :src="photoFullUrl()" class="rounded-circle img_photo">
+                            <img alt="user image" :src="userStore.userPhotoUrl" class="rounded-circle img_photo">
                         </span>
                         <span>
                             <span class="account-user-name">{{ userStore.user.name }}</span>

@@ -40,7 +40,9 @@ Route::resource('products', ProductController::class);
 
 /* --- [API Routes] -> Order Items --- */
 Route::patch('order-items/{order_item}/status', [OrderItemController::class, 'status']); // -> Change Order Item Status
+Route::get('order-items/waiting', [OrderItemController::class, 'get_order_items_waiting']);
 Route::get('users/{user}/order-items', [OrderItemController::class, 'get_order_items_by_chef']); // -> Get Order Item from Chef
+Route::get('users/{user}/order-items/preparing', [OrderItemController::class, 'get_order_items_by_chef_preparing']);
 
 /* --- [API Routes] -> Auth --- */
 Route::post('login', [AuthController::class, 'login']);
