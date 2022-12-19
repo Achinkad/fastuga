@@ -28,7 +28,7 @@ const loadCountOrders = () => {
 
 
 const orders_from_user = computed(() => { return orderStore.my_orders_delivery })
-const all_orders = computed(() => { 
+const all_orders = computed(() => {
     return orderStore.count_orders
 })
 
@@ -62,8 +62,10 @@ watch(() => orderStore.order, function () {
     loadCountOrders()
 })
 
-onMounted(() => { loadOrders() 
-    loadCountOrders()})
+onMounted(() => {
+    loadOrders()
+    loadCountOrders()
+})
 
 onBeforeMount(() => {
     loadOrders()
@@ -89,13 +91,10 @@ onBeforeMount(() => {
                     <div class="col-sm-12">
                         <div class="card widget-flat orange-bg">
                             <div class="card-body">
-                                <h3 class="mt-2 mb-2 fw-bold">Orders in preparation:  {{ all_orders }}</h3>
-                            
+                                <h3 class="mt-2 mb-2 fw-bold">Orders in preparation: {{ all_orders }}</h3>
+
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
