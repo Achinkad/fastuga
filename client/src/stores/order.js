@@ -34,7 +34,6 @@ export const useOrderStore = defineStore('orders', () => {
 
             orders.value = response.data.data
             pagination.value = response.data
-
             return orders.value
         } catch (error) {
             clear_orders()
@@ -92,13 +91,9 @@ export const useOrderStore = defineStore('orders', () => {
     const get_orders_this_month = (() => { return number_orders_this_month.value })
     const get_revenue_orders = (() => { return revenue_orders.value })
     const get_page = (() => { return pagination.value })
-
     const clear_orders = (() => { orders.value = [] })
-
     const total_orders = computed(() => { return orders.value.length })
-
     const my_orders = computed(() => { return orders.value.filter(or => or.customer.user.id == userStore.userId) })
-
     const total_my_orders = computed(() => { return my_orders.value.length })
 
     async function insert_order(order) {

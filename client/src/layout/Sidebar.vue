@@ -18,7 +18,7 @@ const userStore = useUserStore()
                     <router-link class="nav-link"
                         :class="{ active: $route.name === 'Dashboard'
                             || $route.name === 'CustomerDashboard'
-                            || $route.name === 'AnonymousDashboard' 
+                            || $route.name === 'AnonymousDashboard'
                         }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>
@@ -35,8 +35,20 @@ const userStore = useUserStore()
                         Menu
                     </router-link>
                 </li>
+
+                <li class="nav-item nav-item-title mt-2">Your Space</li>
+                <li class="nav-item" v-if="(userStore.user && userStore.user.type == 'C') || !userStore.user">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'NewOrder' }"
+                        :to="{ name: 'NewOrder' }">
+                        <div>
+                            <i class="bi bi-bag-plus-fill" style="font-size: 17px!important;"></i>
+                            Register an Order
+                        </div>
+                    </router-link>
+                </li>
+
                 <li class="nav-item">
-                    <router-link class="nav-link" :class="{ active: $route.name === 'Orders' }"
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Orders' || $route.name == 'Order' }"
                         :to="{ name: 'Orders' }">
                         <div v-if="userStore.user && userStore.user.type == 'EC'">
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
