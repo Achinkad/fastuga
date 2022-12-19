@@ -55,14 +55,27 @@
 </script>
 
 <template>
+    <div class="container-fluid">
+
   <form
     class="row g-3 needs-validation"
     novalidate
     @submit.prevent="changePassword"
   >
-    <h3 class="mt-5 mb-3">Change Password</h3>
-    <hr>
-    <div class="mb-3">
+  <div class="row">
+      <div class="col-12">
+        <div class="d-flex p-title-box">
+    <h4 class="p-title me-auto">Change Password</h4>
+        </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-xl-6">
+
       <div class="mb-3">
         <label
           for="inputNewPassword"
@@ -78,8 +91,9 @@
         <field-error-message :errors="errors" fieldName="password"></field-error-message>
 
       </div>
-    </div>
-    <div class="mb-3">
+              </div>
+              <div class="col-xl-6">
+
       <div class="mb-3">
         <label
           for="inputPasswordConfirm"
@@ -93,14 +107,20 @@
           v-model="passwords.password_confirm"
         >
       </div>
-    </div>
-    <div class="mb-3 d-flex justify-content-center">
+              </div>
+    <div class="mb-3 d-flex justify-content-end">
       <button
         type="button"
         class="btn btn-primary px-5"
         @click="changePassword"
       >Change Password</button>
     </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
   </form>
+  </div>
 </template>
 
