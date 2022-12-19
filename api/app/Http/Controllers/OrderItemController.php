@@ -45,8 +45,19 @@ class OrderItemController extends Controller
 
     public function get_order_items_by_chef(User $user) // -> Gets All Order Items From a Chef
     {
-        if ($user->type != "EC") { abort(400); }
+        if ($user->type != "EC") { abort(403); }
+
         $order_items = OrderItem::where('preparation_by', $user->id)->paginate(10);
+        
+        return OrderItemResource::collection($order_items);
+    }
+
+    public function get_order_items_waiting() // -> Gets All Order Items From a Chef
+    {
+       // if (auth()->guard('api')->user()->type == "EC") { abort(403); }
+
+        $order_items = OrderItem::where('status', 'W')->paginate(10);
+        
         return OrderItemResource::collection($order_items);
     }
 }

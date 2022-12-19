@@ -14,6 +14,8 @@ export const useOrderStore = defineStore('orders', () => {
     const number_orders_this_month = ref([])
     const revenue_orders = ref([])
     const pagination = ref([])
+    const order_items = ref([])
+    const order_items_waiting = ref([])
 
     let url = null
 
@@ -88,7 +90,44 @@ export const useOrderStore = defineStore('orders', () => {
         }
     }
 
+    async function loadOrderItems(page) {
+
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'users/'+userStore.user.id+'/order-items?page='+page
+            })
+
+            order_items.value = response.data.data
+            pagination.value = response.data
+            return order_items.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
+    async function loadOrderItemsWaiting(page) {
+
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: 'order-items/waiting?page='+page
+            })
+
+            order_items_waiting.value = response.data.data
+            pagination.value = response.data
+           
+            return order_items.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+
     const get_orders = (() => { return orders.value })
+    const get_order_items = (() => { return order_items.value })
+    const get_order_items_waiting = (() => { return order_items_waiting.value})
     const get_orders_this_month = (() => { return number_orders_this_month.value })
     const get_revenue_orders = (() => { return revenue_orders.value })
     const get_page = (() => { return pagination.value })
@@ -145,7 +184,11 @@ export const useOrderStore = defineStore('orders', () => {
         loadRevenueOrders,
         get_revenue_orders,
         loadNumberOrdersThisMonth,
-        get_orders_this_month
+        get_orders_this_month,
+        loadOrderItems,
+        get_order_items,
+        loadOrderItemsWaiting,
+        get_order_items_waiting
 
     }
 })
