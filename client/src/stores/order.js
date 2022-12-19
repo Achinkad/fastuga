@@ -22,7 +22,7 @@ export const useOrderStore = defineStore('orders', () => {
         // URL builder
         if (userStore.user && userStore.user.type == "EM") url = `orders?page=${page}`
         if (userStore.user && userStore.user.type == "ED" || userStore.user.type == "C") url = `users/${userStore.userId}/orders?page=${page}`
-
+       
         try {
             const response = await axios({
                 method: 'GET',
@@ -31,10 +31,11 @@ export const useOrderStore = defineStore('orders', () => {
                     status: status
                 }
             })
-
+           
             orders.value = response.data.data
             pagination.value = response.data
-
+            
+ console.log(orders.value,status)
             return orders.value
         } catch (error) {
             clear_orders()
@@ -129,7 +130,10 @@ export const useOrderStore = defineStore('orders', () => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was deleted!`)
     })
-
+    async function update_order_status(order,status) {
+        const response = await axios.patch('orders/' + order.id + '/status',status)
+        return response.data.data
+    }
     return {
         orders,
         my_orders,
@@ -146,6 +150,7 @@ export const useOrderStore = defineStore('orders', () => {
         get_revenue_orders,
         loadNumberOrdersThisMonth,
         get_orders_this_month,
-       my_orders_delivery
+       my_orders_delivery,
+       update_order_status
     }
 })

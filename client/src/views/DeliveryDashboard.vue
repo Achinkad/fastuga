@@ -4,24 +4,37 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
-
+const toast = inject("toast")
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-const pagination = ref({})
+
 
 const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-const loadOrders = (page = 1) => { orderStore.load_orders(page, "R") }
+
+const pagination = computed(() => { return orderStore.get_page() })
+
+const loadOrders = (page = 1) => { 
+    orderStore.load_orders(page, "R") 
+}
 
 
 const orders_from_user = computed(() => { 
-    console.log(orderStore.my_orders_delivery)
+   
     return orderStore.my_orders_delivery })
 
 const acceptOrder = (order) => {
+    console.log(order)
+    orderStore.update_order_status(order,"D")
+    .then((response) => {
+        toast.info("Order " + order.id + " was delivered!")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
     console.log(order)
 }
 
@@ -56,7 +69,7 @@ onBeforeMount(() => {
                 </div>
             </div>
         </div>
-        {{ pagination }}
+      
         <div class="row">
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
@@ -94,12 +107,13 @@ onBeforeMount(() => {
                                         </div>
                                     </td>
                                 </tr>
+                                
                             </tbody>
-                            <div  class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="10"></Bootstrap5Pagination>
-                            </div>
+                           
                         </table>
-                        
+                        <div  class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="2"></Bootstrap5Pagination>
+                            </div>
                     </div>
                 </div>
             </div>
