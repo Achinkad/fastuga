@@ -15,14 +15,14 @@ http.listen(8080, () => {
 io.on("connection", (socket) => {
   console.log(`client ${socket.id} has connected`);
   socket.on("newOrder", (order) => {
-    socket.broadcast.emit("newOrder", order);
+    socket.emit("newOrder", order);
   });
 
   socket.on("deleteOrder", (order) => {
-    socket.broadcast.emit("deleteOrder", order);
+    socket.emit("deleteOrder", order);
   });
-  socket.on("updatedorder", (order) => {
-    socket.broadcast.emit("updatedorder", order);
+  socket.on("updatedOrder", (order) => {
+  socket.to("Manager").to("Delivery").emit("updatedOrder", order);
   });
 
   socket.on("loggedIn", function (user) {

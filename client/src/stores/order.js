@@ -165,7 +165,7 @@ export const useOrderStore = defineStore('orders', () => {
         })
         
         remove_order(response.data.data)
-        socket.to("Manager").to("Delivery").emit('updatedOrder', response.data.data)
+        socket.emit('updatedOrder', response.data.data)
         return response.data.data
     }
     socket.on('updatedOrder', (order) => {
