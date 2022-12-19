@@ -344,7 +344,7 @@ onMounted(() => {
 
                                             </tr>
                                             <tr style="text-align: center;" class="item-order"
-                                                v-for="n in editingOrder.order_item.length">
+                                                v-for="n in editingOrder.order_item.length" >
                                                 <td> <img
                                                         :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)"
                                                         class="rounded-circle img_photo" /><span class="item">{{
