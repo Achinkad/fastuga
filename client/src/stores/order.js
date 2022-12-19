@@ -240,11 +240,39 @@ export const useOrderStore = defineStore('orders', () => {
         socket.emit('updateOrder', response.data.data)
         return response.data.data
     }
+
+    async function update_order_items_status(order_item,status) {
+               
+            if(userStore.user && userStore.user.type == "EC"){
+                data = {
+                    'status': status,
+                    'prepared_by': userStore.user.id
+                }
+    
+            }
+            const response = await axios({
+                method: 'PATCH',
+                url: 'order-items/'+order_item.id+'/status',
+                params: data
+            })
+
+            if(status=='P'){
+                remove_order_item(response.data.data,order_items)
+                loadOrderItemsPreparing()
+            }
+            if(status=='R'){
+                remove_order_item(response.data.data,order_items_preparing)
+            }
+           
+            return response.data.data
+
+    }
+ 
     socket.on('updateOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated!`)
     })
- 
+
     return {
         orders,
         my_orders,
