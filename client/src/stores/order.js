@@ -123,12 +123,13 @@ export const useOrderStore = defineStore('orders', () => {
         const response = await axios.post('/orders', order)
         orders.value.push(response.data.data)
         socket.emit('newOrder', response.data.data)
+        console.log(response.data.data)
         return response.data.data
     }
 
     socket.on('newOrder', (order) => {
-        orders.value.push(order)
-        toast.success(`A new order has arrived. Check your order menu. (#${order.id})`)
+        remove_order(order)
+        toast.info(`A new order has arrived. Check your order menu. (#${order.id})`)
     })
 
     const remove_order = ((order) => {

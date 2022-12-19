@@ -14,8 +14,14 @@ http.listen(8080, () => {
 
 io.on("connection", (socket) => {
   console.log(`client ${socket.id} has connected`);
+
   socket.on("newOrder", (order) => {
-    socket.emit("newOrder", order);
+    if(order.status == "R"){
+      socket.to("Delivery").emit("newOrder", order);
+    }
+    if(order.status == "P"){
+      socket.to("Chef").emit("newOrder", order);
+    }
   });
 
   socket.on("deleteOrder", (order) => {
@@ -24,6 +30,7 @@ io.on("connection", (socket) => {
   socket.on("updatedOrder", (order) => {
   socket.to("Manager").to("Delivery").emit("updatedOrder", order);
   });
+
 
   socket.on("loggedIn", function (user) {
     socket.emit("loggedIn", user);
@@ -38,7 +45,7 @@ io.on("connection", (socket) => {
     if (user.type == "C") {
       socket.join("Customer");
     }
-    if (user.type == "Ec") {
+    if (user.type == "EC") {
       socket.join("Chef");
     }else{
       socket.join("Anonymous");
