@@ -23,7 +23,8 @@ class OrderController extends Controller
         $this->middleware('auth.manager', ['except' => [
             'show',
             'get_orders_user',
-            'status'
+            'status',
+            'store',
         ]]);
     }
     
