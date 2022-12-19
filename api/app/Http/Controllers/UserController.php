@@ -16,6 +16,16 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'show',
+            'store',
+            'status',
+            'update',
+            'show_me'
+        ]]);
+    }
     public function index(Request $request)
     {
         $users = $request->type != 'all' ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
