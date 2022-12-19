@@ -16,7 +16,10 @@ const userStore = useUserStore()
                 <li class="nav-item nav-item-title">Navigation</li>
                 <li class="nav-item">
                     <router-link class="nav-link"
-                        :class="{ active: $route.name === 'Dashboard' || $route.name === 'CustomerDashboard' }"
+                        :class="{ active: $route.name === 'Dashboard'
+                            || $route.name === 'CustomerDashboard'
+                            || $route.name === 'AnonymousDashboard' 
+                        }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>
                         Public Board

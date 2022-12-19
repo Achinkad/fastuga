@@ -4,6 +4,7 @@ import { useUserStore } from "../stores/user.js";
 import Dashboard from "../views/Dashboard.vue";
 import CustomerDashboard from "../views/CustomerDashboard.vue";
 import DeliveryDashboard from "../views/DeliveryDashboard.vue";
+import AnonymousDashboard from "../views/AnonymousDashboard.vue";
 import Orders from "../components/orders/Orders.vue";
 import Order from "../components/orders/Order.vue";
 import ChangePassword from "../components/auth/ChangePassword.vue";
@@ -33,6 +34,11 @@ const router = createRouter({
             path: "/",
             name: "DeliveryDashboard",
             component: DeliveryDashboard,
+        },
+        {
+            path: "/",
+            name: "AnonymousDashboard",
+            component: AnonymousDashboard,
         },
         {
             path: "/users",
@@ -144,6 +150,13 @@ router.beforeEach(async (to, from, next) => {
     if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "ED")) {
         next({
             name: "DeliveryDashboard"
+        })
+        return
+    }
+
+    if (to.name == "Dashboard" && !userStore.user) {
+        next({
+            name: "AnonymousDashboard"
         })
         return
     }

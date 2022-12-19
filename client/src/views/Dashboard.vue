@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, computed } from 'vue'
+import { ref,onMounted, inject, computed } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'
@@ -68,11 +68,11 @@ const capitalize = (word) => {
 
 
 onMounted(async () => {
-    await loadNumberOrdersMonth()
-    await loadRevenueOrders()
-    await loadNumberOrdersThisMonth()
-    await loadCustomersCreatedThisMonth()
-    await loadBestProducts()
+   await loadNumberOrdersMonth()
+   await loadRevenueOrders()
+   await loadNumberOrdersThisMonth()
+   await loadCustomersCreatedThisMonth()
+   await loadBestProducts()
 })
 const options = {
     chart: {
@@ -216,14 +216,11 @@ const options = {
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">Best Selling Products</h5>
                                 <br>
-                                <div class="row mb-3" v-for="(product, index) in best_products" :key="product.id">
-                                    <a> {{ index + 1 }}.</a>
-                                 
-                                    <!--<img  :src="photoFullUrl(product)" class="rounded-circle img_photo" />-->
-                                    <router-link :to="{ name: 'Product', params: { id: product.id } }"
-                                        :title="`View product ${product.name}`">
-                                        {{ product.name }}
-                                    </router-link>
+                                <div class="row mb-3" v-for="(product,index) in best_products" :key="product.id">
+                               <a> {{index+1}}.</a>
+                                <router-link :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`">
+                                    {{product.name}}
+                                </router-link>
                                 </div>
                             </div>
                         </div>
