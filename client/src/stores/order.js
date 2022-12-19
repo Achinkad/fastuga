@@ -228,8 +228,8 @@ export const useOrderStore = defineStore('orders', () => {
         loadOrderItemsWaiting,
         get_order_items_waiting,
         my_orders_delivery,
-       update_order_status,
-       count_orders,
+        update_order_status,
+        count_orders,
         count_orders_by_status
 
     }
