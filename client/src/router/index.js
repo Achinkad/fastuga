@@ -234,11 +234,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "User") {
-        if (
-            userStore.user === null ||
-            userStore.user.type != "EM" ||
-            userStore.user.id == to.params.id
-        ) {
+        if (userStore.user === null ||userStore.user.type != "EM" /*|| userStore.user.id == to.params.id*/ ) {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },

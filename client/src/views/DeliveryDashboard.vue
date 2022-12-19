@@ -1,18 +1,20 @@
 <script setup>
-import { computed, watch, onBeforeMount, inject } from 'vue'
+import { computed, watch, onBeforeMount, inject,ref,onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
-import { useProductStore } from '../stores/product.js'
+import { Bootstrap5Pagination } from 'laravel-vue-pagination'
+
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
+const pagination = ref({})
 
 const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
 
-const loadOrders = (page = 1) => { orderStore.load_orders(page, "P") }
+const loadOrders = (page = 1) => { orderStore.load_orders(page, "R") }
 
 
 const orders_from_user = computed(() => { 
@@ -36,6 +38,8 @@ watch(() => userStore.user, function () {
 
 })
 
+onMounted(() => { loadOrders() })
+
 onBeforeMount(() => {
     loadOrders()
 })
@@ -52,6 +56,7 @@ onBeforeMount(() => {
                 </div>
             </div>
         </div>
+        {{ pagination }}
         <div class="row">
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
@@ -90,7 +95,11 @@ onBeforeMount(() => {
                                     </td>
                                 </tr>
                             </tbody>
+                            <div  class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="10"></Bootstrap5Pagination>
+                            </div>
                         </table>
+                        
                     </div>
                 </div>
             </div>

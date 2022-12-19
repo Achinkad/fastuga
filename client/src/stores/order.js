@@ -146,6 +146,6 @@ export const useOrderStore = defineStore('orders', () => {
         get_revenue_orders,
         loadNumberOrdersThisMonth,
         get_orders_this_month,
-        my_orders_delivery
+       my_orders_delivery
     }
 })

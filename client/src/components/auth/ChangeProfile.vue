@@ -39,7 +39,7 @@
                 reader.readAsDataURL(image);
                 reader.onload = e =>{
                     previewImage = e.target.result;
-                    console.log(previewImage);
+                 
                 }
 }
 
@@ -85,7 +85,7 @@
     }
 
     formData.append('_method', 'PUT');
-
+    router.back();
     userStore.save(formData,userStore.user.id);
 
     }
@@ -95,7 +95,11 @@
     ? serverBaseUrl + "/storage/fotos/" + customer.value.user.photo_url
     : avatarNoneUrl
 })
-  
+const cancel = () => {
+    
+    router.back()
+}
+
  
 onMounted(() => {
   loadCustomer()
