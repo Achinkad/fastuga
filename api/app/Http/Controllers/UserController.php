@@ -81,7 +81,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->fill($request->validated());
-        $user->blocked = $user->blocked == 1 ? 0 : 1;
+        $user->blocked = $user->blocked==1 ? 0 : 1;
 
         if ($request->has('photo_url')) {
 
