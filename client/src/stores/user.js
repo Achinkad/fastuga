@@ -28,6 +28,8 @@ export const useUserStore = defineStore('user', () => {
         return user.value?.id ?? -1
     })
 
+
+
     async function loadUser () {
         try {
             const response = await axios.get('user')
@@ -126,6 +128,8 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const get_customers_this_month = (() => { return number_customers_this_month.value })
+
+
 
     return {
         user,

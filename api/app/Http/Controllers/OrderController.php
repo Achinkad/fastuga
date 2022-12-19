@@ -16,6 +16,16 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth.manager', ['except' => [
+            'show',
+            'get_orders_user',
+            'status'
+        ]]);
+    }
+    
     public function index(Request $request)
     {
         $orders = $request->status != 'all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
