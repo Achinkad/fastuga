@@ -41,6 +41,14 @@ class OrderItemController extends Controller
         $order_item->status = $request->input('status');
         $order_item->preparation_by=$request->prepared_by;
         $order_item->save();
+        if ($order_item->status == "R") {
+            $i = true;
+            foreach ($order_item->order->order_item as $item) {
+              if ($item->status != "R") $i = false; break;
+            }
+            if($i) $order_item->order->status = "R";
+              $order_item->order->save();
+        }
         return new OrderItemResource($order_item);
     }
 
