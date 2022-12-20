@@ -16,6 +16,11 @@ class ProductController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('can:viewAny')->only('viewAny');
+        $this->middleware('can:create')->only('create');
+        $this->middleware('can:update')->only('update');
+        $this->middleware('can:delete')->only('delete');
+        /*
         $this->middleware('auth.manager', ['except' => [
             'index',
             'show',
