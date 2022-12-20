@@ -203,7 +203,18 @@ export const useOrderStore = defineStore('orders', () => {
     })
 
     async function delete_order(order) {
-        const response = await axios.delete('orders/' + order.id)
+        if(userStore.user && userStore.user.type == "EM"){
+            data = {
+                'status': "C",
+            }
+
+        }
+
+        const response = await axios({
+            method: 'PATCH',
+            url: 'orders/' + order.id + '/status',
+            params: data
+        })
         remove_order(response.data.data)
         socket.emit('deleteOrder', response.data.data)
         return response.data.data
