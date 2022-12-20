@@ -5,6 +5,8 @@ namespace App\Policies;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+
 
 class OrderPolicy
 {
@@ -104,5 +106,18 @@ class OrderPolicy
     public function forceDelete(User $user, Order $order)
     {
         //
+    }
+
+    public function status(Order $order)
+    {
+        if(auth()->guard('api')->user()->type == "EM" || auth()->guard('api')->user()->type == "EC" || auth()->guard('api')->user()->type == "ED"){
+            return true;
+        }
+    }
+
+    public function get_count_order_status(){
+        if(auth()->guard('api')->user()->type == "ED"){
+            return true;
+        }
     }
 }

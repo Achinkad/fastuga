@@ -305,7 +305,7 @@ onMounted(() => {
                 <div class="col-4">
                     <div class="row">
                         <div class="col">
-                            <div class="card widget-flat" :class="{'h-100' : !userStore.user }">
+                            <div class="card widget-flat">
                                 <div class="card-body d-flex align-items-center">
                                     <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
                                 </div>
@@ -328,12 +328,12 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-if="(userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) && $route.name == 'Order'">
+                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="row">
-                                        <h3 class="mb-3"><b>Order Information</b></h3>
+                                        <h3 class="mb-3"><b>Payment Information</b></h3>
                                         <div class="col-12">
                                             <p class="mb-1">
                                                 Payment Type: {{ editingOrder.payment_type }}
@@ -344,17 +344,17 @@ onMounted(() => {
                                                 Payment Reference: {{ editingOrder.payment_reference }}
                                             </p>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-12" v-if="userStore.user">
                                             <p class="mb-1">
                                                 Points Used: {{ editingOrder.points_used_to_pay }}
                                             </p>
                                         </div>
-                                        <div class="col-12" v-if="userStore.user.type == 'C'">
+                                        <div class="col-12" v-if="userStore.user && userStore.user.type == 'C'">
                                             <p class="mb-0">
                                                 Points Gained: {{ editingOrder.points_gained }}
                                             </p>
                                         </div>
-                                        <div class="col-12" v-if="userStore.user.type == 'EM'">
+                                        <div class="col-12" v-if="userStore.user && userStore.user.type == 'EM'">
                                             <p class="mb-0">
                                                 Total paid with points: {{ editingOrder.total_paid_with_points }}
                                             </p>

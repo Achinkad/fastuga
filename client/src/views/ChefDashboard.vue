@@ -37,8 +37,8 @@ const updateStatus = (order_item,status) => {
         })
 
 }
-const pagination = computed(() => { 
-    return orderStore.get_page() 
+const pagination = computed(() => {
+    return orderStore.get_page()
     })
 const pagination_preparation = computed(() => { return orderStore.get_page_preparation() })
 
@@ -97,7 +97,7 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                       
+
                                 <tr v-if="order_items_preparing.length==0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
                                 </tr>
@@ -122,7 +122,7 @@ onBeforeMount(() => {
                             </Bootstrap5Pagination>
                         </div>
                     </div>
-                     
+
                 </div>
             </div>
 
@@ -143,7 +143,7 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                       
+
                                 <tr v-if="order_items_waiting.length==0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
                                 </tr>
@@ -168,7 +168,7 @@ onBeforeMount(() => {
                             </Bootstrap5Pagination>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

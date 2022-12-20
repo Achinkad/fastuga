@@ -26,6 +26,15 @@ class CustomerController extends Controller
             'show_by_user',
 
         ]]);
+        $this->middleware('auth.chef', ['except' => [
+            'store',
+            'show',
+            'update',
+            'show_by_user',
+            'get_number_customers_created_this_month',
+
+        ]]);
+        
     }
     public function index()
     {

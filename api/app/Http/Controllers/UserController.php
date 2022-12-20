@@ -25,6 +25,10 @@ class UserController extends Controller
             'update',
             'show_me'
         ]]);
+        $this->middleware('auth.chef', ['except' => [
+            'update',
+            'show_me'
+        ]]);
     }
     public function index(Request $request)
     {
