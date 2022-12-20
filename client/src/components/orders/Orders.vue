@@ -12,7 +12,7 @@ import OrderItemsTable from "./OrderItemsTable.vue"
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 const router = useRouter()
-const pagination_aux = ref();
+const pagination_aux = ref({});
 
 const status = ref("all")
 

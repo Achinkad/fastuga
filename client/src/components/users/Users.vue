@@ -1,15 +1,16 @@
 <script setup>
-import { ref, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch,computed } from 'vue'
 import { useRouter } from 'vue-router'
 import UserTable from "./UserTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import { useUserStore } from '../../stores/user.js'
 
+const userStore = useUserStore()
 const router = useRouter()
 
 const axios = inject('axios')
 
-const users = ref([])
-const pagination = ref({})
+const pagination_aux = ref({});
 
 const serverBaseUrl = inject("serverBaseUrl")
 
@@ -18,26 +19,28 @@ const forceRerender = () => {
     console.log("reload")
 }
 
+var total_users = 0
 var value_role = ref("all")
 
 const loadUsers = (page = 1) => {
-    axios.get(serverBaseUrl + '/api/users?page=' + page, {
-        params: {
-            type: value_role.value
-        }
-
-    })
-        .then((response) => {
-            users.value = response.data.data
-            pagination.value = response.data
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+   userStore.load_users(page,value_role.value)
 }
 
+const pagination = computed(() => { return userStore.get_page() })
+const users = computed(() => { return userStore.get_users() })
+
+const total = computed(() => {
+    pagination_aux.value = userStore.get_page()
+  
+    if (pagination_aux.value.meta != undefined) {
+       total_users = pagination_aux.value.meta.total
+    }
+    
+    return total_users
+})
+
 watch(value_role, () => {
-    console.log(value_role.value)
+    
     loadUsers()
 })
 const addUser = () => {
@@ -59,7 +62,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <h4 class="p-title me-auto">Users List</h4>
                     <div class="p-title-right">
-                        <h6 class="p-title">Viewing 0 of 0</h6>
+                        <h6 class="p-title">Viewing {{userStore.total_users}} of {{total}}</h6>
                     </div>
                 </div>
             </div>

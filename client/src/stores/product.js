@@ -1,4 +1,4 @@
-import { ref, inject } from 'vue'
+import { ref, inject,computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useProductStore = defineStore('products', () => {
@@ -27,6 +27,8 @@ export const useProductStore = defineStore('products', () => {
     }
 
     const get_page = (() => { return pagination.value })
+    const total_products = computed(() => { return products.value.length })
+    const get_products = (() => { return products.value })
 
     async function load_best_products() {
         try {
@@ -48,6 +50,8 @@ export const useProductStore = defineStore('products', () => {
         get_page,
         best_products,
         load_products,
-        load_best_products
+        load_best_products,
+        total_products,
+        get_products
     }
 })

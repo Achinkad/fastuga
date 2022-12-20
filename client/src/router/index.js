@@ -129,12 +129,13 @@ router.beforeEach(async (to, from, next) => {
         handlingFirstRoute = false
         await userStore.restoreToken()
     }
-    
+
     if (to.name == "Dashboard") {
         if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
 
         switch (userStore.user.type) {
             case "C":
+                if (userStore.user) userStore.get_customer(userStore.user)
                 next({ name: "CustomerDashboard" }); return
                 break;
 
