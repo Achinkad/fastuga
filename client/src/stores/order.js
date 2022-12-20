@@ -223,21 +223,25 @@ export const useOrderStore = defineStore('orders', () => {
         }
 
         if(status == 'R') {
-            socket.emit('updatedOrderChef', response.data.data)
+             socket.emit('updatedOrderChef', response.data.data)
             remove_order_item(response.data.data,order_items_preparing)
+           
         }
 
         return response.data.data
     }
+    
     socket.on('deliveredOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated to status delivered!`)
-    })
+    })  
     socket.on('updatedOrderChef', (order) => {
+        console.log(order.id)
         remove_order_item(order)
         orders.value.push(order)
         toast.info(`The Order (#${order.id}) was updated to status ready!`)
     })
+   
     socket.on('newOrder', (order) => {
         orders.value.push(order)
         toast.info(`A new order has arrived. Check your order menu. (#${order.id})`)

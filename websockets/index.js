@@ -16,48 +16,43 @@ io.on("connection", (socket) => {
   console.log(`client ${socket.id} has connected`);
 
   socket.on("newOrder", (order) => {
-   if (order.status == 'R') {
+    if (order.status == "R") {
       socket.to("Delivery").emit("newOrder", order);
-      console.log("entrou no delivery")
+      console.log("entrou no delivery");
     }
-    if (order.status == 'P') {
+    if (order.status == "P") {
       socket.to("Chef").emit("newOrder", order);
-      console.log("entrou no chef")
+      console.log("entrou no chef");
     }
   });
+
   socket.on("deliveredOrder", (order) => {
     socket.to("Manager").emit("deliveredOrder", order);
-  })
+  });
+
   socket.on("deleteOrder", (order) => {
     socket.to("Manager").emit("deleteOrder", order);
   });
-  
+
   socket.on("updatedOrderChef", (order) => {
-    console.log("ENTROU")
-    socket.to("Manager").emit("updatedOrderChef", order);
-    socket.to("Delivery").emit("updatedOrderChef", order);
+    socket.to("Delivery").to("Manager").emit("updatedOrderChef", order);
   });
 
   socket.on("loggedIn", function (user) {
     socket.emit("loggedIn", user);
-    socket.join(user.id)
+    socket.join(user.id);
     if (user.type == "EM") {
       socket.join("Manager");
-   
     }
     if (user.type == "ED") {
       socket.join("Delivery");
-
     }
     if (user.type == "C") {
       socket.join("Customer");
-    
     }
     if (user.type == "EC") {
       socket.join("Chef");
-
     } else {
-    
       socket.join("Anonymous");
     }
   });
@@ -75,7 +70,7 @@ io.on("connection", (socket) => {
     if (user.type == "C") {
       socket.leave("Customer");
     }
-    if (user.type == "Ec") {
+    if (user.type == "EC") {
       socket.leave("Chef");
     } else {
       socket.leave("Anonymous");
