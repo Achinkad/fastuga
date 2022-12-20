@@ -59,7 +59,7 @@ const userStore = useUserStore()
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             Your Orders
                         </div>
-                        <div v-else>
+                        <div v-if = "userStore.user && userStore.user.type == 'EM'">
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             All Orders    
                         </div>

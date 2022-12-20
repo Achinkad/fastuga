@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, watch, computed  } from 'vue'
+import { ref, onMounted, watch, computed  } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/order.js'

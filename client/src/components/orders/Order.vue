@@ -10,7 +10,7 @@ const serverBaseUrl = inject("serverBaseUrl")
 const router = useRouter()
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-const socket = inject("socket")
+
 const axios = inject('axios')
 const toast = inject('toast')
 
@@ -118,32 +118,10 @@ const getCurrentCustomer = () => {
 const dataAsString = () => {
     return JSON.stringify(order.value)
 }
-/*
-let nextCallBack = null
-const leaveConfirmed = () => {
-    if (nextCallBack) {
-        nextCallBack()
-    }
-}
 
-onBeforeRouteLeave((to, from, next) => {
-    nextCallBack = null
-
-    let newValueStr = dataAsString()
-    if (originalValueStr != newValueStr) {
-        nextCallBack = next
-        confirmationLeaveDialog.value.show()
-    } else {
-        next()
-    }
-})
-*/
 const order = ref(newOrder())
 const errors = ref(null)
-//const confirmationLeaveDialog = ref(null)
 
-// beforeRouteUpdate was not fired correctly
-// Used this watcher instead to update the ID
 watch(
     () => props.id,
     (newValue) => {
@@ -156,11 +134,6 @@ watch(
 
 
 <template>
-
-    <!--<confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
-    msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-
-    </confirmation-dialog>-->
 
     <order-detail :currentCustomer="currentCustomer" :order="order" :errors="errors" @cancel="cancel" @add="add" @getCurrentCustomer="getCurrentCustomer"></order-detail>
 </template>

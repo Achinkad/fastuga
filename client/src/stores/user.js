@@ -54,11 +54,7 @@ const socket = inject("socket")
            
             await loadUser()   
             socket.emit('loggedIn', user.value)
-            socket.on('loggedIn', (user) => {
-      
-                toast.success(`${user.name} was logged in!`)
-            })
-        
+          
             if (user.value.type == "C") { await get_customer(user.value) }
             return true
         }
@@ -72,10 +68,7 @@ const socket = inject("socket")
         try {
             await axios.post('logout')
             socket.emit('loggedOut', user.value)
-            socket.on('loggedOut', (user) => {
-      
-                toast.error(`${user.name} was logged in!`)
-            })
+            toast.error(`${user.value.name} was logged in!`)
             clearUser()
             return true
         } catch (error) {
