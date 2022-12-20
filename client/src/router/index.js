@@ -23,10 +23,6 @@ const router = createRouter({
     routes: [
         {
             path: "/",
-            redirect: "/login",
-        },
-        {
-            path: "/",
             name: "Dashboard",
             component: Dashboard,
         },
@@ -150,7 +146,7 @@ router.beforeEach(async (to, from, next) => {
         handlingFirstRoute = false
         await userStore.restoreToken()
     }
-
+    
     if (to.name == "Dashboard") {
         if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
 
@@ -213,7 +209,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Order") {
-        if (userStore.user.type == "EM" || userStore.user.type == "C") {
+        if ((userStore.user && (userStore.user.type == "EM" || userStore.user.type == "C")) || !userStore.user) {
             next()
             return
         }

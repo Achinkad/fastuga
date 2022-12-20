@@ -37,8 +37,8 @@ const updateStatus = (order_item,status) => {
         })
 
 }
-const pagination = computed(() => { 
-    return orderStore.get_page() 
+const pagination = computed(() => {
+    return orderStore.get_page()
     })
 const pagination_preparation = computed(() => { return orderStore.get_page_preparation() })
 
@@ -62,10 +62,6 @@ watch(() => orderStore.order, function () {
     loadOrderItemsPreparing()
 })
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c2a6e5c1bc73e8547f9048bc40ecebe83e1ed729
 onBeforeMount(() => {
     loadOrderItemsWaiting()
     loadOrderItemsPreparing()
@@ -101,7 +97,7 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                       
+
                                 <tr v-if="order_items_preparing.length==0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
                                 </tr>
@@ -126,7 +122,7 @@ onBeforeMount(() => {
                             </Bootstrap5Pagination>
                         </div>
                     </div>
-                     
+
                 </div>
             </div>
 
@@ -147,7 +143,7 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                       
+
                                 <tr v-if="order_items_waiting.length==0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
                                 </tr>
@@ -172,7 +168,7 @@ onBeforeMount(() => {
                             </Bootstrap5Pagination>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
