@@ -129,8 +129,6 @@ watch(
 <user-detail
 :user="user"
 :errors="errors"
-:operationType="insert"
-@save="save"
 @add="add"
 @cancel="cancel"
 ></user-detail>

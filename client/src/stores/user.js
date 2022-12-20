@@ -14,6 +14,8 @@ const socket = inject("socket")
     const number_customers_this_month = ref([])
     const user = ref(null)
     const customer = ref(null)
+    const users = ref([])
+    const pagination = ref([])
 
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
@@ -26,7 +28,28 @@ const socket = inject("socket")
         return user.value?.id ?? -1
     })
 
+    async function load_users(page,type) {
 
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: `users?page=${page}`,
+                params: {
+                    type: type
+                }
+            })
+            
+            users.value = response.data.data
+            pagination.value = response.data
+            return users.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+    const get_users = (() => { return users.value })
+    const get_page = (() => { return pagination.value })
+    const total_users = computed(() => { return users.value.length })
 
     async function loadUser () {
         try {
@@ -37,6 +60,7 @@ const socket = inject("socket")
             throw error
         }
     }
+    
 
     function clearUser () {
         delete axios.defaults.headers.common.Authorization
@@ -146,6 +170,10 @@ const socket = inject("socket")
         restoreToken,
         save,
         get_customers_this_month,
-        loadCustomersCreatedThisMonth
+        loadCustomersCreatedThisMonth,
+        load_users,
+        get_users,
+        get_page,
+        total_users
     }
 })
