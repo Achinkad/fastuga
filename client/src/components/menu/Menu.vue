@@ -110,10 +110,10 @@ onBeforeMount(() => {
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-center mt-3">
-            <button type="button" name="button" class="btn btn-secondary" v-if="active_page.links.next" @click="loadMoreProducts(active_page.links.next, active_el)">
+            <button type="button" name="button" class="btn btn-secondary" v-if="active_page.links && active_page.links.next" @click="loadMoreProducts(active_page.links.next, active_el)">
                 <span><b>Load More Products</b></span>
             </button>
-            <button type="button" name="button" class="btn btn-secondary disabled" v-if="!active_page.links.next">
+            <button type="button" name="button" class="btn btn-secondary disabled" v-if="active_page.links && !active_page.links.next">
                 <span><b>Load More Products</b></span>
             </button>
         </div>

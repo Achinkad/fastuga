@@ -185,6 +185,7 @@ class OrderController extends Controller
     {
         if(auth()->guard('api')->user()->type == "ED") {
             if($request->has('status')) {
+                
                 $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
                 return OrderResource::collection($orders);
             }
@@ -200,7 +201,7 @@ class OrderController extends Controller
             $orders = Order::where('customer_id', $customer->id)->paginate(20);
             return OrderResource::collection($orders);
         }
-
+        
     }
 
     public function get_number_orders_by_month(){

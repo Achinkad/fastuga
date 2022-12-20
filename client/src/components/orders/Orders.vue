@@ -25,7 +25,14 @@ const props = defineProps({
 })
 
 const loadOrders = (page = 1) => {
-    orderStore.load_orders(page, status.value)
+    if(userStore.user && userStore.user.type=='EM'){
+        orderStore.load_orders(page, status.value)
+    }
+    else{
+        orderStore.load_orders(page)
+    }
+    
+    
 }
 
 const loadOrderItems = (page = 1) => {
@@ -69,6 +76,7 @@ watch(status, () => { loadOrders() })
 onMounted(() => { 
     if(userStore.user && userStore.user.type!='EC'){
         loadOrders()
+
     }
 
     if(userStore.user && userStore.user.type=='EC'){
