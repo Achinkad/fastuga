@@ -198,7 +198,7 @@ export const useOrderStore = defineStore('orders', () => {
             params: data
         })
         remove_order(response.data.data)
-        socket.emit('updatedOrder', response.data.data)
+        socket.emit('deliveredOrder', response.data.data)
         return response.data.data
     }
 
@@ -215,7 +215,7 @@ export const useOrderStore = defineStore('orders', () => {
             url: 'order-items/'+order_item.id+'/status',
             params: data
         })
-
+        socket.emit('updatedOrderChef', response.data.data)
         if(status == 'P') {
             remove_order_item(response.data.data,order_items)
             loadOrderItemsPreparing()
@@ -227,14 +227,17 @@ export const useOrderStore = defineStore('orders', () => {
 
         return response.data.data
     }
- 
-    socket.on('updatedOrder', (order) => {
+    socket.on('deliveredOrder', (order) => {
         remove_order(order)
-        toast.info(`The Order (#${order.id}) was updated!`)
+        toast.info(`The Order (#${order.id}) was updated to status delivered!`)
+    })
+    socket.on('updatedOrderChef', (order) => {
+        remove_order_item(order)
+        toast.info(`The Order (#${order.id}) was updated to status ready!`)
     })
     socket.on('newOrder', (order) => {
         orders.value.push(order)
-        toast.success(`A new order has arrived. Check your order menu. (#${order.id})`)
+        toast.info(`A new order has arrived. Check your order menu. (#${order.id})`)
     })
     socket.on('deleteOrder', (order) => {
         remove_order(order)
