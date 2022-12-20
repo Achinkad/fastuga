@@ -98,29 +98,13 @@ const dataAsString = () => {
     return JSON.stringify(product.value)
 }
 
-let nextCallBack = null
-/*
-const leaveConfirmed = () => {
-    if (nextCallBack) {
-        nextCallBack()
-    }
-}
 
-onBeforeRouteLeave((to, from, next) => {
-    nextCallBack = null
-    let newValueStr = dataAsString()
-    if (originalValueStr != newValueStr) {
-        nextCallBack = next
-        confirmationLeaveDialog.value.show()
-    } else {
-        next()
-    }
-})*/
+
 
 
 const product = ref(newProduct())
 const errors = ref(null)
-const confirmationLeaveDialog = ref(null)
+
 
 watch(
     () => props.id,
@@ -134,11 +118,7 @@ watch(
 </script>
 
 <template>
-    <!--
-        Needed? Orders dont(?)
-        <confirmation-dialog ref="confirmationLeaveDialog" confirmationBtn="Discard changes and leave"
-        msg="Do you really want to leave? You have unsaved changes!" @confirmed="leaveConfirmed">
-    </confirmation-dialog>-->
+
 
     <product-detail :product="product" :errors="errors" @save="save" @cancel="cancel" @add="add"></product-detail>
 </template>

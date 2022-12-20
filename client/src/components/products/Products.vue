@@ -43,15 +43,7 @@ const addProduct = () => {
 const editProduct = (product) => {
     router.push({ name: 'Product', params: { id: product.id } })
 }
-const deletedProduct = (deletedProduct) => {
-    //VER MAIS TARDE
-    /*
-    let idx = orders.value.findIndex((t) => t.id === deletedProduct.id)
-    if (idx >= 0) {
-    orders.value.splice(idx, 1)
-}
-*/
-}
+
 
 const forceRerender = () => {
     loadProducts()
@@ -107,7 +99,7 @@ onMounted(() => {
                                 :showId="true"
                                 @edit="editProduct"
                                 @forceRerender="forceRerender"
-                                @deleted="deletedProduct"
+                              
                             >
                             </product-table>
 

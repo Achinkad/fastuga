@@ -6,10 +6,6 @@ const router = createRouter({
     routes: [
         {
             path: "/",
-            redirect: "/login",
-        },
-        {
-            path: "/",
             name: "Dashboard",
             component: () => import("../views/Dashboard.vue"),
         },
@@ -133,32 +129,23 @@ router.beforeEach(async (to, from, next) => {
         handlingFirstRoute = false
         await userStore.restoreToken()
     }
+    
+    if (to.name == "Dashboard") {
+        if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
 
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "C")) {
-        next({
-            name: "CustomerDashboard"
-        })
-        return
-    }
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "ED")) {
-        next({
-            name: "DeliveryDashboard"
-        })
-        return
-    }
+        switch (userStore.user.type) {
+            case "C":
+                next({ name: "CustomerDashboard" }); return
+                break;
 
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "EC")) {
-        next({
-            name: "ChefDashboard"
-        })
-        return
-    }
+            case "ED":
+                next({ name: "DeliveryDashboard" }); return
+                break;
 
-    if (to.name == "Dashboard" && !userStore.user) {
-        next({
-            name: "AnonymousDashboard"
-        })
-        return
+            case "EC":
+                next({ name: "ChefDashboard" }); return
+                break;
+        }
     }
 
     if (to.name == "Login") {
@@ -205,7 +192,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Order") {
-        if (userStore.user.type == "EM" || userStore.user.type == "C") {
+        if ((userStore.user && (userStore.user.type == "EM" || userStore.user.type == "C")) || !userStore.user) {
             next()
             return
         }

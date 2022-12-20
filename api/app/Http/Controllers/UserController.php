@@ -18,13 +18,28 @@ class UserController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('can:viewAny')->only('viewAny');
+        $this->middleware('can:create')->only('create');
+        $this->middleware('can:update')->only('update');
+        $this->middleware('can:delete')->only('delete');
+
+        /*
         $this->middleware('auth.manager', ['except' => [
             'show',
             'store',
             'status',
             'update',
-            'show_me'
+            'show_me',
+            'new_password'
+
         ]]);
+        /*
+        $this->middleware('auth.chef', ['except' => [
+            'update',
+            'show_me',
+            'new_password'
+        ]]);
+        */
     }
     public function index(Request $request)
     {

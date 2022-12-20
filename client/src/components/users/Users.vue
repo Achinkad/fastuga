@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, inject,watch } from 'vue'
+import { ref, computed, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import UserTable from "./UserTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -18,25 +18,25 @@ const forceRerender = () => {
     console.log("reload")
 }
 
-var value_role=ref("all")
+var value_role = ref("all")
 
 const loadUsers = (page = 1) => {
-    axios.get(serverBaseUrl+'/api/users?page='+page,{
-        params:{
+    axios.get(serverBaseUrl + '/api/users?page=' + page, {
+        params: {
             type: value_role.value
         }
 
     })
-    .then((response) => {
-        users.value = response.data.data
-        pagination.value = response.data
-    })
-    .catch((error) => {
-        console.log(error)
-    })
+        .then((response) => {
+            users.value = response.data.data
+            pagination.value = response.data
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
-watch(value_role,() =>{
+watch(value_role, () => {
     console.log(value_role.value)
     loadUsers()
 })
@@ -47,7 +47,7 @@ const editUser = (user) => {
     router.push({ name: 'User', params: { id: user.id } })
 }
 
-onMounted (() => {
+onMounted(() => {
     loadUsers()
 })
 </script>
@@ -85,17 +85,14 @@ onMounted (() => {
                             </div>
                             <div class="col-xl-4 d-flex justify-content-end align-items-end">
                                 <button type="button" class="btn btn-warning px-4 btn-add" @click="addUser"><i
-                                    class="bi bi-xs bi-plus-circle me-2"></i> Add User
+                                        class="bi bi-xs bi-plus-circle me-2"></i> Add User
                                 </button>
                             </div>
-                            <user-table
-                                :users="users"
-                                :showId="false"
-                                @edit="editUser"
-                                @forceRerender="forceRerender"
-                            ></user-table>
+                            <user-table :users="users" :showId="false" @edit="editUser"
+                                @forceRerender="forceRerender"></user-table>
                             <div class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5">
+                                </Bootstrap5Pagination>
                             </div>
                         </div>
                     </div>

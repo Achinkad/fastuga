@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
     const toast = inject("toast")
     const axios = inject('axios')
     const serverBaseUrl = inject('serverBaseUrl')
-
+const socket = inject("socket")
     const errors = ref(null)
     const number_customers_this_month = ref([])
 
@@ -48,7 +48,10 @@ export const useUserStore = defineStore('user', () => {
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
-            await loadUser()
+           
+            await loadUser()   
+            socket.emit('loggedIn', user.value)
+          
             if (user.value.type == "C") { await get_customer(user.value) }
             return true
         }
@@ -61,6 +64,8 @@ export const useUserStore = defineStore('user', () => {
     async function logout() {
         try {
             await axios.post('logout')
+            socket.emit('loggedOut', user.value)
+            toast.error(`${user.value.name} was logged out!`)
             clearUser()
             return true
         } catch (error) {
@@ -72,7 +77,9 @@ export const useUserStore = defineStore('user', () => {
         let storedToken = sessionStorage.getItem('token')
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
+            
             await loadUser()
+            socket.emit('loggedIn', user)
             return true
         }
         clearUser()
@@ -125,7 +132,6 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const get_customers_this_month = (() => { return number_customers_this_month.value })
-
 
 
     return {

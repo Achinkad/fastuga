@@ -110,11 +110,15 @@ onBeforeMount(() => {
                                 <tr v-for="order in orders_from_user" :key="order.id">
                                     <td>#{{ order.id }}</td>
                                     <td>{{ order.ticket_number }}</td>
-                                    <div v-if="order.customer != null">
-                                        <td>{{ order.customer.user.name }}</td>
+                                    <td>
+                                        <div v-if="order.customer != null">
+                                            {{ order.customer.user.name }}
 
-                                    </div>
-                                    <div v-else>--</div>
+                                        </div>
+                                        <div v-else>--</div>
+
+                                    </td>
+
 
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
