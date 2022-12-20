@@ -3,7 +3,6 @@ import { inject, onMounted, ref, watch } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
-import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import UserTable from "./UserTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -88,7 +88,7 @@ onMounted(() => {
                                         class="bi bi-xs bi-plus-circle me-2"></i> Add User
                                 </button>
                             </div>
-                            <user-table :users="users" :showId="false" @edit="editUser"
+                            <user-table :users="users"  @edit="editUser"
                                 @forceRerender="forceRerender"></user-table>
                             <div class="d-flex justify-content-end mt-3">
                                 <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5">

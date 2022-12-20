@@ -1,11 +1,9 @@
-import { ref, inject, computed } from 'vue'
+import { ref, inject } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useProductStore = defineStore('products', () => {
-    const socket = inject("socket")
-    const axios = inject('axios')
-    const toast = inject("toast")
 
+    const axios = inject('axios')
     const products = ref([])
     const pagination = ref([])
     const best_products = ref([])

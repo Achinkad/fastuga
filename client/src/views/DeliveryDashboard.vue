@@ -1,6 +1,6 @@
 <script setup>
-import { computed, watch, onBeforeMount, inject, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, watch, onBeforeMount, inject } from 'vue'
+
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
@@ -10,9 +10,6 @@ const userStore = useUserStore()
 const orderStore = useOrderStore()
 
 
-const router = useRouter()
-
-const serverBaseUrl = inject("serverBaseUrl")
 
 const pagination = computed(() => { return orderStore.get_page() })
 

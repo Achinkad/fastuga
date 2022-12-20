@@ -93,8 +93,8 @@ onMounted(() => {
                                 </button>
                             </div>
 
-                            <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
-                            <order-table :orders="anonymous_orders" :showId="true" @edit="editOrder" v-if="!userStore.user"></order-table>
+                            <order-table :orders="orders" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
+                            <order-table :orders="anonymous_orders" @edit="editOrder" v-if="!userStore.user"></order-table>
 
                             <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 

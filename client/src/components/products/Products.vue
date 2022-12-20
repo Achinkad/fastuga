@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import ProductTable from "./ProductTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -96,7 +96,6 @@ onMounted(() => {
 
                             <product-table
                                 :products="products"
-                                :showId="true"
                                 @edit="editProduct"
                                 @forceRerender="forceRerender"
                               

@@ -12,7 +12,6 @@
   const errors = ref(null)
 
   const passwords = ref({
-        //current_password: '',
         password: '',
         password_confirm: ''
     })
@@ -29,8 +28,6 @@
         password: passwords.value.password
       })
       .then((response) => {
-        //order.value = response.data.data
-        //originalValueStr = dataAsString()
         toast.success('Password was updated successfully.')
         router.back()
       })

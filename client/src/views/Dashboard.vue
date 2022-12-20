@@ -1,22 +1,16 @@
 <script setup>
-import { ref,onMounted, inject, computed } from 'vue'
+import { ref,onMounted, computed } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'
 
 const userStore = useUserStore()
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl");
-const orders = ref([])
-const status = ref("all")
 const orderStore = useOrderStore()
 const productStore = useProductStore()
 const series = ref([{
     name: 'Orders',
     data: []
 }])
-
-const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
 const loadBestProducts = () => { productStore.load_best_products() }
 const best_products = computed(() => { return productStore.best_products })
