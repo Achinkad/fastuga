@@ -23,11 +23,14 @@ class UserController extends Controller
             'store',
             'status',
             'update',
-            'show_me'
+            'show_me',
+            'new_password'
+
         ]]);
         $this->middleware('auth.chef', ['except' => [
             'update',
-            'show_me'
+            'show_me',
+            'new_password'
         ]]);
     }
     public function index(Request $request)
