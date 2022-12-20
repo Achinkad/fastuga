@@ -90,9 +90,8 @@ onBeforeMount(() => {
                                             <img :src="photoFullUrl(product)" class="product-photo"/>
                                         </div>
                                         <div class="col-auto">
-                                            <span><b>{{product.name}}</b></span>
-                                            <span class="ms-2"><i>{{product.price}}€</i></span> <br>
-                                            <span style="font-size:14px;">{{capitalize(product.type)}}</span>
+                                            <span><b>{{product.name}}</b></span> <br>
+                                            <span style="font-size:14px;"><i>{{product.price}}€</i></span>
                                         </div>
                                     </div>
                                 </div>
