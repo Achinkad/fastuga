@@ -46,7 +46,6 @@ watch(() => userStore.user, function() { loadOrders() })
 
 onBeforeMount(() => {
     loadOrders()
-
     loadBestProducts()
 })
 </script>

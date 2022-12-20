@@ -16,11 +16,13 @@ io.on("connection", (socket) => {
   console.log(`client ${socket.id} has connected`);
 
   socket.on("newOrder", (order) => {
-    if (order.status == "R") {
+   if (order.status == 'R') {
       socket.to("Delivery").emit("newOrder", order);
+      console.log("entrou no delivery")
     }
-    if (order.status == "P") {
+    if (order.status == 'P') {
       socket.to("Chef").emit("newOrder", order);
+      console.log("entrou no chef")
     }
   });
   socket.on("deliveredOrder", (order) => {
@@ -31,7 +33,9 @@ io.on("connection", (socket) => {
   });
   
   socket.on("updatedOrderChef", (order) => {
-    socket.to("Manager").to("Delivery").emit("updatedOrderChef", order);
+    console.log("ENTROU")
+    socket.to("Manager").emit("updatedOrderChef", order);
+    socket.to("Delivery").emit("updatedOrderChef", order);
   });
 
   socket.on("loggedIn", function (user) {
@@ -39,16 +43,21 @@ io.on("connection", (socket) => {
     socket.join(user.id)
     if (user.type == "EM") {
       socket.join("Manager");
+   
     }
     if (user.type == "ED") {
       socket.join("Delivery");
+
     }
     if (user.type == "C") {
       socket.join("Customer");
+    
     }
     if (user.type == "EC") {
       socket.join("Chef");
+
     } else {
+    
       socket.join("Anonymous");
     }
   });

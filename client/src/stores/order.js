@@ -216,13 +216,14 @@ export const useOrderStore = defineStore('orders', () => {
             url: 'order-items/'+order_item.id+'/status',
             params: data
         })
-        socket.emit('updatedOrderChef', response.data.data)
+        
         if(status == 'P') {
             remove_order_item(response.data.data,order_items)
             loadOrderItemsPreparing()
         }
 
         if(status == 'R') {
+            socket.emit('updatedOrderChef', response.data.data)
             remove_order_item(response.data.data,order_items_preparing)
         }
 
