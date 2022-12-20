@@ -18,25 +18,29 @@ io.on("connection", (socket) => {
   socket.on("newOrder", (order) => {
     if (order.status == "R") {
       socket.to("Delivery").emit("newOrder", order);
+      console.log("entrou no delivery");
     }
     if (order.status == "P") {
       socket.to("Chef").emit("newOrder", order);
+      console.log("entrou no chef");
     }
   });
+
   socket.on("deliveredOrder", (order) => {
     socket.to("Manager").emit("deliveredOrder", order);
-  })
+  });
+
   socket.on("deleteOrder", (order) => {
     socket.to("Manager").emit("deleteOrder", order);
   });
 
   socket.on("updatedOrderChef", (order) => {
-    socket.to("Manager").to("Delivery").emit("updatedOrderChef", order);
+    socket.to("Delivery").to("Manager").emit("updatedOrderChef", order);
   });
 
   socket.on("loggedIn", function (user) {
     socket.emit("loggedIn", user);
-    socket.join(user.id)
+    socket.join(user.id);
     if (user.type == "EM") {
       socket.join("Manager");
 
@@ -68,7 +72,7 @@ io.on("connection", (socket) => {
     if (user.type == "C") {
       socket.leave("Customer");
     }
-    if (user.type == "Ec") {
+    if (user.type == "EC") {
       socket.leave("Chef");
     } else {
       socket.leave("Anonymous");

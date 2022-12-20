@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted, computed,inject } from 'vue'
+import { ref,onMounted, computed, inject } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'
@@ -183,11 +183,13 @@ onMounted(async () => {
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">Best Selling Products</h5>
                                 <br>
-                                <div class="row mb-3" v-for="(product,index) in best_products" :key="product.id">
+                                <div class="row mb-2" v-for="(product,index) in best_products" :key="product.id">
                                     <div class="row d-flex">
                                         <div class="col">
-                                            <span>{{index+1}}.</span>
-                                            <router-link :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`">
+                                            <span class="me-1">{{index+1}}.</span>
+                                            <router-link
+                                            style="text-decoration:underline;color:#212529;"
+                                            :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`">
                                                 {{product.name}}
                                             </router-link>
                                         </div>
