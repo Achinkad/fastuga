@@ -1,5 +1,5 @@
 <script setup>
-import { inject, onMounted, ref, watch } from "vue"
+import { inject, onMounted, ref, watch, computed } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
@@ -157,20 +157,6 @@ const countProduct = (product) => {
 const points = () => { return customer.value.points }
 const cancel = () => { emit("cancel", editingOrder.value) }
 
-const points_stack_val = ref(null)
-
-const points_stack = (points) => {
-    let p = 0, x = 0, arr = []
-    for (var i = 0; i < Math.floor(points / 10); i++) {
-        p = (x += 10)
-        arr.push(p)
-    }
-    points_stack_val.value = arr;
-    return points_stack_val.value
-}
-
-
-
 const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl
 }
@@ -253,7 +239,9 @@ onMounted(() => {
                                         <label for="points" class="form-label">Points to use</label>
                                         <select id="points" name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
                                             <option value="0" selected>0</option>
-                                            <option v-for="n in points_stack(points())" :value="n">{{ n }}</option>
+                                            <option v-if="Math.floor(points() / 10) > 0" v-for="n in Math.floor(points() / 10)" :value="n * 10">
+                                                {{ n * 10 }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>

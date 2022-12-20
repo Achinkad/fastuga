@@ -54,7 +54,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="container-fluid" v-if="userStore.customer">
+    <div class="container-fluid" v-if="userStore.customer && orders_from_user != null">
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
