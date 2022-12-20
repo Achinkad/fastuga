@@ -24,6 +24,8 @@ class CustomerController extends Controller
             'show',
             'update',
             'show_by_user',
+            'get_number_customers_created_this_month',
+
 
         ]]);
         $this->middleware('auth.chef', ['except' => [
@@ -32,6 +34,16 @@ class CustomerController extends Controller
             'update',
             'show_by_user',
             'get_number_customers_created_this_month',
+
+
+        ]]);
+        $this->middleware('auth.delivery', ['except' => [
+            'store',
+            'show',
+            'update',
+            'show_by_user',
+            'get_number_customers_created_this_month',
+
 
         ]]);
         

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class ChefAutorization
+class DeliveryAutorization
 {
     /**
      * Handle an incoming request.
@@ -16,6 +16,6 @@ class ChefAutorization
      */
     public function handle(Request $request, Closure $next)
     {
-        return Auth()->guard('api')->user()->type == "EC" ? $next($request) : abort(403);
+        return Auth()->guard('api')->user()->type == "ED" ? $next($request) : abort(403);
     }
 }
