@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
     socket.join(user.id);
    if (user.type == "EM") {
       socket.join("Manager");
-      
+
     }
    if (user.type == "ED") {
       socket.join("Delivery");
@@ -52,11 +52,11 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("loggedOut", function (user) 
-  { 
+  socket.on("loggedOut", function (user)
+  {
     socket.emit("loggedOut", user);
     socket.leave(user.id);
-   
+
     if (user.type == "EM") {
       socket.leave("Manager");
     }
@@ -77,5 +77,5 @@ socket.on('updateUser', function (user) {
  socket.in('administrator').except(user.id).emit('updateUser', user)
  socket.in(user.id).emit('updateUser', user)
  })
-  
+
 });

@@ -42,7 +42,10 @@ const capitalize = (word) => {
     return capitalizedFirst + rest
 }
 
-watch(() => userStore.user, function() { loadOrders() })
+watch(() => userStore.user, function() {
+    // userStore.get_customer()
+    loadOrders()
+})
 
 onBeforeMount(() => {
     loadOrders()
@@ -51,7 +54,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="userStore.customer">
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">

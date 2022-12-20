@@ -13,7 +13,6 @@ export const useUserStore = defineStore('user', () => {
 
     const errors = ref(null)
     const number_customers_this_month = ref([])
-
     const user = ref(null)
     const customer = ref(null)
 
