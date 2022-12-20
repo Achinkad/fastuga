@@ -28,6 +28,7 @@ class CustomerController extends Controller
 
 
         ]]);
+        /*
         $this->middleware('auth.chef', ['except' => [
             'store',
             'show',
@@ -46,7 +47,7 @@ class CustomerController extends Controller
 
 
         ]]);
-        
+        */
     }
     public function index()
     {

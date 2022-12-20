@@ -27,11 +27,13 @@ class UserController extends Controller
             'new_password'
 
         ]]);
+        /*
         $this->middleware('auth.chef', ['except' => [
             'update',
             'show_me',
             'new_password'
         ]]);
+        */
     }
     public function index(Request $request)
     {

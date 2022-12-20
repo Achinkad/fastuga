@@ -17,16 +17,22 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
-
+    
     public function __construct()
+    
     {
+        $this->middleware('can:viewAny')->only('viewAny');
+        $this->middleware('can:create')->only('create');
+        $this->middleware('can:delete')->only('delete');
+
+        /*
         $this->middleware('auth.manager', ['except' => [
             'show',
             'get_orders_user',
             'store',
             'get_count_order_status'
         ]]);
-        
+        /*
         $this->middleware('auth.chef', ['except' => [
             'store',
             'get_number_orders_by_month',
@@ -34,7 +40,7 @@ class OrderController extends Controller
             'get_count_order_status'
 
         ]]);
-        
+        */
     }
 
     public function index(Request $request)

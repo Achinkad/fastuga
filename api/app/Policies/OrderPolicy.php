@@ -20,7 +20,7 @@ class OrderPolicy
      */
     public function viewAny(User $user)
     {
-        if(auth()->guard('api')->user()->type == "EM"){
+        if($user->type=="EM"){
             return true;
         }
     }
@@ -34,15 +34,10 @@ class OrderPolicy
      */
     public function view(User $user, Order $order)
     {
-        if($user->type=='ED' && $order->delivered_by==$user->id){
+        if(($user->type=='ED' && $order->delivered_by==$user->id)||($user->type=='C' && $order->customer_id==$user->customer->id)){
             return true;
         }
-        if($order->customer_id==$user->id){
-            return false;
-        }
-        else{
-            return true;
-        }
+
     }
 
     /**
@@ -53,9 +48,10 @@ class OrderPolicy
      */
     public function create(User $user)
     {
-        if($user->type == 'C' || $user->type == null){
+        if($user->type == 'C' || $user->type == null || $user->type == 'EM'){
             return true;
         }
+        
     }
 
     /**
@@ -107,17 +103,20 @@ class OrderPolicy
     {
         //
     }
-
+/*
     public function status(Order $order)
     {
-        if(auth()->guard('api')->user()->type == "EM" || auth()->guard('api')->user()->type == "EC" || auth()->guard('api')->user()->type == "ED"){
+        if($user->type== "EM" || $user->type == "EC" || $user->type == "ED"){
             return true;
         }
     }
 
-    public function get_count_order_status(){
-        if(auth()->guard('api')->user()->type == "ED"){
+    public function get_count_order_status(User $user){
+        
+        if($user->type == "ED"){
             return true;
         }
+        
     }
+    */
 }

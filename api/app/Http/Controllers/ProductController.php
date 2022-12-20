@@ -21,11 +21,13 @@ class ProductController extends Controller
             'show',
             'get_best_selling_product'
         ]]);
+        /*
         $this->middleware('auth.chef', ['except' => [
             'index',
             'show',
             'get_best_selling_product'
         ]]);
+        */
     }
 
     public function index(Request $request)
