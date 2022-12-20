@@ -8,8 +8,6 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 import OrderTable from "./OrderTable.vue"
 import OrderItemsTable from "./OrderItemsTable.vue"
 
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
@@ -50,7 +48,7 @@ const total = computed(() => {
 })
 
 const orders = computed(() => {
-
+    console.log(orderStore.get_orders())
     return orderStore.get_orders()
  
 })

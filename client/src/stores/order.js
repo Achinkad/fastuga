@@ -189,11 +189,7 @@ export const useOrderStore = defineStore('orders', () => {
         return response.data.data
     }
 
-    socket.on('newOrder', (order) => {
-        remove_order(order)
-        toast.info(`A new order has arrived. Check your order menu. (#${order.id})`)
-    })
-
+   
     const remove_order = ((order) => {
         let i = orders.value.findIndex((t) => t.id === order.id)
         if (i >= 0) orders.value.splice(i, 1)
@@ -207,16 +203,24 @@ export const useOrderStore = defineStore('orders', () => {
     })
 
     async function delete_order(order) {
-        const response = await axios.delete('orders/' + order.id)
+        if(userStore.user && userStore.user.type == "EM"){
+            data = {
+                'status': "C",
+            }
+
+        }
+
+        const response = await axios({
+            method: 'PATCH',
+            url: 'orders/' + order.id + '/status',
+            params: data
+        })
         remove_order(response.data.data)
         socket.emit('deleteOrder', response.data.data)
         return response.data.data
     }
 
-    socket.on('deleteOrder', (order) => {
-        remove_order(order)
-        toast.info(`The Order (#${order.id}) was deleted!`)
-    })
+ 
 
     let data = {}
 
@@ -266,10 +270,18 @@ export const useOrderStore = defineStore('orders', () => {
             return response.data.data
 
     }
-
-    socket.on('updateOrder', (order) => {
+ 
+    socket.on('updatedOrder', (order) => {
         remove_order(order)
         toast.info(`The Order (#${order.id}) was updated!`)
+    })
+    socket.on('newOrder', (order) => {
+        orders.value.push(order)
+        toast.success(`A new order has arrived. Check your order menu. (#${order.id})`)
+    })
+    socket.on('deleteOrder', (order) => {
+        remove_order(order)
+        toast.info(`The Order (#${order.id}) was deleted!`)
     })
 
     return {

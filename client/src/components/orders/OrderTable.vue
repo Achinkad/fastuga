@@ -65,12 +65,7 @@ const orderToDeleteDescription = computed(() => {
 
 const dialogConfirmedDelete = () => {
     orderStore.delete_order(orderToDelete.value)
-    .then((response) => {
-        toast.info("Order " + orderToDeleteDescription.value + " was deleted!")
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  
 }
 
 const deleteClick = (order) => {
