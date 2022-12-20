@@ -65,12 +65,7 @@ const orderToDeleteDescription = computed(() => {
 
 const dialogConfirmedDelete = () => {
     orderStore.delete_order(orderToDelete.value)
-    .then((response) => {
-        toast.info("Order " + orderToDeleteDescription.value + " was deleted!")
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+
 }
 
 const deleteClick = (order) => {
@@ -111,7 +106,7 @@ watch(
             <tr v-for="order in orders" :key="order.id">
                 <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
-                <td v-if="order.customer && userStore.user.type != 'C'">
+                <td v-if="order.customer && userStore.user.type == 'EM'">
                     <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
                         #{{ order.customer_id }}
                     </router-link>

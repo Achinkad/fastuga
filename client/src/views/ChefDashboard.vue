@@ -62,11 +62,10 @@ watch(() => orderStore.order, function () {
     loadOrderItemsPreparing()
 })
 
-onMounted(() => { 
-    loadOrderItemsWaiting()
-    loadOrderItemsPreparing()
-})
+<<<<<<< HEAD
+=======
 
+>>>>>>> c2a6e5c1bc73e8547f9048bc40ecebe83e1ed729
 onBeforeMount(() => {
     loadOrderItemsWaiting()
     loadOrderItemsPreparing()

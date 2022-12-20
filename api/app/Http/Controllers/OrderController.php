@@ -184,6 +184,13 @@ class OrderController extends Controller
     public function get_orders_user(Request $request, $id)
     {
         $request->validate(['status' => 'sometimes|in:all,P,R,D,C']);
+        if(auth()->guard('api')->user()->type == "ED") {
+            if($request->has('status')) {
+
+                $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
+                return OrderResource::collection($orders);
+            }
+        }
 
         switch (auth()->guard('api')->user()->type) {
             case 'ED':
