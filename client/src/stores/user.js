@@ -13,7 +13,7 @@ const socket = inject("socket")
     const errors = ref(null)
     const number_customers_this_month = ref([])
     const user = ref(null)
-    const customer = ref(null)
+    const customer = ref([])
     const users = ref([])
     const pagination = ref([])
 
@@ -130,7 +130,7 @@ const socket = inject("socket")
         })
     }
 
-    async function get_customer(user) {
+    async function loadCustomer(user) {
         try {
             const response = await axios.get('customers/users/' + user.id)
             customer.value = response.data.data
@@ -139,6 +139,8 @@ const socket = inject("socket")
             throw error
         }
     }
+
+    const get_customer = (() => { return customer.value })
 
     async function loadCustomersCreatedThisMonth() {
 
@@ -163,6 +165,7 @@ const socket = inject("socket")
         user,
         userId,
         customer,
+        loadCustomer,
         get_customer,
         userPhotoUrl,
         login,

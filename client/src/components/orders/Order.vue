@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, inject } from 'vue'
+import { ref, watch, inject,computed,onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
@@ -25,7 +25,6 @@ const props = defineProps({
     }
 })
 
-const currentCustomer= ref({})
 
 const newOrder = () => {
     return {
@@ -92,29 +91,6 @@ const cancel = () => {
     router.push({ name: 'Orders' })
 }
 
-
-const getCurrentCustomer = () => {
-
-    axios.get(serverBaseUrl + '/api/customers/user/' + userStore.user.id)
-        .then((response) => {
-
-            if (response.data) {
-                currentCustomer.value = response.data.data
-
-                order.value.payment_reference=currentCustomer.value.default_payment_reference;
-                order.value.payment_type=currentCustomer.value.default_payment_type;
-
-                order.value.customer_id = currentCustomer.value.id;
-
-
-            }
-
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
 const dataAsString = () => {
     return JSON.stringify(order.value)
 }
@@ -122,18 +98,32 @@ const dataAsString = () => {
 const order = ref(newOrder())
 const errors = ref(null)
 
+const loadCustomer = () => {
+   userStore.loadCustomer(userStore.user)
+}
+
+const customer = computed(() => { return userStore.get_customer() })
+
 watch(
     () => props.id,
     (newValue) => {
+        
         loadOrder(newValue)
     },
     { immediate: true }
 )
+
+onMounted(() => {
+    if (userStore.user && userStore.user.type == 'C') {
+        loadCustomer()
+       
+    }
+})
 
 </script>
 
 
 <template>
 
-    <order-detail :currentCustomer="currentCustomer" :order="order" :errors="errors" @cancel="cancel" @add="add" @getCurrentCustomer="getCurrentCustomer"></order-detail>
+    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer" ></order-detail>
 </template>
