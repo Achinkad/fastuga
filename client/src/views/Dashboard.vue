@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted, computed } from 'vue'
+import { ref,onMounted, computed,inject } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'

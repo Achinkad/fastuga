@@ -1,39 +1,31 @@
 <script setup>
-import { ref, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch,computed } from 'vue'
 import { useRouter } from 'vue-router'
 import ProductTable from "./ProductTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import { useProductStore } from '../../stores/product.js'
 
 const router = useRouter()
 const serverBaseUrl = inject("serverBaseUrl")
 
 const axios = inject('axios')
 
-const products = ref([])
-const pagination = ref({})
+const pagination_aux = ref({});
 
+const productStore = useProductStore()
+
+var total_products = 0
 var value_type = ref("all")
 
 const loadProducts = (page = 1) => {
-    axios.get(serverBaseUrl + '/api/products?page=' + page, {
-
-        params: {
-            type: value_type.value
-        }
-
-    })
-    .then((response) => {
-        products.value = response.data.data
-        pagination.value = response.data
-    })
-    .catch((error) => {
-        console.log(error)
-    })
+   productStore.load_products(page,value_type.value)
 }
+const pagination = computed(() => { return productStore.get_page() })
+const products = computed(() => { return productStore.get_products() })
 
 //WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_TYPE(valor do filtro)
 watch(value_type, () => {
-    console.log(value_type.value)
+    
     loadProducts()
 })
 
@@ -44,6 +36,15 @@ const editProduct = (product) => {
     router.push({ name: 'Product', params: { id: product.id } })
 }
 
+const total = computed(() => {
+    pagination_aux.value = productStore.get_page()
+  
+    if (pagination_aux.value.meta != undefined) {
+       total_products = pagination_aux.value.meta.total
+    }
+    
+    return total_products
+})
 
 const forceRerender = () => {
     loadProducts()
@@ -63,7 +64,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <h4 class="p-title me-auto">Products List</h4>
                     <div class="p-title-right">
-                        <h6 class="p-title">Viewing 0 of 0</h6>
+                        <h6 class="p-title">Viewing {{productStore.total_products}} of {{total}}</h6>
                     </div>
                 </div>
             </div>
