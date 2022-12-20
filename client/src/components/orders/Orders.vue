@@ -71,7 +71,7 @@ const editOrder = (order) => {
 watch(status, () => { loadOrders() })
 
 onMounted(() => { 
-    if(userStore.user.type!='EC'){
+    if(userStore.user && userStore.user.type!='EC'){
         loadOrders()
     }
 

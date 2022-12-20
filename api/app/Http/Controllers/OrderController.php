@@ -25,6 +25,7 @@ class OrderController extends Controller
             'get_orders_user',
             'status',
             'store',
+            'get_count_order_status'
         ]]);
     }
 
@@ -57,6 +58,7 @@ class OrderController extends Controller
             $order->total_paid = $order->total_price - $discount_value;
 
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
+           
             $order->customer->points -= abs($order->points_used_to_pay);
             $order->customer->points += $points;
             $order->points_gained = $points;
