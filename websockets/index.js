@@ -16,30 +16,28 @@ io.on("connection", (socket) => {
   console.log(`client ${socket.id} has connected`);
 
   socket.on("newOrder", (order) => {
-    if(order.status == "R"){
+    if (order.status == "R") {
       socket.to("Delivery").emit("newOrder", order);
     }
-    if(order.status == "P"){
+    if (order.status == "P") {
       socket.to("Chef").emit("newOrder", order);
     }
   });
 
   socket.on("deleteOrder", (order) => {
-    socket.emit("deleteOrder", order);
+    socket.to("Manager").emit("deleteOrder", order);
   });
   socket.on("updatedOrder", (order) => {
-  socket.to("Manager").to("Delivery").emit("updatedOrder", order);
+    socket.to("Manager").to("Delivery").emit("updatedOrder", order);
   });
-
 
   socket.on("loggedIn", function (user) {
     socket.emit("loggedIn", user);
-    socket.join(user.id);
-   if (user.type == "EM") {
+    socket.join(user.id)
+    if (user.type == "EM") {
       socket.join("Manager");
-      
     }
-   if (user.type == "ED") {
+    if (user.type == "ED") {
       socket.join("Delivery");
     }
     if (user.type == "C") {
@@ -47,20 +45,19 @@ io.on("connection", (socket) => {
     }
     if (user.type == "EC") {
       socket.join("Chef");
-    }else{
+    } else {
       socket.join("Anonymous");
     }
   });
 
-  socket.on("loggedOut", function (user) 
-  { 
+  socket.on("loggedOut", function (user) {
     socket.emit("loggedOut", user);
     socket.leave(user.id);
-   
+
     if (user.type == "EM") {
       socket.leave("Manager");
     }
-   if (user.type == "ED") {
+    if (user.type == "ED") {
       socket.leave("Delivery");
     }
     if (user.type == "C") {
@@ -68,14 +65,13 @@ io.on("connection", (socket) => {
     }
     if (user.type == "Ec") {
       socket.leave("Chef");
-    }else{
+    } else {
       socket.leave("Anonymous");
     }
   });
 
-socket.on('updateUser', function (user) {
- socket.in('administrator').except(user.id).emit('updateUser', user)
- socket.in(user.id).emit('updateUser', user)
- })
-  
+  socket.on("updateUser", function (user) {
+    socket.in("administrator").except(user.id).emit("updateUser", user);
+    socket.in(user.id).emit("updateUser", user);
+  });
 });
