@@ -96,9 +96,9 @@ watch(
             <tr>
                 <th v-if="showId">Order ID</th>
                 <th v-if="showTicketNumber">Ticket Number</th>
-                <th v-if="showCustomer && userStore.user.type != 'C'">Customer ID</th>
+                <th v-if="showCustomer && userStore.user.type == 'EM'">Customer ID</th>
                 <th v-if="userStore.user.type == 'C'">Points Gained</th>
-                <th v-if="showPrice">Price</th>
+                <th v-if="showPrice && userStore.user.type != 'ED'">Price</th>
                 <th v-if="showStatus">Order Status</th>
                 <th class="text-center" v-if="userStore.user && (userStore.user.type=='EM' ||  userStore.user.type=='C')" style="width:10%">Actions</th>
             </tr>
@@ -110,14 +110,14 @@ watch(
             <tr v-for="order in orders" :key="order.id">
                 <td v-if="showId">#{{ order.id }}</td>
                 <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
-                <td v-if="order.customer && userStore.user.type != 'C'">
+                <td v-if="order.customer && userStore.user.type == 'EM'">
                     <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
                         #{{ order.customer_id }}
                     </router-link>
                 </td>
-                <td v-if="!order.customer && userStore.user.type != 'C'"> -- </td>
+                <td v-if="!order.customer && userStore.user.type == 'EM'"> -- </td>
                 <td v-if="userStore.user.type == 'C'">{{ order.points_gained }}</td>
-                <td v-if="showPrice">{{ order.total_price }}€</td>
+                <td v-if="showPrice && userStore.user.type != 'ED'">{{ order.total_price }}€</td>
                 <td v-if="showStatus">
                     <span v-if="order.status == 'P'">
                         <span class="badge badge-info-lighten">Pending</span>
