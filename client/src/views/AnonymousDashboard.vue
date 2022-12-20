@@ -5,7 +5,7 @@ import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
 
 const productStore = useProductStore()
-const orderStore = useProductStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
@@ -17,7 +17,7 @@ const loadBestProducts = () => {
     })
 }
 
-const orders_from_user = computed(() => { return orderStore.my_orders })
+const anonymous_orders = computed(() => { return orderStore.get_anonymous_orders })
 const best_products = computed(() => { return productStore.best_products })
 
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
@@ -75,9 +75,8 @@ onBeforeMount(() => {
                                             <img :src="photoFullUrl(product)" class="product-photo"/>
                                         </div>
                                         <div class="col-10">
-                                            <span><b>{{product.name}}</b></span>
-                                            <span class="ms-2"><i>{{product.price}}€</i></span> <br>
-                                            <span style="font-size:14px;">{{capitalize(product.type)}} </span>
+                                            <span><b>{{product.name}}</b></span> <br>
+                                            <span style="font-size:14px;"><i>{{product.price}}€</i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -90,7 +89,7 @@ onBeforeMount(() => {
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title">Orders In Pending</h4>
+                        <h4 class="header-title">Your Orders</h4>
                     </div>
                     <div class="card-body pt-0">
                         <table class="table table-responsive align-middle">
@@ -98,20 +97,33 @@ onBeforeMount(() => {
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Ticket Number</th>
-                                    <th>Points Gained</th>
                                     <th>Price</th>
+                                    <th>Status</th>
                                     <th class="text-center" style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="orders_from_user == null">
+                                <tr v-if="anonymous_orders.length == 0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">You don't have any orders... yet!</td>
                                 </tr>
-                                <tr v-for="order in orders_from_user" :key="order.id">
+                                <tr v-for="order in anonymous_orders" :key="order.id">
                                     <td>#{{order.id}}</td>
                                     <td>{{order.ticket_number}}</td>
-                                    <td>{{order.points_gained}}</td>
                                     <td>{{order.total_price}}€</td>
+                                    <td>
+                                        <span v-if="order.status == 'P'">
+                                            <span class="badge badge-info-lighten">Preparing</span>
+                                        </span>
+                                        <span v-if="order.status == 'R'">
+                                            <span class="badge badge-warning-lighten">Ready</span>
+                                        </span>
+                                        <span v-if="order.status == 'D'">
+                                            <span class="badge badge-success-lighten">Delivered</span>
+                                        </span>
+                                        <span v-if="order.status == 'C'">
+                                            <span class="badge badge-danger-lighten">Cancelled</span>
+                                        </span>
+                                    </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
                                             <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)">

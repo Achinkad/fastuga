@@ -138,6 +138,13 @@ const totalPrice = () => {
     editingOrder.value.order_item.forEach((value) => {
         total += parseFloat(value.price)
     })
+
+    if (total <= points_to_pay.value / 2) {
+        points_to_pay.value = 0
+    } else {
+        total -= points_to_pay.value / 2
+    }
+
     return total.toFixed(2)
 }
 
@@ -174,6 +181,32 @@ const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl
 }
 
+const points_to_pay = ref(0)
+watch(() => editingOrder.value.points_used_to_pay, (newValue) => {
+    points_to_pay.value = newValue
+})
+
+const payment_type = ref("Payment Reference")
+watch(() => editingOrder.value.payment_type, (newValue) => {
+    switch (newValue) {
+        case "VISA":
+            payment_type.value = "Visa ID"
+            break;
+
+        case "MBWAY":
+            payment_type.value = "Phone Number"
+            break;
+
+        case "PAYPAL":
+            payment_type.value = "E-Mail Address"
+            break;
+
+        default:
+            payment_type.value = "Payment Reference"
+            break;
+    }
+})
+
 onMounted(() => {
     getProducts()
     if (userStore.user && userStore.user.type == 'C') {
@@ -198,13 +231,13 @@ onMounted(() => {
         <form class="needs-validation" novalidate @submit.prevent="save">
             <div class="row">
                 <div class="col-8">
-                    <div class="card h-100" v-if="(userStore.user && userStore.user.type == 'C') && $route.name == 'NewOrder'">
+                    <div class="card h-100" v-if="(!userStore.user || (userStore.user && userStore.user.type == 'C')) && $route.name == 'NewOrder'">
                         <div class="card-body d-flex align-items-center">
                             <div class="w-100">
                                 <div class="row">
                                     <div class="col">
                                         <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span> </label>
-                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'">
+                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type">
                                             <option value="VISA">Visa</option>
                                             <option value="PAYPAL">PayPal</option>
                                             <option value="MBWAY">MBWay</option>
@@ -214,9 +247,8 @@ onMounted(() => {
 
                                     <div class="col">
                                         <label for="inputPaymentReference" class="form-label">Payment Reference <span class="text-danger">*</span></label>
-
                                         <input type="text" class="form-control" id="inputPaymentReference"
-                                        placeholder="Payment Reference" required
+                                        :placeholder="payment_type" required
                                         v-model="editingOrder.payment_reference"
                                         v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
                                         <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
@@ -301,12 +333,12 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-if="(userStore.user && userStore.user.type == 'C') && $route.name == 'Order'">
+                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">
                                     <div class="row">
-                                        <h3 class="mb-3"><b>Order Information</b></h3>
+                                        <h3 class="mb-3"><b>Payment Information</b></h3>
                                         <div class="col-12">
                                             <p class="mb-1">
                                                 Payment Type: {{ editingOrder.payment_type }}
@@ -317,9 +349,19 @@ onMounted(() => {
                                                 Payment Reference: {{ editingOrder.payment_reference }}
                                             </p>
                                         </div>
-                                        <div class="col-12">
-                                            <p class="mb-0">
+                                        <div class="col-12" v-if="userStore.user">
+                                            <p class="mb-1">
                                                 Points Used: {{ editingOrder.points_used_to_pay }}
+                                            </p>
+                                        </div>
+                                        <div class="col-12" v-if="userStore.user && userStore.user.type == 'C'">
+                                            <p class="mb-0">
+                                                Points Gained: {{ editingOrder.points_gained }}
+                                            </p>
+                                        </div>
+                                        <div class="col-12" v-if="userStore.user && userStore.user.type == 'EM'">
+                                            <p class="mb-0">
+                                                Total paid with points: {{ editingOrder.total_paid_with_points }}
                                             </p>
                                         </div>
                                     </div>
@@ -329,7 +371,7 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <div class="row mt-3" v-if="$route.name == 'NewOrder'">
+            <div class="row mt-4" v-if="$route.name == 'NewOrder'">
                 <div class="col-7">
                     <div class="card">
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
@@ -348,7 +390,7 @@ onMounted(() => {
                                         </thead>
                                         <tbody>
                                             <tr v-if="editingOrder.order_item.length == 0">
-                                                <td colspan="3" class="text-center" style="height:55px!important;">You don't have any products :(</td>
+                                                <td colspan="3" class="text-center" style="height:55px!important;">You don't have any products selected yet :(</td>
                                             </tr>
                                             <tr v-for="n in editingOrder.order_item.length">
                                                 <td>
@@ -395,11 +437,20 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="mb-3 mt-2">
-                                <div v-for="n in products.length" class="mb-3">
-                                    <img :src="productPhotoFullUrl(products[n - 1])" class="rounded-circle img_photo" />
-                                    <span class="ms-3"> {{ products[n - 1].name }}</span>
-                                    <button type="button" class="btn btn-menu bi bi-plus" id="add" @click="addProduct(products[n - 1]); countProduct(products[n - 1])"></button>
-                                    <button type="button" class="btn btn-menu bi bi-dash ms-2" id="add" @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
+                                <div v-for="n in products.length" class="mb-4">
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <img :src="productPhotoFullUrl(products[n - 1])" class="rounded-circle img_photo" />
+                                        </div>
+                                        <div class="col-7">
+                                            <span class="ms-3"> <b>{{ products[n - 1].name }}</b> </span><br>
+                                            <span class="ms-3"> {{ products[n - 1].price }}€</span>
+                                        </div>
+                                        <div class="col-4">
+                                            <button type="button" class="btn btn-menu bi bi-plus" id="add" @click="addProduct(products[n - 1]); countProduct(products[n - 1])"></button>
+                                            <button type="button" class="btn btn-menu bi bi-dash ms-2" id="add" @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

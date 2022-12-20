@@ -53,11 +53,6 @@ watch(() => orderStore.order, function () {
     loadCountOrders()
 })
 
-onMounted(() => {
-    loadOrders()
-    loadCountOrders()
-})
-
 onBeforeMount(() => {
     loadOrders()
     loadCountOrders()

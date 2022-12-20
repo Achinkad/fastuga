@@ -66,7 +66,7 @@ class OrderController extends Controller
             $order->total_paid = $order->total_price - $discount_value;
 
             $points = intval(round($order->total_paid / 10, 0, PHP_ROUND_HALF_DOWN));
-           
+
             $order->customer->points -= abs($order->points_used_to_pay);
             $order->customer->points += $points;
             $order->points_gained = $points;
@@ -191,25 +191,30 @@ class OrderController extends Controller
 
     public function get_orders_user(Request $request, $id)
     {
+        $request->validate(['status' => 'sometimes|in:all,P,R,D,C']);
         if(auth()->guard('api')->user()->type == "ED") {
             if($request->has('status')) {
-                
+
                 $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
                 return OrderResource::collection($orders);
             }
         }
 
-        if(auth()->guard('api')->user()->type == "ED"){
-            $orders = Order::where('delivered_by', $id)->paginate(20);
-            return OrderResource::collection($orders);
-        }
+        switch (auth()->guard('api')->user()->type) {
+            case 'ED':
+                $orders = $request->status != 'all' ? Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20) : Order::whereNull('delivered_by')->paginate(20);
+                break;
 
-        if(auth()->guard('api')->user()->type == "C"){
-            $customer = Customer::where('user_id', $id)->firstOrFail();
-            $orders = Order::where('customer_id', $customer->id)->paginate(20);
-            return OrderResource::collection($orders);
+            case 'C':
+                $customer = Customer::where('user_id', $id)->firstOrFail();
+                $orders = $request->status != 'all' ? Order::where('customer_id', $customer->id)->where('status', $request->input('status'))->paginate(20) : Order::where('customer_id', $customer->id)->paginate(20);
+                break;
+
+            default:
+                abort(403);
+                break;
         }
-        
+        return OrderResource::collection($orders);
     }
 
     public function get_number_orders_by_month(){
