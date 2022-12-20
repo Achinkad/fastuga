@@ -27,13 +27,13 @@ class OrderController extends Controller
             'get_count_order_status'
         ]]);
         
-        $this->middleware('auth.chef', ['except' => [
+       /* $this->middleware('auth.chef', ['except' => [
             'store',
             'get_number_orders_by_month',
             'get_revenue_orders',
             'get_count_order_status'
 
-        ]]);
+        ]]);*/
         
     }
 

@@ -68,7 +68,7 @@ const socket = inject("socket")
         try {
             await axios.post('logout')
             socket.emit('loggedOut', user.value)
-            toast.error(`${user.value.name} was logged in!`)
+            toast.error(`${user.value.name} was logged out!`)
             clearUser()
             return true
         } catch (error) {

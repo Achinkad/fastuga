@@ -23,12 +23,15 @@ io.on("connection", (socket) => {
       socket.to("Chef").emit("newOrder", order);
     }
   });
-
+  socket.on("deliveredOrder", (order) => {
+    socket.to("Manager").emit("deliveredOrder", order);
+  })
   socket.on("deleteOrder", (order) => {
     socket.to("Manager").emit("deleteOrder", order);
   });
-  socket.on("updatedOrder", (order) => {
-    socket.to("Manager").to("Delivery").emit("updatedOrder", order);
+  
+  socket.on("updatedOrderChef", (order) => {
+    socket.to("Manager").to("Delivery").emit("updatedOrderChef", order);
   });
 
   socket.on("loggedIn", function (user) {
