@@ -151,31 +151,22 @@ router.beforeEach(async (to, from, next) => {
         await userStore.restoreToken()
     }
 
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "C")) {
-        next({
-            name: "CustomerDashboard"
-        })
-        return
-    }
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "ED")) {
-        next({
-            name: "DeliveryDashboard"
-        })
-        return
-    }
+    if (to.name == "Dashboard") {
+        if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
 
-    if (to.name == "Dashboard" && (userStore.user && userStore.user.type == "EC")) {
-        next({
-            name: "ChefDashboard"
-        })
-        return
-    }
+        switch (userStore.user.type) {
+            case "C":
+                next({ name: "CustomerDashboard" }); return
+                break;
 
-    if (to.name == "Dashboard" && !userStore.user) {
-        next({
-            name: "AnonymousDashboard"
-        })
-        return
+            case "ED":
+                next({ name: "DeliveryDashboard" }); return
+                break;
+
+            case "EC":
+                next({ name: "ChefDashboard" }); return
+                break;
+        }
     }
 
     if (to.name == "Login") {

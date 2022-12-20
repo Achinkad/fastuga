@@ -26,15 +26,8 @@ const props = defineProps({
     }
 })
 
-const loadOrders = (page = 1) => {
-
-    orderStore.load_orders(page, status.value)
-    
-}
-
-const loadOrderItems = (page = 1) => {
-    orderStore.loadOrderItems(page)
-}
+const loadOrders = (page = 1) => { orderStore.load_orders(page, status.value) }
+const loadOrderItems = (page = 1) => { orderStore.loadOrderItems(page) }
 
 const total = computed(() => {
     pagination.value = orderStore.get_page()
@@ -44,41 +37,21 @@ const total = computed(() => {
     return total_orders
 })
 
-const orders = computed(() => {
+const anonymous_orders = computed(() => { return orderStore.get_anonymous_orders })
+const orders = computed(() => { return orderStore.get_orders() })
+const order_items = computed(() => { return orderStore.get_order_items() })
+const pagination = computed(() => { return orderStore.get_page() })
 
-    return orderStore.get_orders()
- 
-})
-
-const pagination = computed(() => {
-   
-    return orderStore.get_page()
-    
-})
-
-const order_items = computed(() => {
-    return orderStore.get_order_items()
-})
-
-const addOrder = () => {
-    router.push({ name: "NewOrder" });
-}
-
-const editOrder = (order) => {
-    router.push({ name: "Order", params: { id: order.id } });
-}
+const addOrder = () => { router.push({ name: "NewOrder" }) }
+const editOrder = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 
 watch(status, () => { loadOrders() })
-
-onMounted(() => { 
-    if(userStore.user && userStore.user.type!='EC'){
+onMounted(() => {
+    if (userStore.user && userStore.user.type == 'EC') {
+        loadOrderItems()
+    } else if (userStore.user) {
         loadOrders()
     }
-
-    if(userStore.user && userStore.user.type=='EC'){
-        loadOrderItems()
-    }
-    
 })
 
 </script>
@@ -103,7 +76,7 @@ onMounted(() => {
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div class="d-flex align-items-center" v-if="userStore.user && userStore.user.type=='EM'">
+                                    <div class="d-flex align-items-center">
                                         <label for="selectCompleted" class="me-2">Status</label>
                                         <select class="form-select" id="selectCompleted" v-model="status">
                                             <option value="all" selected>Any</option>
@@ -122,7 +95,9 @@ onMounted(() => {
                                 </button>
                             </div>
 
-                            <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
+                            <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
+                            <order-table :orders="anonymous_orders" :showId="true" @edit="editOrder" v-if="!userStore.user"></order-table>
+
                             <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
                             <div v-if="userStore.user && userStore.user.type != 'EC'" class="d-flex justify-content-end mt-3">

@@ -5,7 +5,7 @@ import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
 
 const productStore = useProductStore()
-const orderStore = useProductStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
 const serverBaseUrl = inject("serverBaseUrl")
@@ -17,7 +17,7 @@ const loadBestProducts = () => {
     })
 }
 
-const orders_from_user = computed(() => { return orderStore.my_orders })
+const anonymous_orders = computed(() => { return orderStore.get_anonymous_orders })
 const best_products = computed(() => { return productStore.best_products })
 
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
@@ -98,19 +98,17 @@ onBeforeMount(() => {
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Ticket Number</th>
-                                    <th>Points Gained</th>
                                     <th>Price</th>
                                     <th class="text-center" style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="orders_from_user == null">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">You don't have any orders... yet!</td>
+                                <tr v-if="anonymous_orders == null">
+                                    <td colspan="5" class="text-center" style="height:55px!important;">You don't have any orders... yet!</td>
                                 </tr>
-                                <tr v-for="order in orders_from_user" :key="order.id">
+                                <tr v-for="order in anonymous_orders" :key="order.id">
                                     <td>#{{order.id}}</td>
                                     <td>{{order.ticket_number}}</td>
-                                    <td>{{order.points_gained}}</td>
                                     <td>{{order.total_price}}€</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
