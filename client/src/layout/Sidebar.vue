@@ -55,6 +55,10 @@ const userStore = useUserStore()
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             Order-Items
                         </div>
+                        <div v-if="userStore.user && userStore.user.type == 'ED'">
+                            <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
+                            Order history
+                        </div>
                         <div v-if="(userStore.user && userStore.user.type == 'C') || !userStore.user">
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             Your Orders
