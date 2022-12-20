@@ -19,6 +19,7 @@ const props = defineProps({
 
 })
 
+
 const emit = defineEmits(["save", "cancel", "add"]);
 
 const editingProduct = ref(props.product);

@@ -2,14 +2,15 @@
 import { inject, onMounted, ref, watch, computed } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
+import { useProductStore } from '../../stores/product.js'
+
 
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
 
-
-const paginationNewOrder = ref({})
+const productStore = useProductStore()
 
 var value_type = ref("all")
 
@@ -21,7 +22,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    currentCustomer: {
+    customer: {
         type: Object,
         required: true,
     },
@@ -42,35 +43,26 @@ const newOrderItem = () => {
     }
 }
 
-const emit = defineEmits(["cancel", "add", "getCurrentCustomer"])
-const products = ref([])
+const emit = defineEmits(["cancel", "add"])
 
 const editingOrder = ref(props.order)
-const customer = ref(props.currentCustomer)
+
+const customer = ref(props.customer)
 
 editingOrder.value.points_used_to_pay = "0"
 
 watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
-watch(() => props.currentCustomer, (newCustomer) => { customer.value = newCustomer })
 watch(value_type, () => {
-    getProducts()
+    loadProducts()
     totalPrice()
 })
 
-const getProducts = (page = 1) => {
-    axios.get(serverBaseUrl + '/api/products?page=' + page, {
-        params: {
-            type: value_type.value
-        }
-    })
-    .then((response) => {
-        products.value = response.data.data
-        paginationNewOrder.value = response.data
-    })
-    .catch((error) => {
-        console.log(error);
-    })
+const loadProducts = (page = 1) => {
+   productStore.load_products(page,value_type.value)
 }
+
+const paginationNewOrder = computed(() => { return productStore.get_page() })
+const products = computed(() => { return productStore.get_products() })
 
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem())
@@ -116,7 +108,6 @@ const fillOrder = () => {
 }
 
 
-
 const deleteProductInAdd = (product) => {
     var flag = 0
     editingOrder.value.order_item.forEach((value, index) => {
@@ -154,7 +145,6 @@ const countProduct = (product) => {
     return count
 }
 
-const points = () => { return customer.value.points }
 const cancel = () => { emit("cancel", editingOrder.value) }
 
 const productPhotoFullUrl = (product) => {
@@ -166,8 +156,19 @@ watch(() => editingOrder.value.points_used_to_pay, (newValue) => {
     points_to_pay.value = newValue
 })
 
+watch(
+    () => props.customer,
+    (newCustomer) => {
+
+        customer.value = newCustomer
+        editingOrder.value.payment_reference=newCustomer.default_payment_reference
+        editingOrder.value.payment_type=newCustomer.default_payment_type
+    }
+)
+
 const payment_type = ref("Payment Reference")
 watch(() => editingOrder.value.payment_type, (newValue) => {
+
     switch (newValue) {
         case "VISA":
             payment_type.value = "Visa ID"
@@ -187,12 +188,10 @@ watch(() => editingOrder.value.payment_type, (newValue) => {
     }
 })
 
+
 onMounted(() => {
-    getProducts()
-    if (userStore.user && userStore.user.type == 'C') {
-        emit("getCurrentCustomer")
-        points()
-    }
+    loadProducts()
+
 })
 </script>
 
@@ -203,7 +202,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <div>
                         <h4 class="p-title" v-if="$route.name == 'Order'"> Order #{{ editingOrder.id }} Details </h4>
-                        <h4 class="p-title" v-if="$route.name == 'NewOrder'">Register your order</h4>
+                        <h4 class="p-title" v-if="$route.name == 'NewOrder'">Register your order {{teste()}}</h4>
                     </div>
                 </div>
             </div>
@@ -236,8 +235,8 @@ onMounted(() => {
                                 </div>
                                 <div class="row mt-3 mb-3" v-if="userStore.user && userStore.user.type == 'C'">
                                     <div class="col">
-                                        <label for="points" class="form-label">Points to use</label>
-                                        <select id="points" name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
+                                        <label class="form-label">Points to use</label>
+                                        <select name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
                                             <option value="0" selected>0</option>
                                             <option v-if="Math.floor(points() / 10) > 0" v-for="n in Math.floor(points() / 10)" :value="n * 10">
                                                 {{ n * 10 }}
@@ -304,10 +303,10 @@ onMounted(() => {
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">
                                     <div>
-                                        <h3 class="mt-2 mb-2 fw-bold">You've {{ points() }} Points!</h3>
+                                        <h3 class="mt-2 mb-2 fw-bold">You've {{ customer.points }} Points!</h3>
                                         <p class="mb-2 text-muted">
                                             <span class="text-muted me-2">
-                                                You can discount until {{(Math.floor(points() / 10)) * 5}}€ in this order.
+                                                You can discount until {{(Math.floor(customer.points / 10)) * 5}}€ in this order.
                                             </span>
                                         </p>
                                     </div>
@@ -414,8 +413,9 @@ onMounted(() => {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-4 d-flex justify-content-end align-items-end">
-                                    <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="getProducts" :limit="5"></Bootstrap5Pagination>
+                                    <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
                                 </div>
                             </div>
                             <div class="mb-3 mt-2">
