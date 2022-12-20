@@ -12,6 +12,7 @@ import OrderItemsTable from "./OrderItemsTable.vue"
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 const router = useRouter()
+const pagination_aux = ref();
 
 const status = ref("all")
 
@@ -40,15 +41,15 @@ const loadOrderItems = (page = 1) => {
 }
 
 const total = computed(() => {
-    pagination.value = orderStore.get_page()
-    if (pagination.value.meta != undefined) {
-        total_orders = pagination.value.meta.total
+    pagination_aux.value = orderStore.get_page()
+    if (pagination_aux.value.meta != undefined) {
+       total_orders = pagination_aux.value.meta.total
     }
     return total_orders
 })
 
 const orders = computed(() => {
-    console.log(orderStore.get_orders())
+
     return orderStore.get_orders()
  
 })

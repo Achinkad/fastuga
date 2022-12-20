@@ -26,18 +26,18 @@ const photoFullUrl = () => {
 }
 */
 
-
+/*
 watch(currentPhoto.photo_url,
   () => userStore.userPhotoUrl
 )
-
+*/
 
 </script>
 
 <template>
     <nav class="navbar navbar-expand-md flex-md-nowrap">
         <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            data-bs-target="sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -71,7 +71,7 @@ watch(currentPhoto.photo_url,
                             <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
                         </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                         <li>
                             <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
                                 :to="{ name: 'ChangeProfile' }">
