@@ -1,8 +1,6 @@
 <script setup>
 import { inject } from "vue"
 
-
-
 const serverBaseUrl = inject("serverBaseUrl")
 
 const props = defineProps({
@@ -35,21 +33,21 @@ const props = defineProps({
     type: Boolean,
     default: true,
   }
- 
+
 })
 
 const photoFullUrl = (product) => {
   return product.photo_url
     ? serverBaseUrl + "/storage/products/" + product.photo_url
     : avatarNoneUrl;
-};
-
+}
 </script>
 
 <template>
-  
-  <table class="table">
-    <thead>
+
+  <div class="table-responsive">
+    <table class="table align-middle mt-4">
+        <thead class="table-light">
       <tr>
         <th v-if="showProductPhoto">Product Photo</th>
         <th v-if="showProductPhoto">Product Name</th>
@@ -73,7 +71,7 @@ const photoFullUrl = (product) => {
       </tr>
     </tbody>
   </table>
-
+</div>
 </template>
 
 <style scoped>

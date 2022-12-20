@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ProductResource;
@@ -17,7 +18,8 @@ class ProductController extends Controller
     {
         $this->middleware('auth.manager', ['except' => [
             'index',
-            'show'
+            'show',
+            'get_best_selling_product'
         ]]);
     }
 
@@ -43,19 +45,19 @@ class ProductController extends Controller
             $folderPath = "public/products/";
 
             $image_parts = explode(";base64,", $product->photo_url);
-    
+
             $image_type_aux = explode("image/", $image_parts[0]);
-    
+
             $image_type = $image_type_aux[1];
-    
+
             $image_base64 = base64_decode($image_parts[1]);
-            
-            
+
+
             $uniqid=uniqid();
-         
+
 
             $file="{$uniqid}.{$image_type}";
-            
+
             // -> Stores the new photo
 
             Storage::put($folderPath.$file, $image_base64);
@@ -96,19 +98,19 @@ class ProductController extends Controller
             $folderPath = "public/products/";
 
             $image_parts = explode(";base64,", $product->photo_url);
-    
+
             $image_type_aux = explode("image/", $image_parts[0]);
-    
+
             $image_type = $image_type_aux[1];
-    
+
             $image_base64 = base64_decode($image_parts[1]);
-            
-            
+
+
             $uniqid=uniqid();
-         
+
 
             $file="{$uniqid}.{$image_type}";
-            
+
             // -> Stores the new photo
 
             Storage::put($folderPath.$file, $image_base64);
@@ -128,5 +130,13 @@ class ProductController extends Controller
             if ($product->order_item) { $product->order_item->detach(); }
             return $product->delete();
         });
+    }
+
+    public function get_best_selling_product()
+    {
+        $ids = [];
+        $best_products = DB::table('order_items')->selectRaw('product_id, COUNT(*) as count')->groupBy('product_id')->orderBy('count', 'desc')->take(5)->get();
+        foreach ($best_products as $product) { array_push($ids, $product->product_id); }
+        return ProductResource::collection(Product::whereIn('id', $ids)->get());
     }
 }

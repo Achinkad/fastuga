@@ -82,11 +82,15 @@ const save = () => {
     formData.append('name', editingUser.value.name);
     formData.append('email', editingUser.value.email);
     formData.append('type', editingUser.value.type);
+    
     if(editingUser.value.blocked == false){
         formData.append('blocked', 0);
         }else{
           formData.append('blocked', 1);
     }
+    
+
+
     if (previewImage != null) {
         formData.append('photo_url', previewImage);
     }
@@ -102,14 +106,30 @@ const cancel = () => {
 </script>
 
 <template>
+  <div class="container-fluid">
+
   <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'User'">User #{{ editingUser.id }}</h3>
-    <h3 class="mt-5 mb-3" v-if="$route.name == 'newUser'">Adding New User</h3>
-    <hr />
-    <hr />
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex p-title-box">
+
+    <h4 class="p-title me-auto" v-if="$route.name == 'User'">User #{{ editingUser.id }}</h4>
+    <h4 class="p-title me-auto" v-if="$route.name == 'newUser'">Adding New User</h4>
+  </div>
+  </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+
+
+
     <div class="d-flex flex-wrap justify-content-between">
-      <div class="w-75 pe-4">
-        <div class="mb-3">
+      <div class="col-xl-6">
+
+        <div class="mb-3 px-1">
           <label for="inputName" class="form-label">Name</label>
           <input
             type="text"
@@ -121,6 +141,8 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
+      </div>
+      <div class="col-xl-6">
 
         <div class="mb-3 px-1">
           <label for="inputEmail" class="form-label">Email</label>
@@ -134,7 +156,10 @@ const cancel = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-        <div class="mb-3 px-1" v-if="$route.name == 'newUser'">
+      </div>
+      <div class="col-xl-6" v-if="$route.name == 'newUser'">
+
+        <div class="mb-3 px-1" >
           <label for="inputPassword" class="form-label">Password</label>
           <input
             type="password"
@@ -144,38 +169,46 @@ const cancel = () => {
             required
             v-model="editingUser.password"
           />
-          <field-error-message :errors="errors" fieldName="email"></field-error-message>
+          <field-error-message :errors="errors" fieldName="password"></field-error-message>
         </div>
-         <div class="mb-3" >
-            <label  for="type">Role:</label>
-            <select id="type" name="type"  v-model="editingUser.type">
+        </div>
+        <div class="col-xl-6">
+
+         <div class="mb-3 px-1" >
+            <label for="type" class="form-label">Role</label>
+            <select id="type" name="type" class="form-select" v-model="editingUser.type">
               <option value="EM">Manager</option>
               <option value="EC">Chef</option>
               <option value="ED">Delivery</option>
             </select>
           <field-error-message :errors="errors" fieldName="type"></field-error-message>
         </div>
+        </div>
+        <div class="col-xl-6" v-if="$route.name == 'User'">
 
-        <div v-if="$route.name == 'User'" class="mb-3">
-            <label for="blocked">Blocked:</label>
-            <select id="blocked" name="blocked"  v-model="editingUser.blocked">
+        <div class="mb-3 px-1">
+            <label for="blocked" class="form-label">Blocked</label>
+            <select id="blocked" name="blocked"  class="form-select" v-model="editingUser.blocked">
               <option value="false">Unblocked</option>
               <option value="true">Blocked</option>
             </select>
           <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
         </div>
-      </div>
+        </div>
+      
+        <div class="col-xl-6">
 
-      <div class="w-25">
-                <label class="form-label">Photo</label>
-                <div class="mb-3">
-                    <img :src="avatarNoneUrl" class="img-thumbnail" v-if="$route.name == 'newUser'" />
+
+                <div class="mb-3 px-1">
+                  <label class="form-label">Photo</label>
+                    <br>
                     <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'" />
+                    
                     <input type="file" class="form-control" name='upload' @change="handleUpload"
                         required>
                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
-            </div>
+        </div>
 
       <!--
 
@@ -203,7 +236,13 @@ const cancel = () => {
                 User</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
   </form>
+  </div>
 </template>
 
 <style scoped>

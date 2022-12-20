@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from "vue";
+import { inject, watch,ref } from "vue";
 import { useUserStore } from '../stores/user.js'
 import { useRouter } from 'vue-router'
 import avatarNoneUrl from '@/assets/avatar-none.png'
@@ -9,17 +9,29 @@ const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
-const logout = async () => {
-    if (await userStore.logout()) {
-        toast.success("User has logged out of the application.")
+const currentPhoto = ref(userStore.user) 
+
+
+const logout = () => {
+    if (userStore.logout()) {
         router.push({ name: 'Login' })
+        
     } else {
         toast.error("There was a problem logging out of the application!")
     }
 }
+/*
 const photoFullUrl = () => {
     return userStore.user.photo_url ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
 }
+*/
+
+
+watch(currentPhoto.photo_url,
+  () => userStore.userPhotoUrl
+)
+
+
 </script>
 
 <template>
@@ -49,7 +61,7 @@ const photoFullUrl = () => {
                     <a class="nav-link" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span class="account-user-avatar">
-                            <img alt="user image" :src="photoFullUrl()" class="rounded-circle img_photo">
+                            <img alt="user image" :src="userStore.userPhotoUrl" class="rounded-circle img_photo">
                         </span>
                         <span>
                             <span class="account-user-name">{{ userStore.user.name }}</span>
@@ -61,18 +73,15 @@ const photoFullUrl = () => {
                     </a>
                     <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                         <li>
-                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
-                                :to="{ name: 'ChangePassword' }">
-                                Change password
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                :to="{ name: 'ChangeProfile' }">
+                                Profile
                             </router-link>
                         </li>
                         <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
-                                :to="{ name: 'ChangeProfile' }">
-                                Change profile
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                                :to="{ name: 'ChangePassword' }">
+                                Change password
                             </router-link>
                         </li>
                         <li>
@@ -113,8 +122,6 @@ const photoFullUrl = () => {
     padding: calc(31px * .5) 20px calc(31px * .5) 57px !important;
     text-align: left !important;
     position: relative;
-    background-color: rgb(250, 250, 253);
-    border: 1px solid #eef2f7;
     border-width: 0 1px;
     min-height: 70px;
     transition: none;

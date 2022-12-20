@@ -9,7 +9,7 @@ body {
     padding: 0 !important;
     margin: 0;
     background-color: #fafbfe !important;
-    color: #6c757d !important;
+    color: #1f2937 !important;
 }
 
 .wrapper {
@@ -24,6 +24,20 @@ main {
     overflow: hidden;
     min-height: 100vh;
     padding: 70px 12px 65px;
+}
+
+h5 {
+    font-size: .9375rem !important;
+}
+
+h4 {
+    font-weight: 700 !important;
+    line-height: 1.1;
+}
+
+h3 {
+    font-size: 1.5rem !important;
+    font-weight: 700;
 }
 
 .sidebar {
@@ -91,25 +105,22 @@ main {
 }
 
 .p-title-box .p-title {
-  font-size: 1.235rem;
-  margin: 0;
-  line-height: 75px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: #6c757d;
-  font-weight: 600;
+    font-size: 1.235rem;
+    margin: 0;
+    line-height: 75px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 600;
 }
 
-.active > .page-link, .page-link.active {
-    z-index: 3;
-    color: #fff !important;
-    background-color: #727cf5 !important;
-    border-color: #727cf5 !important;
+.p-title-box .p-title-right {
+    float: right;
 }
 
-.page-link {
-    color: #727cf5 !important;
+.p-title-box .p-title-right h6 {
+    font-size: 16px;
+    font-weight: 400;
 }
 
 .footer {

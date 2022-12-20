@@ -1,191 +1,113 @@
 <script setup>
-import { ref, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch, computed  } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
+import { useOrderStore } from '../../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
 import OrderTable from "./OrderTable.vue"
 import OrderItemsTable from "./OrderItemsTable.vue"
 
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
 
 const userStore = useUserStore()
+const orderStore = useOrderStore()
 const router = useRouter()
 
-const pagination = ref({})
+const status = ref("all")
 
-//variável usada no filtro
-var value_status = ref("all");
-
-//WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_STATUS(valor do filtro)
-watch(value_status, () => {
-  console.log(value_status.value)
-  loadOrders()
-})
-
-//funcao a implementar com filtros para historicos de negocio
-
-const loadOrders = (page = 1) => {
-
-    if(userStore.user && userStore.user.type == 'EM'){
-
-      axios.get(serverBaseUrl + '/api/orders?page=' + page, {
-        params: {
-          status: value_status.value
-        }
-      })
-      .then((response) => {
-
-        orders.value = response.data.data
-        pagination.value = response.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-
-    if(userStore.user && (userStore.user.type == 'ED' || userStore.user.type == 'C')){
-
-      axios.get(serverBaseUrl+'/api/users/'+ userStore.userId +'/orders?page='+page)
-      .then((response) => {
-
-        orders.value = response.data.data
-        pagination.value = response.data
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-    if(userStore.user && userStore.user.type == 'EC'){
-      console.log("aaaa")
-      axios.get(serverBaseUrl+'/api/users/'+ userStore.userId +'/order-items?page='+page)
-      .then((response) => {
-        order_items.value = response.data.data
-        pagination.value = response.data
-
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
-
-
-    }
-
-const addOrder = () => {
-  router.push({ name: "NewOrder" });
-};
-
-const editOrder = (order) => {
-  router.push({ name: "Order", params: { id: order.id } });
-};
-
-const deletedOrder = (deletedOrder) => {
-  let idx = orders.value.findIndex((o) => o.id === deletedOrder.id)
-  if (idx >= 0) {
-    orders.value.splice(idx, 1);
-  }
-};
+var total_orders = 0
 
 const props = defineProps({
-  onlyCurrentOrders: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-const forceRerender = () => {
-    loadOrders()
-
-}
-
-const orders = ref([])
-const order_items = ref([])
-
-onMounted(() => {
-  if(userStore.user){
-    loadOrders()
-  }
-
-
+    onlyCurrentOrders: {
+        type: Boolean,
+        default: false
+    }
 })
+
+const loadOrders = (page = 1) => { orderStore.load_orders(page, status.value) }
+const loadOrderItems = (page = 1) => { orderStore.loadOrderItems(page) }
+
+const total = computed(() => {
+    pagination.value = orderStore.get_page()
+    if (pagination.value.meta != undefined) {
+        total_orders = pagination.value.meta.total
+    }
+    return total_orders
+})
+
+const anonymous_orders = computed(() => { return orderStore.get_anonymous_orders })
+const orders = computed(() => { return orderStore.get_orders() })
+const order_items = computed(() => { return orderStore.get_order_items() })
+const pagination = computed(() => { return orderStore.get_page() })
+
+const addOrder = () => { router.push({ name: "NewOrder" }) }
+const editOrder = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
+
+watch(status, () => { loadOrders() })
+onMounted(() => {
+    if (userStore.user && userStore.user.type == 'EC') {
+        loadOrderItems()
+    } else if (userStore.user) {
+        loadOrders()
+    }
+})
+
 </script>
 
 <template>
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="d-flex">
-                    <div class="p-title-box">
-                        <div class="p-title-right">
-                            <h4 class="p-title" v-if="!userStore.user || userStore.user.type != 'EC'">Orders (Total: 83)</h4>
-                            <h4 class="p-title" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
-                        </div>
+                <div class="d-flex p-title-box">
+                    <h4 class="p-title me-auto" v-if="!userStore.user || userStore.user.type != 'EC'">Orders List</h4>
+                    <h4 class="p-title me-auto" v-if="userStore.user && userStore.user.type == 'EC'">Order Items</h4>
+                    <div class="p-title-right">
+                        <h6 class="p-title">Viewing {{orderStore.total_orders}} of {{total}}</h6>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="d-flex">
-                <div class="col-3" v-if="userStore.user && userStore.user.type=='EM'">
-                    <label for="selectCompleted" class="form-label">Filter by status:</label>
-                    <select class="form-select" id="selectCompleted" v-model="value_status">
-                        <option value="all" selected>Any</option>
-                        <option value="P">Preparing Orders</option>
-                        <option value="R">Ready Orders</option>
-                        <option value="D">Delivered Orders</option>
-                        <option value="C">Canceled Orders</option>
-                    </select>
-                  </div>
-                </div>
-              </div> 
-                <div class="ms-auto align-self-center">
-                    <div class="mx-0 mt-2" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
-                          <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
-                              <i class="bi bi-xs bi-plus-circle"></i>&nbsp; Add Order
-                          </button>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-xl-8">
+                                <div class="d-flex">
+                                    <div class="d-flex align-items-center">
+                                        <label for="selectCompleted" class="me-2">Status</label>
+                                        <select class="form-select" id="selectCompleted" v-model="status">
+                                            <option value="all" selected>Any</option>
+                                            <option value="P">Preparing</option>
+                                            <option value="R">Ready</option>
+                                            <option value="D">Delivered</option>
+                                            <option value="C">Canceled</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 d-flex justify-content-end align-items-end" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
+                                <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
+                                    <i class="bi bi-xs bi-plus-circle me-2"></i>Add Order
+                                </button>
+                            </div>
+
+                            <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
+                            <order-table :orders="anonymous_orders" :showId="true" @edit="editOrder" v-if="!userStore.user"></order-table>
+
+                            <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
+
+                            <div v-if="userStore.user && userStore.user.type != 'EC'" class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+                            </div>
+                             <div v-if="userStore.user && userStore.user.type=='EC'" class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItems" :limit="5"></Bootstrap5Pagination>
+                            </div>
+                        </div>
                     </div>
                 </div>
-          
-       
-
-        <order-table :orders="orders" :showId="true" @edit="editOrder" @deleted="deletedOrder" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type != 'EC'"></order-table>
-        <order-items-table :order_items="order_items" @forceRerender="forceRerender" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
-
-        <div v-if="userStore.user && !onlyCurrentOrders" class="d-flex justify-content-end mt-3">
-            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+            </div>
         </div>
     </div>
 </template>
-
-<style scoped>
-.btn-addOrder {
-  margin-top: 1.85rem;
-}
-
-button[type="button"] {
-    background-color: #727cf5 !important;
-    color: #fff;
-    border-color: #727cf5;
-    border-radius: 0.15rem;
-    box-shadow: 0px 2px 6px 0px rgba(114, 124, 245, 0.5);
-    border: 1px #727cf5;
-    font-size: 15px;
-    padding: .5rem 0;
-}
-
-button[type="button"]:hover {
-    color: #fff;
-}
-
-button[type="button"]:focus {
-    color: #fff;
-    box-shadow: 0 0 0 .15rem rgba(135, 144, 247, 0.5);
-}
-
-.btn-add {
-    position: relative;
-    top: .775rem;
-}
-</style>

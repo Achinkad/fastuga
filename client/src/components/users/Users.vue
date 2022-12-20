@@ -1,15 +1,15 @@
 <script setup>
-  import { ref, computed, onMounted, inject,watch } from 'vue'
-  import {useRouter} from 'vue-router'
-  import UserTable from "./UserTable.vue"
-  import { Bootstrap5Pagination } from 'laravel-vue-pagination';
-  
-  const router = useRouter()
+import { ref, computed, onMounted, inject,watch } from 'vue'
+import { useRouter } from 'vue-router'
+import UserTable from "./UserTable.vue"
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
-  const axios = inject('axios')
+const router = useRouter()
 
-  const users = ref([])
-  const pagination = ref({})
+const axios = inject('axios')
+
+const users = ref([])
+const pagination = ref({})
 
 const serverBaseUrl = inject("serverBaseUrl")
 
@@ -17,75 +17,100 @@ const forceRerender = () => {
     loadUsers()
     console.log("reload")
 }
-  var value_role=ref("all");
 
+var value_role=ref("all")
 
-
-  const loadUsers = (page = 1) => {
+const loadUsers = (page = 1) => {
     axios.get(serverBaseUrl+'/api/users?page='+page,{
-    params:{
-      type: value_role.value
-      }
-      
-  })
-        .then((response) => {
-          users.value = response.data.data
-          pagination.value = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
+        params:{
+            type: value_role.value
+        }
 
-  watch(value_role,() =>{
-  console.log(value_role.value)
-  loadUsers()
-}) 
-  const addUser = () => {
-    router.push({ name: "newUser" });
-  };
-  const editUser = (user) => {
-    router.push({ name: 'User', params: { id: user.id } })
-  }
+    })
+    .then((response) => {
+        users.value = response.data.data
+        pagination.value = response.data
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+}
 
-  onMounted (() => {
+watch(value_role,() =>{
+    console.log(value_role.value)
     loadUsers()
-  })
+})
+const addUser = () => {
+    router.push({ name: "newUser" });
+};
+const editUser = (user) => {
+    router.push({ name: 'User', params: { id: user.id } })
+}
+
+onMounted (() => {
+    loadUsers()
+})
 </script>
 
 <template>
-  <h3 class="mt-5 mb-3">Users</h3>
-  <hr>
-  <div class="mx-2 mt-2 flex-grow-1 filter-div">
-      <label for="selectRole" class="form-label">Filter by role:</label>
-      <select class="form-select" id="selectRole" v-model="value_role">
-        <option value="all" selected>Any</option>
-        <option value="C">Customers</option>
-        <option value="EC">Employees Chef</option>
-        <option value="ED">Employees Delivery</option>
-        <option value="EM">Employees Manager</option>
-      </select>
-      <div class="mx-0 mt-2">
-        <button type="button" class="btn btn-warning px-4 btn-addtask" @click="addUser"><i
-            class="bi bi-xs bi-plus-circle"></i>&nbsp; Add User</button>
-      </div>
-  </div>
-  <user-table
-    :users="users"
-    :showId="false"
-    @edit="editUser"
-    @forceRerender="forceRerender"
-  ></user-table>
-  <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
-  <hr>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex p-title-box">
+                    <h4 class="p-title me-auto">Users List</h4>
+                    <div class="p-title-right">
+                        <h6 class="p-title">Viewing 0 of 0</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-xl-8">
+                                <div class="d-flex">
+                                    <div class="d-flex align-items-center">
+                                        <label for="selectRole" class="me-2">Role</label>
+                                        <select class="form-select" id="selectRole" v-model="value_role">
+                                            <option value="all" selected>Any</option>
+                                            <option value="C">Customers</option>
+                                            <option value="EC">Employees Chef</option>
+                                            <option value="ED">Employees Delivery</option>
+                                            <option value="EM">Employees Manager</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 d-flex justify-content-end align-items-end">
+                                <button type="button" class="btn btn-warning px-4 btn-add" @click="addUser"><i
+                                    class="bi bi-xs bi-plus-circle me-2"></i> Add User
+                                </button>
+                            </div>
+                            <user-table
+                                :users="users"
+                                :showId="false"
+                                @edit="editUser"
+                                @forceRerender="forceRerender"
+                            ></user-table>
+                            <div class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5"></Bootstrap5Pagination>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
 .filter-div {
-  min-width: 12rem;
+    min-width: 12rem;
 }
+
 .total-filtro {
-  margin-top: 2.3rem;
+    margin-top: 2.3rem;
 }
 </style>
-

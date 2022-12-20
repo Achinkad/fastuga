@@ -39,7 +39,7 @@
                 reader.readAsDataURL(image);
                 reader.onload = e =>{
                     previewImage = e.target.result;
-                    console.log(previewImage);
+                 
                 }
 }
 
@@ -50,8 +50,9 @@
     return JSON.stringify(customer.value)
   }
 
-  let originalValueStr='';
+   let originalValueStr='';
   const loadCustomer = () => {
+  
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
         axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
@@ -84,7 +85,7 @@
     }
 
     formData.append('_method', 'PUT');
-
+    router.back();
     userStore.save(formData,userStore.user.id);
 
     }
@@ -94,7 +95,11 @@
     ? serverBaseUrl + "/storage/fotos/" + customer.value.user.photo_url
     : avatarNoneUrl
 })
-  
+const cancel = () => {
+    
+    router.back()
+}
+
  
 onMounted(() => {
   loadCustomer()
@@ -151,17 +156,30 @@ const updateCostumer = () => {
 
   
 </script>
-
+fieldName
 
 <template>
-   
-    <h3 class="mt-5 mb-3">Profile</h3>
-    <hr />
+     <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex p-title-box">
+
+    <h4 class="p-title me-auto">Profile</h4>
+          </div>
+        </div>
+      </div>
+
        <form>
-        
+        <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+
     <div class="d-flex flex-wrap justify-content-between">
-      <div class="w-75 pe-4">
-        <div class="mb-3">
+      <div class="col-xl-6">
+
+        <div class="mb-3 px-1">
           <label for="inputName" class="form-label">Name</label>
           <input
             type="text"
@@ -173,7 +191,9 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
+      </div>
      
+      <div class="col-xl-6">
 
         <div class="mb-3 px-1">
           <label for="inputEmail" class="form-label">Email</label>
@@ -187,8 +207,10 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="email"></field-error-message>
         </div>
-        
+      </div>
       
+      <div class="col-xl-6">
+
         <div class="mb-3 px-1" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputPhone" class="form-label">Phone</label>
           <input
@@ -201,6 +223,9 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="phone"></field-error-message>
         </div>
+      </div>
+
+      <div class="col-xl-6">
 
         <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
           <label for="inputNif" class="form-label">NIF</label>
@@ -214,26 +239,32 @@ const updateCostumer = () => {
           />
           <field-error-message :errors="errors" fieldName="name"></field-error-message>
         </div>
+      </div>
+      <div class="col-xl-6">
+
         <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
-            <label for="payment_type">Payment Type</label>
-            <select id="payment_type" name="payment_type" v-model="customer.default_payment_type">
+            <label class="form-label" for="payment_type">Payment Type</label>
+            <select id="payment_type" name="payment_type" class="form-select" v-model="customer.default_payment_type">
                 <option value="VISA">Visa</option>
                 <option value="PAYPAL">PayPal</option>
                 <option value="MBWAY">MBWay</option>
             </select>
         <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
         </div>
+      </div>
+      <div class="col-xl-6">
+
         <div class="mb-3" v-if="userStore.user && userStore.user.type == 'C'">
-            <div class="mb-3">
+            
                 <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
                 <input type="text" class="form-control" id="inputPaymentReference" v-model="customer.default_payment_reference"/>
                 
-            </div>
+            
         </div>
-        </div>
-    </div>
+      </div>
+        
+      <div class="col-xl-6">
 
-    <div class="w-25">
                 <label class="form-label">Photo</label>
                 <div class="mb-3">
                     <img :src="photoFullUrl" class="img-thumbnail" />
@@ -242,6 +273,7 @@ const updateCostumer = () => {
                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
       </div>
+    </div>
 
 
     
@@ -252,7 +284,14 @@ const updateCostumer = () => {
                 User</button>
       <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
-  
+  </div>
+</div>
+</div>
+</div>
+</div>
   </form>
+  </div>
+
+
 
 </template>
