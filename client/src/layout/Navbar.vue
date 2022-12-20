@@ -1,15 +1,14 @@
 <script setup>
-import { inject, watch,ref } from "vue";
+import { inject } from "vue";
 import { useUserStore } from '../stores/user.js'
 import { useRouter } from 'vue-router'
-import avatarNoneUrl from '@/assets/avatar-none.png'
 
-const serverBaseUrl = inject("serverBaseUrl")
+
+
 const router = useRouter()
 const userStore = useUserStore()
 const toast = inject("toast")
 
-const currentPhoto = ref(userStore.user) 
 
 
 const logout = () => {
@@ -20,16 +19,6 @@ const logout = () => {
         toast.error("There was a problem logging out of the application!")
     }
 }
-/*
-const photoFullUrl = () => {
-    return userStore.user.photo_url ? serverBaseUrl + '/storage/fotos/' + userStore.user.photo_url : avatarNoneUrl
-}
-*/
-
-
-watch(currentPhoto.photo_url,
-  () => userStore.userPhotoUrl
-)
 
 
 </script>
@@ -37,7 +26,7 @@ watch(currentPhoto.photo_url,
 <template>
     <nav class="navbar navbar-expand-md flex-md-nowrap">
         <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            data-bs-target="sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -56,8 +45,8 @@ watch(currentPhoto.photo_url,
                         Login
                     </router-link>
                 </li>
-                <div class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
-                <li class="nav-item dropdown nav-user" v-if="userStore.user" id="dropdown-user">
+                <div  class="topbar-divider d-none d-sm-block" v-if="!userStore.user"></div>
+                <li class="nav-item dropdown nav-user" v-if="userStore.user" >
                     <a class="nav-link" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span class="account-user-avatar">
@@ -71,7 +60,7 @@ watch(currentPhoto.photo_url,
                             <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
                         </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                         <li>
                             <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
                                 :to="{ name: 'ChangeProfile' }">

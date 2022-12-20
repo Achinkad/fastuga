@@ -12,23 +12,6 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    showId: {
-        type: Boolean,
-        default: true,
-    },
-
-    showPhoto: {
-        type: Boolean,
-        default: true,
-    },
-    showEditButton: {
-        type: Boolean,
-        default: true,
-    },
-    showDeleteButton: {
-        type: Boolean,
-        default: true,
-    },
 });
 
 const emit = defineEmits(["edit", "deleted", "forceRerender"]);
@@ -93,7 +76,7 @@ const capitalize = (word) => {
     <table class="table table-responsive align-middle mt-4">
         <thead class="table-light">
             <tr>
-                <th v-if="showPhoto">Photo</th>
+                <th >Photo</th>
                 <th class="align-middle">Name</th>
                 <th class="align-middle">Category</th>
                 <th class="align-middle">Price</th>
@@ -102,18 +85,18 @@ const capitalize = (word) => {
         </thead>
         <tbody>
             <tr v-for="product in products" :key="product.id">
-                <td v-if="showPhoto" class="align-middle">
-                    <img :src="photoFullUrl(product)" class="rounded-circle img_photo" />
+                <td  class="align-middle">
+                    <img alt ="product" :src="photoFullUrl(product)" class="rounded-circle img_photo" />
                 </td>
                 <td class="align-middle">{{ product.name }}</td>
                 <td class="align-middle">{{ capitalize(product.type) }}</td>
                 <td class="align-middle">{{ product.price }}€</td>
                 <td class="text-center">
                     <div class="d-flex justify-content-center">
-                        <button class="btn btn-xs btn-light" title="Edit Product" @click="editClick(product)" v-if="showEditButton">
+                        <button class="btn btn-xs btn-light" title="Edit Product" @click="editClick(product)">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-xs btn-light" title="Delete Product" @click="deleteClick(product)" v-if="showDeleteButton">
+                        <button class="btn btn-xs btn-light" title="Delete Product" @click="deleteClick(product)">
                             <i class="bi bi-trash3"></i>
                         </button>
                     </div>

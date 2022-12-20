@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch, onBeforeMount, onMounted, inject, ref } from 'vue'
+import { computed, onBeforeMount, inject} from 'vue'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
@@ -23,11 +23,7 @@ const best_products = computed(() => { return productStore.best_products })
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
-const capitalize = (word) => {
-    const capitalizedFirst = word[0].toUpperCase()
-    const rest = word.slice(1)
-    return capitalizedFirst + rest
-}
+
 
 onBeforeMount(() => {
     loadBestProducts()

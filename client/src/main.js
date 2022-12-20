@@ -24,6 +24,7 @@ app.provide('axios', axios.create({
     baseURL: serverBaseUrl + '/api',
     headers: {
         'Content-type': 'application/json',
+        'Content-Encoding': 'gzip'
     },
 }))
 app.provide('serverBaseUrl', serverBaseUrl)

@@ -3,7 +3,7 @@ import { ref, watch, computed, inject } from "vue";
 import avatarNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
-//var product_photo_intermediary = undefined
+
 var previewImage = null
 
 
@@ -41,13 +41,6 @@ watch(
     }
 )
 
-
-/*
-const handleUpload = (files) => {
-    product_photo_intermediary = files[0]
-
-}
-*/
 
 
 

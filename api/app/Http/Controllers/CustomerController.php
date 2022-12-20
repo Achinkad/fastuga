@@ -19,13 +19,40 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('can:viewAny')->only('viewAny');
+        $this->middleware('can:create')->only('create');
+        $this->middleware('can:update')->only('update');
+        $this->middleware('can:delete')->only('delete');
+        /*
         $this->middleware('auth.manager', ['except' => [
             'store',
             'show',
             'update',
             'show_by_user',
+            'get_number_customers_created_this_month',
+
 
         ]]);
+        /*
+        $this->middleware('auth.chef', ['except' => [
+            'store',
+            'show',
+            'update',
+            'show_by_user',
+            'get_number_customers_created_this_month',
+
+
+        ]]);
+        $this->middleware('auth.delivery', ['except' => [
+            'store',
+            'show',
+            'update',
+            'show_by_user',
+            'get_number_customers_created_this_month',
+
+
+        ]]);
+        */
     }
     public function index()
     {

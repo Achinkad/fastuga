@@ -2,13 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
-
-class OrderPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -20,7 +17,7 @@ class OrderPolicy
      */
     public function viewAny(User $user)
     {
-        if($user->type=="EM"){
+        if($user->type == "EM"){
             return true;
         }
     }
@@ -29,15 +26,14 @@ class OrderPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Order $order)
+    public function view(User $user, User $model)
     {
-        if(($user->type=='ED' && $order->delivered_by==$user->id)||($user->type=='C' && $order->customer_id==$user->customer->id)){
+        if (($user->type!="EM" && $user->id==$model->id) || $user->type=="EM"){
             return true;
         }
-
     }
 
     /**
@@ -48,34 +44,35 @@ class OrderPolicy
      */
     public function create(User $user)
     {
-        if($user->type == 'C' || $user->type == null || $user->type == 'EM'){
+        if($user->type=="EM" || $user->type=="C"){
             return true;
         }
-        
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Order $order)
+    public function update(User $user, User $model)
     {
-        
+        if (($user->type!="EM" && $user->id==$model->id) || $user->type=="EM"){
+            return true;
+        }
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Order $order)
+    public function delete(User $user, User $model)
     {
-        if($user->type == 'EM'){
+        if($user->type == "EM"){
             return true;
         }
     }
@@ -84,10 +81,10 @@ class OrderPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Order $order)
+    public function restore(User $user, User $model)
     {
         //
     }
@@ -96,27 +93,11 @@ class OrderPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Order $order)
+    public function forceDelete(User $user, User $model)
     {
         //
     }
-/*
-    public function status(Order $order)
-    {
-        if($user->type== "EM" || $user->type == "EC" || $user->type == "ED"){
-            return true;
-        }
-    }
-
-    public function get_count_order_status(User $user){
-        
-        if($user->type == "ED"){
-            return true;
-        }
-        
-    }
-    */
 }

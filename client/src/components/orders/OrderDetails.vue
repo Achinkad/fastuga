@@ -1,21 +1,19 @@
 <script setup>
 import { inject, onMounted, ref, watch } from "vue"
-import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 
-import avatarNoneUrl from '@/assets/avatar-none.png'
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
 const axios = inject('axios')
-const toast = inject('toast')
+
 
 const paginationNewOrder = ref({})
-const currentCustomer = ref({})
+
 var value_type = ref("all")
 
-const router = useRouter()
+
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -117,9 +115,7 @@ const fillOrder = () => {
     editingOrder.value.total_paid = editingOrder.value.total_price;
 }
 
-const deleteProduct = (position) => {
-    editingOrder.value.order_item.splice(position - 1, 1)
-}
+
 
 const deleteProductInAdd = (product) => {
     var flag = 0
@@ -173,9 +169,7 @@ const points_stack = (points) => {
     return points_stack_val.value
 }
 
-const userPhotoFullUrl = (user) => {
-    return user.photo_url ? serverBaseUrl + "/storage/fotos/" + user.photo_url : avatarNoneUrl
-}
+
 
 const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl

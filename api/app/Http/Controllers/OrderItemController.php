@@ -50,7 +50,7 @@ class OrderItemController extends Controller
             if($i) $order_item->order->status = "R";
             $order_item->order->save();
         }
-        
+
         return new OrderItemResource($order_item);
     }
 

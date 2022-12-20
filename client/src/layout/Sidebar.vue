@@ -1,5 +1,4 @@
 <script setup>
-import { computed, watch } from 'vue'
 import { useUserStore } from '../stores/user.js'
 
 const userStore = useUserStore()
@@ -55,11 +54,15 @@ const userStore = useUserStore()
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             Order-Items
                         </div>
+                        <div v-if="userStore.user && userStore.user.type == 'ED'">
+                            <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
+                            Order history
+                        </div>
                         <div v-if="(userStore.user && userStore.user.type == 'C') || !userStore.user">
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             Your Orders
                         </div>
-                        <div v-else>
+                        <div v-if = "userStore.user && userStore.user.type == 'EM'">
                             <i class="bi bi-bag-fill" style="font-size: 17px!important;"></i>
                             All Orders    
                         </div>

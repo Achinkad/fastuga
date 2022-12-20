@@ -1,6 +1,6 @@
 <script setup>
-import { computed, watch, onBeforeMount, inject, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, watch, onBeforeMount, inject } from 'vue'
+
 import { useUserStore } from '../stores/user.js'
 import { useOrderStore } from '../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
@@ -10,9 +10,6 @@ const userStore = useUserStore()
 const orderStore = useOrderStore()
 
 
-const router = useRouter()
-
-const serverBaseUrl = inject("serverBaseUrl")
 
 const pagination = computed(() => { return orderStore.get_page() })
 
@@ -110,11 +107,15 @@ onBeforeMount(() => {
                                 <tr v-for="order in orders_from_user" :key="order.id">
                                     <td>#{{ order.id }}</td>
                                     <td>{{ order.ticket_number }}</td>
-                                    <div v-if="order.customer != null">
-                                        <td>{{ order.customer.user.name }}</td>
+                                    <td>
+                                        <div v-if="order.customer != null">
+                                            {{ order.customer.user.name }}
 
-                                    </div>
-                                    <div v-else>--</div>
+                                        </div>
+                                        <div v-else>--</div>
+
+                                    </td>
+
 
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">

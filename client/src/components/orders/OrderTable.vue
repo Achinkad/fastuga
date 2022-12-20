@@ -1,14 +1,10 @@
 <script setup>
-import { ref, watch, computed, inject, onMounted } from "vue"
+import { ref, watch, computed } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/order.js'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
-const axios = inject("axios")
-const toast = inject("toast")
-const serverBaseUrl = inject("serverBaseUrl")
 
 const emit = defineEmits(["completeToggled", "edit"])
 
@@ -17,38 +13,6 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    showId: {
-        type: Boolean,
-        default: true,
-    },
-    showStatus: {
-        type: Boolean,
-        default: true,
-    },
-    showCustomer: {
-        type: Boolean,
-        default: true,
-    },
-    showPrice: {
-        type: Boolean,
-        default: true,
-    },
-    showTicketNumber: {
-        type: Boolean,
-        default: true,
-    },
-    showCompletedButton: {
-        type: Boolean,
-        default: true,
-    },
-    showEditButton: {
-        type: Boolean,
-        default: true,
-    },
-    showDeleteButton: {
-        type: Boolean,
-        default: true,
-    }
 })
 
 const editingOrders = ref(props.orders)
@@ -89,12 +53,12 @@ watch(
     <table class="table align-middle mt-4">
         <thead class="table-light">
             <tr>
-                <th v-if="showId">Order ID</th>
-                <th v-if="showTicketNumber">Ticket Number</th>
-                <th v-if="showCustomer && (userStore.user && userStore.user.type != 'C')">Customer ID</th>
+                <th >Order ID</th>
+                <th >Ticket Number</th>
+                <th v-if=" (userStore.user && userStore.user.type != 'C')">Customer ID</th>
                 <th v-if="userStore.user && userStore.user.type == 'C'">Points Gained</th>
-                <th v-if="showPrice">Price</th>
-                <th v-if="showStatus">Order Status</th>
+                <th >Price</th>
+                <th >Order Status</th>
                 <th class="text-center" v-if="(userStore.user && (userStore.user.type == 'EM' ||  userStore.user.type=='C')) || !userStore.user" style="width:10%">Actions</th>
             </tr>
         </thead>
@@ -104,8 +68,8 @@ watch(
                 <td v-else colspan="5" class="text-center" style="height:55px!important;"> No data available.</td>
             </tr>
             <tr v-for="order in orders" :key="order.id">
-                <td v-if="showId">#{{ order.id }}</td>
-                <td v-if="showTicketNumber">{{ order.ticket_number }}</td>
+                <td >#{{ order.id }}</td>
+                <td>{{ order.ticket_number }}</td>
                 <td v-if="order.customer && userStore.user.type == 'EM'">
                     <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
                         #{{ order.customer_id }}
@@ -113,8 +77,8 @@ watch(
                 </td>
                 <td v-if="!order.customer && (userStore.user && userStore.user.type != 'C')"> -- </td>
                 <td v-if="userStore.user && userStore.user.type == 'C'">{{ order.points_gained }}</td>
-                <td v-if="showPrice">{{ order.total_price }}€</td>
-                <td v-if="showStatus">
+                <td>{{ order.total_price }}€</td>
+                <td >
                     <span v-if="order.status == 'P'">
                         <span class="badge badge-info-lighten">Preparing</span>
                     </span>
@@ -132,12 +96,12 @@ watch(
                     <div class="d-flex justify-content-center">
                         <div v-if="userStore.user && userStore.user.type == 'EM'">
                             <div v-if="order.status != 'C' && order.status != 'D'">
-                                <button class="btn btn-xs btn-light" title="Delete Order" @click="deleteClick(order)" v-if="showDeleteButton">
+                                <button class="btn btn-xs btn-light" title="Delete Order" @click="deleteClick(order)">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
                         </div>
-                        <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)" v-if="showEditButton">
+                        <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)" >
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>

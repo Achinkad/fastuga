@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, watch, computed  } from 'vue'
+import { ref, onMounted, watch, computed  } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/order.js'
@@ -12,6 +12,7 @@ import OrderItemsTable from "./OrderItemsTable.vue"
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 const router = useRouter()
+const pagination_aux = ref();
 
 const status = ref("all")
 
@@ -28,9 +29,9 @@ const loadOrders = (page = 1) => { orderStore.load_orders(page, status.value) }
 const loadOrderItems = (page = 1) => { orderStore.loadOrderItems(page) }
 
 const total = computed(() => {
-    pagination.value = orderStore.get_page()
-    if (pagination.value.meta != undefined) {
-        total_orders = pagination.value.meta.total
+    pagination_aux.value = orderStore.get_page()
+    if (pagination_aux.value.meta != undefined) {
+       total_orders = pagination_aux.value.meta.total
     }
     return total_orders
 })
@@ -93,8 +94,8 @@ onMounted(() => {
                                 </button>
                             </div>
 
-                            <order-table :orders="orders" :showId="true" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
-                            <order-table :orders="anonymous_orders" :showId="true" @edit="editOrder" v-if="!userStore.user"></order-table>
+                            <order-table :orders="orders" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
+                            <order-table :orders="anonymous_orders" @edit="editOrder" v-if="!userStore.user"></order-table>
 
                             <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 

@@ -17,6 +17,7 @@ class AuthController extends Controller
         $this->passport_client_key = env('PASSPORT_CLIENT_KEY');
     }
 
+
     private function passportAuthenticationData($username, $password) {
         return [
             'grant_type' => 'password',

@@ -8,31 +8,6 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  showProductPhoto: {
-    type: Boolean,
-    default: true,
-  },
-  showProductName: {
-    type: Boolean,
-    default: true,
-  },
-  showStatus: {
-    type: Boolean,
-    default: true,
-  },
-  showOrderId: {
-    type: Boolean,
-    default: false,
-  },
-  showNotes: {
-    type: Boolean,
-    default: true,
-
-  },
-  showDate: {
-    type: Boolean,
-    default: true,
-  }
 
 })
 
@@ -49,25 +24,25 @@ const photoFullUrl = (product) => {
     <table class="table align-middle mt-4">
         <thead class="table-light">
       <tr>
-        <th v-if="showProductPhoto">Product Photo</th>
-        <th v-if="showProductPhoto">Product Name</th>
-        <th v-if="showStatus">Status</th>
-        <th v-if="showNotes">Notes</th>
-        <th v-if="showDate">Date</th>
-        <th v-if="showOrderId">Order_id</th>
+        <th >Product Photo</th>
+        <th >Product Name</th>
+        <th >Status</th>
+        <th >Notes</th>
+        <th>Date</th>
+        <th >Order_id</th>
 
       </tr>
     </thead>
     <tbody>
       <tr v-for="order_item in order_items">
-        <td v-if="showProductPhoto" class="align-middle">
-          <img :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
+        <td  class="align-middle">
+          <img alt="product" :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
         </td>
-        <td v-if="showProductName">{{ order_item.product.name }}</td>
-        <td v-if="showStatus">{{ order_item.status }}</td>
-        <td v-if="showNotes">{{ order_item.notes }}</td>
-       <td v-if="showDate">{{ order_item.order.date }}</td>
-        <td v-if="showOrderId">{{ order_item.order_id }}</td>
+        <td>{{ order_item.product.name }}</td>
+        <td>{{ order_item.status }}</td>
+        <td>{{ order_item.notes }}</td>
+       <td>{{ order_item.order.date }}</td>
+        <td>{{ order_item.order_id }}</td>
       </tr>
     </tbody>
   </table>
