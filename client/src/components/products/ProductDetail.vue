@@ -173,15 +173,19 @@ const photoFullUrl = computed(() => {
                                     </div>
                                 </div>
                                 <div class="mb-3 d-flex justify-content-end">
-                                    <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'newProduct'">
+                                    <div class="mb-3 px-1">
+                                    <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newProduct'">
                                         Add Product
                                     </button>
-                                    <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'Product'">
+                                    <button type="button" class="btn btn-warning px-4 btn-add" @click="save" v-if="$route.name == 'Product'">
                                         Save Product
                                     </button>
+                                    </div>
+                                    <div class="mb-3 px-1">
                                     <button type="button" class="btn btn-light px-5" @click="cancel">
                                         Cancel
                                     </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

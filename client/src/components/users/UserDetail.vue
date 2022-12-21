@@ -188,11 +188,15 @@ const cancel = () => {
 
                 </div>
                 <div class="mb-3 d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'newUser'">Add
+                  <div class="mb-3 px-1">
+                  <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newUser'">Add
                     User</button>
-                  <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'User'">Save
+                  <button type="button" class="btn btn-warning px-4 btn-add" @click="save" v-if="$route.name == 'User'">Save
                     User</button>
-                  <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+                    </div>
+                    <div class="mb-3 px-1">
+                  <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
+                  </div>
                 </div>
               </div>
             </div>
