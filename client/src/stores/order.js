@@ -243,6 +243,7 @@ export const useOrderStore = defineStore("orders", () => {
   });
 
   socket.on("newOrder", (order) => {
+  
     orders.value.push(order);
     toast.info(
       `A new order has arrived. Check your order menu. (#${order.id})`

@@ -21,6 +21,7 @@ io.on("connection", (socket) => {
    
     }
     if (order.status == "P") {
+      console.log(order)
       socket.to("Chef").emit("newOrder", order);
    
     }
