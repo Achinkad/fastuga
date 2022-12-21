@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
 
 class OrderPolicy
@@ -63,7 +62,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        
+
     }
 
     /**
@@ -103,14 +102,29 @@ class OrderPolicy
     {
         //
     }
-/*
-    public function status(Order $order)
+
+    public function status(User $user)
     {
         if($user->type== "EM" || $user->type == "EC" || $user->type == "ED"){
             return true;
         }
     }
 
+
+    public function get_orders_user(User $user)
+    {
+        if($user->type=="ED" || $user->type=="C" ){
+            return true;
+        }
+    }
+
+    public function get_number_orders_this_month(User $user)
+    {
+        if($user->type=="EM"){
+            return true;
+        }
+    }
+    
     public function get_count_order_status(User $user){
         
         if($user->type == "ED"){
@@ -118,5 +132,5 @@ class OrderPolicy
         }
         
     }
-    */
+    
 }

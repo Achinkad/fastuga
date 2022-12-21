@@ -16,10 +16,11 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:viewAny')->only('viewAny');
-        $this->middleware('can:create')->only('create');
-        $this->middleware('can:update')->only('update');
-        $this->middleware('can:delete')->only('delete');
+        //$this->middleware('can:viewAny')->only('viewAny');
+        //$this->middleware('can:view')->only('view');
+        //$this->middleware('can:create')->only('create');
+        //$this->middleware('can:update')->only('update');
+        //$this->middleware('can:delete')->only('delete');
         /*
         $this->middleware('auth.manager', ['except' => [
             'index',
@@ -43,6 +44,8 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         $product = new Product;
         $product->fill($request->validated());
 
@@ -93,6 +96,8 @@ class ProductController extends Controller
 
     public function update(StoreProductRequest $request, Product $product)
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         $product->fill($request->validated());
 
         if ($request->has('photo_url')) {
@@ -137,6 +142,8 @@ class ProductController extends Controller
 
     public function destroy($id) // -> Boolean Return
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         return DB::transaction(function () use ($id) {
             $product = Product::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
             if ($product->order_item) { $product->order_item->detach(); }

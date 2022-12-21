@@ -100,4 +100,23 @@ class UserPolicy
     {
         //
     }
+
+    public function show_me(User $user, User $model) { 
+            return true;
+    }
+
+    public function toogle(User $user) {
+        if($user->type == "EM"){
+            return true;
+        }
+    }
+
+    public function new_password(User $user) {
+        return true;
+    
+    }
+
+
+
+
 }

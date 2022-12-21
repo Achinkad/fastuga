@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Models\Order;
 use App\Policies\OrderPolicy;
 
@@ -17,7 +18,6 @@ use App\Policies\OrderItemPolicy;
 use App\Models\Customer;
 use App\Policies\CustomerPolicy;
 
-// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -28,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+            'App\Models\Model' => 'App\Policies\ModelPolicy',
             Order::class => OrderPolicy::class,
             Product::class => ProductPolicy::class,
             User::class => UserPolicy::class,
@@ -48,6 +48,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('viewAll-order', function (User $user) {
+            if($user->type=="EM"){
+                return true;
+            }
+        });
+        Gate::define('get_orders_user-order',function (User $user)
+        {
+            
+            if($user->type=="ED" || $user->type=="C" ){
+                return true;
+            }
+        });
         //
     }
 }

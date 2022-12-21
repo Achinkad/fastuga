@@ -101,4 +101,18 @@ class CustomerPolicy
     {
         //
     }
+
+
+    public function get_number_customers_created_this_month(User $user){
+        if($user->type == "EM"){
+            return true;
+        }
+    }
+    public function show_by_user(User $user, User $model)
+    {
+        if (($user->type!="EM" && $user->id==$model->id) || $user->type=="EM"){
+            return true;
+        }
+    }
+
 }

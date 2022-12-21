@@ -14,6 +14,7 @@ use App\Http\Resources\OrderResource;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\OrderItemController;
 use App\Models\OrderItem;
+use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
@@ -21,9 +22,16 @@ class OrderController extends Controller
     public function __construct()
     
     {
-        $this->middleware('can:viewAny')->only('viewAny');
-        $this->middleware('can:create')->only('create');
-        $this->middleware('can:delete')->only('delete');
+        //$this->middleware('can:viewAny')->only('viewAny');
+        //$this->middleware('can:view')->only('view');
+
+        //$this->middleware('can:create')->only('create');
+        //$this->middleware('can:delete')->only('delete');
+        //$this->middleware('can:status')->only('status');
+        //$this->middleware('can:get_orders_user')->only('get_orders_user');
+        //$this->middleware('can:get_number_orders_this_month')->only('get_number_orders_this_month');
+        //$this->middleware('can:get_count_order_status')->only('get_count_order_status');
+
 
         /*
         $this->middleware('auth.manager', ['except' => [
@@ -45,12 +53,17 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         $orders = $request->status != 'all' ? Order::where('status', $request->input('status'))->paginate(20) : Order::paginate(20);
         return OrderResource::collection($orders);
     }
 
     public function store(StoreOrderRequest $request)
     {
+        if (Auth()->guard('api')->user()->type == "ED" || Auth()->guard('api')->user()->type == "EC" ) { abort(403); }
+
+        $this->authorizeForUser(Auth()->guard('api')->user(),'create');
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
@@ -119,11 +132,15 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+         /* --- Authorization --- */
+         if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$order->id) ) { abort(403); }
         return new OrderResource($order);
     }
 
     public function update(StoreOrderRequest $request, Order $order)
     {
+        if (Auth()->guard('api')->user()->type == "ED" || Auth()->guard('api')->user()->type == "EC" ) { abort(403); }
+
         $order->fill($request->validated());
         $order->save();
 
@@ -139,6 +156,8 @@ class OrderController extends Controller
 
     public function destroy($id) // -> Boolean Return
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         return DB::transaction(function () use ($id) {
             $order = Order::where('id', $id)->firstOrFail();
             if ($order->customer) { $order->customer()->dissociate(); }
@@ -153,6 +172,9 @@ class OrderController extends Controller
 
     public function status(Request $request, Order $order) // -> Change Order Status (Request -> Status:P,R,D,C)
     {
+        if (Auth()->guard('api')->user()->type != "EM" && Auth()->guard('api')->user()->type != "EC" && Auth()->guard('api')->user()->type != "ED") { abort(403); }
+
+        $this->authorizeForUser($request->user('api'),'status');
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
 
         if ($request->has('delivered_by') && $request->input('status') == "D") {
@@ -197,6 +219,8 @@ class OrderController extends Controller
 
     public function get_orders_user(Request $request, $id)
     {
+        if (Auth()->guard('api')->user()->type != "ED" && Auth()->guard('api')->user()->type != "C") { abort(403); }
+
         $request->validate(['status' => 'sometimes|in:all,P,R,D,C']);
         if(auth()->guard('api')->user()->type == "ED") {
             if($request->has('status')) {
@@ -224,6 +248,7 @@ class OrderController extends Controller
     }
 
     public function get_number_orders_by_month(){
+
 
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
             //$orders_this_year=Order::whereYear('date','=',$year);
@@ -275,8 +300,33 @@ class OrderController extends Controller
         }
     }
     public function get_count_order_status(Request $request){
+        if (Auth()->guard('api')->user()->type != "ED") { abort(403); }
+
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
         $count_orders = Order::where('status', $request->input('status'))->count();
         return $count_orders;
     }
+/*
+    protected function resourceAbilityMap()
+{
+    return array_merge(parent::resourceAbilityMap(), [
+        'status' => 'status',
+        'get_orders_user' => 'get_orders_user',
+        'get_number_orders_this_month' => 'get_number_orders_this_month',
+        'get_count_order_status' => 'get_count_order_status'
+
+    ]);
+
+}
+
+protected function resourceMethodsWithoutModels()
+{
+    return array_merge(parent::resourceMethodsWithoutModels(), [
+        'status',
+        'get_orders_user',
+        'get_number_orders_this_month',
+        'get_count_order_status'
+    ]);
+}
+*/
 }
