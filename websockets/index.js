@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("deliveredOrder", (order) => {
+    console.log(order)
     socket.to("Manager").emit("deliveredOrder", order);
   });
 
@@ -35,7 +36,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updatedOrderChef", (order) => {
-    socket.to("Delivery").to("Manager").emit("updatedOrderChef", order);
+    console.log(order.id)
+    socket.to("Delivery").to("Manager").emit("updatedOrderChef",order);
   });
 
   socket.on("loggedIn", function (user) {

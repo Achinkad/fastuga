@@ -23,7 +23,7 @@ const loadOrderItemsPreparing = (page = 1) => {
 
 }
 
-const updateStatus = (order_item,status) => {
+const updateStatus = (order_item, status) => {
 
     orderStore.update_order_items_status(order_item, status)
         .then((response) => {
@@ -36,11 +36,11 @@ const updateStatus = (order_item,status) => {
 }
 const pagination = computed(() => {
     return orderStore.get_page()
-    })
+})
 const pagination_preparation = computed(() => { return orderStore.get_page_preparation() })
 
-const order_items_waiting = computed(() => { return orderStore.get_order_items_waiting()})
-const order_items_preparing = computed(() => { return orderStore.get_order_items_preparing()})
+const order_items_waiting = computed(() => { return orderStore.get_order_items_waiting() })
+const order_items_preparing = computed(() => { return orderStore.get_order_items_preparing() })
 
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
@@ -61,6 +61,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
+    {{ order_items_preparing }}
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -75,33 +76,36 @@ onBeforeMount(() => {
             <div class="col-xl-6 col-lg-6">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="order_items_preparing.length != 0">Orders being prepared ({{order_items_preparing.length}})</h4>
+                        <h4 class="header-title" v-if="order_items_preparing.length != 0">Orders being prepared
+                            ({{ order_items_preparing.length }})</h4>
                         <h4 class="header-title" v-else>Orders being prepared </h4>
                     </div>
                     <div class="card-body pt-0">
-                             <table class="table table-responsive align-middle">
+                        <table class="table table-responsive align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th >Product Photo</th>
-                                    <th >Product Name</th>
-                                    <th >Notes</th>
+                                    <th>Product Photo</th>
+                                    <th>Product Name</th>
+                                    <th>Notes</th>
                                     <th class="text-center" style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                <tr v-if="order_items_preparing.length==0">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+                                <tr v-if="order_items_preparing.length == 0">
+                                    <td colspan="6" class="text-center" style="height:55px!important;">No data
+                                        available.</td>
                                 </tr>
                                 <tr v-for="order_item in order_items_preparing" :key="order_item.id">
-                                   <td  class="align-middle">
-                                    <img :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
+                                    <td class="align-middle">
+                                        <img :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
                                     </td>
-                                    <td >{{ order_item.product.name }}</td>
+                                    <td>{{ order_item.product.name }}</td>
                                     <td style="max-width: 150px;word-wrap: break-word;">{{ order_item.notes }}</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-xs btn-light" title="Done Cooking" @click="updateStatus(order_item,'R')">
+                                            <button class="btn btn-xs btn-light" title="Done Cooking"
+                                                @click="updateStatus(order_item, 'R')">
                                                 <i class="bi bi-check2"></i>
                                             </button>
                                         </div>
@@ -110,7 +114,8 @@ onBeforeMount(() => {
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-3">
-                            <Bootstrap5Pagination :data="pagination_preparation" @pagination-change-page="loadOrderItemsPreparing" :limit="2">
+                            <Bootstrap5Pagination :data="pagination_preparation"
+                                @pagination-change-page="loadOrderItemsPreparing" :limit="2">
                             </Bootstrap5Pagination>
                         </div>
                     </div>
@@ -121,33 +126,36 @@ onBeforeMount(() => {
             <div class="col-xl-6 col-lg-6">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="order_items_waiting.length != 0">Orders Waiting({{order_items_waiting.length}})</h4>
+                        <h4 class="header-title" v-if="order_items_waiting.length != 0">Orders
+                            Waiting({{ order_items_waiting.length }})</h4>
                         <h4 class="header-title" v-else>Waiting Orders</h4>
                     </div>
                     <div class="card-body pt-0">
-                             <table class="table table-responsive align-middle">
+                        <table class="table table-responsive align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th >Product Photo</th>
-                                    <th >Product Name</th>
-                                    <th >Notes</th>
+                                    <th>Product Photo</th>
+                                    <th>Product Name</th>
+                                    <th>Notes</th>
                                     <th class="text-center" style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                <tr v-if="order_items_waiting.length==0">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+                                <tr v-if="order_items_waiting.length == 0">
+                                    <td colspan="6" class="text-center" style="height:55px!important;">No data
+                                        available.</td>
                                 </tr>
                                 <tr v-for="order_item in order_items_waiting" :key="order_item.id">
-                                   <td  class="align-middle">
-                                    <img :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
+                                    <td class="align-middle">
+                                        <img :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
                                     </td>
-                                    <td >{{ order_item.product.name }}</td>
+                                    <td>{{ order_item.product.name }}</td>
                                     <td style="max-width: 150px;word-wrap: break-word;">{{ order_item.notes }}</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-xs btn-light" title="Accept Order-Item" @click="updateStatus(order_item,'P')">
+                                            <button class="btn btn-xs btn-light" title="Accept Order-Item"
+                                                @click="updateStatus(order_item, 'P')">
                                                 <i class="bi bi-check2"></i>
                                             </button>
                                         </div>
@@ -156,7 +164,8 @@ onBeforeMount(() => {
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-3">
-                            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItemsWaiting" :limit="2">
+                            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItemsWaiting"
+                                :limit="2">
                             </Bootstrap5Pagination>
                         </div>
                     </div>
@@ -183,10 +192,12 @@ onBeforeMount(() => {
 .card.orange-bg {
     background-color: #ffeed6 !important;
 }
+
 .img_photo {
-  width: 3.2rem;
-  height: 3.2rem;
+    width: 3.2rem;
+    height: 3.2rem;
 }
+
 .product-photo {
     width: 2.8rem;
     height: 2.8rem;
