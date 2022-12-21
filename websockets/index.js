@@ -18,11 +18,11 @@ io.on("connection", (socket) => {
   socket.on("newOrder", (order) => {
     if (order.status == "R") {
       socket.to("Delivery").emit("newOrder", order);
-      console.log("entrou no delivery");
+   
     }
     if (order.status == "P") {
       socket.to("Chef").emit("newOrder", order);
-      console.log("entrou no chef");
+   
     }
   });
 
