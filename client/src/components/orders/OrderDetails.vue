@@ -238,7 +238,7 @@ onMounted(() => {
                                         <label class="form-label">Points to use</label>
                                         <select name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
                                             <option value="0" selected>0</option>
-                                            <option v-if="Math.floor(points() / 10) > 0" v-for="n in Math.floor(points() / 10)" :value="n * 10">
+                                            <option v-if="Math.floor(customer.points / 10) > 0" v-for="n in Math.floor(customer.points / 10)" :value="n * 10">
                                                 {{ n * 10 }}
                                             </option>
                                         </select>
