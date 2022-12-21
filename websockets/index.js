@@ -21,13 +21,13 @@ io.on("connection", (socket) => {
    
     }
     if (order.status == "P") {
+    
       socket.to("Chef").emit("newOrder", order);
    
     }
   });
 
   socket.on("deliveredOrder", (order) => {
-    console.log(order.customer.user.id)
     socket.to("Manager").to(order.customer.user.id).emit("deliveredOrder", order);
   });
 
@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
   {
     socket.emit("loggedOut", user);
     socket.leave(user.id);
-    console.log(user.id)
     if (user.type == "EM") {
       socket.leave("Manager");
     }

@@ -68,7 +68,7 @@ watch(
                 <tr v-if="orders.length == 0">
                     <td v-if="userStore.user" colspan="6" class="text-center" style="height:55px!important;"> No data
                         available.</td>
-                    <td v-else colspan="5" class="text-center" style="height:55px!important;"> No data available.</td>
+                    <td v-else colspan="4" class="text-center" style="height:55px!important;"> No data available.</td>
                 </tr>
                 <tr v-for="order in orders" :key="order.id">
                     <td>#{{ order.id }}</td>
@@ -86,7 +86,7 @@ watch(
                         
                     </td>
                     
-                    <td v-if="order.customer_id == null"> -- </td>
+                    <td v-if="order.customer_id == null && (userStore.user && userStore.user.type != 'C')"> -- </td>
                     
                     <td v-if="userStore.user && userStore.user.type == 'C'">{{ order.points_gained }}</td>
                     <td v-if="userStore.user && userStore.user.type != 'ED'">{{ order.total_price }}€</td>

@@ -49,7 +49,7 @@ watch(() => userStore.user, function () {
     loadOrderItemsWaiting()
     loadOrderItemsPreparing()
 })
-watch(() => orderStore.order, function () {
+watch(() => orderStore.order_items, function () {
     loadOrderItemsWaiting()
     loadOrderItemsPreparing()
 })
