@@ -24,7 +24,7 @@ const loadOrderItemsPreparing = (page = 1) => {
 }
 
 const updateStatus = (order_item,status) => {
-
+    console.log(order_item)
     orderStore.update_order_items_status(order_item, status)
         .then((response) => {
             toast.info("Order-item " + order_item.id + " changed status!")

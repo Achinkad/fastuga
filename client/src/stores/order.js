@@ -204,6 +204,7 @@ export const useOrderStore = defineStore('orders', () => {
     }
 
     async function update_order_items_status(order_item, status) {
+        
         if(userStore.user && userStore.user.type == "EC") {
             data = {
                 'status': status,
@@ -227,7 +228,7 @@ export const useOrderStore = defineStore('orders', () => {
             remove_order_item(response.data.data,order_items_preparing)
            
         }
-
+        console.log(response.data.data)
         return response.data.data
     }
     
