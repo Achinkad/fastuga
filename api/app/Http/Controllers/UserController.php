@@ -64,7 +64,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
           /* --- Authorization --- */
-          if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$user->id) ) { abort(403); }
+          if ((Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->id!=$user->id) ) { abort(403); }
         $user->fill($request->validated());
 
         if ($request->has('photo_url')) {

@@ -150,7 +150,6 @@ const cancel = () => {
                     </div>
                   </div>
                   <div class="col-xl-6">
-
                     <div class="mb-3 px-1">
                       <label for="type" class="form-label">Role</label>
                       <select id="type" name="type" class="form-select" v-model="editingUser.type">
@@ -176,6 +175,7 @@ const cancel = () => {
                   </div>
 
                 </div>
+                <div v-if="(editingUser.type!='C') || (userStore.user.type!='EM')">
                 <div class="mb-3 d-flex justify-content-end">
                   <div class="mb-3 px-1">
                   <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newUser'">Add
@@ -185,6 +185,7 @@ const cancel = () => {
                     </div>
                     <div class="mb-3 px-1">
                   <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
+                  </div>
                   </div>
                 </div>
               </div>
