@@ -28,7 +28,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("deliveredOrder", (order) => {
-    console.log(order.customer.user.id)
     socket.to("Manager").to(order.customer.user.id).emit("deliveredOrder", order);
   });
 
