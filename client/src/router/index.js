@@ -227,7 +227,7 @@ router.beforeEach(async (to, from, next) => {
             next()
             return
         }
-        if (userStore.user.type == "EC" || userStore.user.type == "ED") {
+        if (userStore.user.type == "EC" || userStore.user.type == "ED" || userStore.user.type == "EM") {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },
