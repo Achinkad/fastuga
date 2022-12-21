@@ -174,7 +174,6 @@ class OrderController extends Controller
     {
         if (Auth()->guard('api')->user()->type != "EM" && Auth()->guard('api')->user()->type != "EC" && Auth()->guard('api')->user()->type != "ED") { abort(403); }
 
-        $this->authorizeForUser($request->user('api'),'status');
         $request->validate(['status' => 'sometimes|in:P,R,D,C']);
 
         if ($request->has('delivered_by') && $request->input('status') == "D") {

@@ -240,6 +240,7 @@ export const useOrderStore = defineStore("orders", () => {
       });
   socket.on("deliveredOrder", (order) => {
     remove_order(order);
+    orders.value.push(order);
     toast.info(`The Order (#${order.id}) was updated to status delivered!`);
   });
 
