@@ -55,7 +55,7 @@
   
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
-        axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
+        axios.get(serverBaseUrl+'/api/customers/users/' + userStore.user.id)
           .then((response) => {
             customer.value = response.data.data
             originalValueStr = dataAsString()
