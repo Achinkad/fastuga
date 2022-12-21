@@ -149,12 +149,6 @@ const cancel = () => { emit("cancel", editingOrder.value) }
 
 const points_stack_val = ref(null)
 
-const teste = () => {
-   
-    console.log("teste")
-   
-}
-
 const points_stack = (points) => {
    
     console.log(points)
@@ -223,7 +217,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <div>
                         <h4 class="p-title" v-if="$route.name == 'Order'"> Order #{{ editingOrder.id }} Details </h4>
-                        <h4 class="p-title" v-if="$route.name == 'NewOrder'">Register your order {{teste()}}</h4>
+                        <h4 class="p-title" v-if="$route.name == 'NewOrder'">Register your order</h4>
                     </div>
                 </div>
             </div>
@@ -315,8 +309,19 @@ onMounted(() => {
                         <div class="col">
                             <div class="card widget-flat">
                                 <div class="card-body d-flex align-items-center">
-                                    <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                    </div>
+                                    <div class="col">
+                                        <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
+                                    </div>
+                                    
                                 </div>
+                                    
+                                    
+                                </div>
+                                
                             </div>
                         </div>
                     </div>

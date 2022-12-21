@@ -45,6 +45,7 @@ const capitalize = (word) => {
 watch(() => userStore.user, function() {
     // userStore.get_customer()
     loadOrders()
+
 })
 
 onBeforeMount(() => {
@@ -104,7 +105,7 @@ onBeforeMount(() => {
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="orders_from_user.length != 0">Orders In Pending ({{orders_from_user.length}})</h4>
+                        <h4 class="header-title" v-if="orders_from_user.length != undefined">Orders In Pending ({{orders_from_user.length}})</h4>
                         <h4 class="header-title" v-else>Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
