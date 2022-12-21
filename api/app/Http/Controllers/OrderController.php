@@ -107,7 +107,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
          /* --- Authorization --- */
-         if ((Auth()->guard('api')->user()->type != "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$order->user_id) ) { abort(403); }
+         if (Auth()->guard('api')->user()->type != "EM" &&(Auth()->guard('api')->user()->customer->id!=$order->customer_id) ) { abort(403); }
         return new OrderResource($order);
     }
 
