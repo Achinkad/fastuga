@@ -71,7 +71,7 @@ const save = (product_values) => {
 const add = (product_values) => {
     axios.post(serverBaseUrl + '/api/products', product_values)
         .then((response) => {
-            console.log("feito")
+    
     
             toast.success("Product added successfuly")
             router.push({ name: 'Products' })
