@@ -201,7 +201,7 @@ class OrderController extends Controller
                 else{
                     $orders= Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
                 }
-                
+
                 break;
 
             case 'C':

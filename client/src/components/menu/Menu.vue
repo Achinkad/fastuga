@@ -35,13 +35,14 @@ const loadMoreProducts = async (page_url, type) => {
     })
 }
 
-const truncate = (str, n) => {
-    return (str.length > n) ? str.slice(0, n-1) + '...' : str;
-}
+const truncate = (str, n) => { return (str.length > n) ? str.slice(0, n - 1) + '...' : str; }
 
 onBeforeMount(() => {
     loadProducts(active_el.value)
-    active_page.value = pagination.value
+    let i = setInterval(function () {
+        active_page.value = pagination.value
+        clearInterval(i)
+    }, 100)
 })
 </script>
 
@@ -51,7 +52,7 @@ onBeforeMount(() => {
             <div class="col-md-12">
                 <div class="row d-flex p-title-box justify-content-center align-items-center">
                     <h4 class="p-title me-auto col-sm-12 col-md-6">Our Menu, Just for You</h4>
-                    <div class="p-title-right col-sm-12 col-md-6">
+                    <div class="p-title-right col-sm-12 col-md-6 d-flex justify-content-end">
                         <button type="button" name="button" class="btn btn-menu ms-3"
                             :class="{ active : active_el == 'all' }"
                             @click="selectType('all')">
