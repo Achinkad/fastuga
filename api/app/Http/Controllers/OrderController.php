@@ -18,13 +18,6 @@ use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
-
-    public function __construct()
-
-    {
-
-    }
-
     public function index(Request $request)
     {
         if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
@@ -110,7 +103,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
          /* --- Authorization --- */
-         if (Auth()->guard('api')->user()->type != "EM" &&(Auth()->guard('api')->user()->customer->id!=$order->customer_id) ) { abort(403); }
+         if (Auth()->guard('api')->user()!=null && Auth()->guard('api')->user()->type != "EM" &&(Auth()->guard('api')->user()->customer->id!=$order->customer_id) ) { abort(403); }
         return new OrderResource($order);
     }
 
