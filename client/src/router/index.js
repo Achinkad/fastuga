@@ -111,11 +111,15 @@ const router = createRouter({
             component: () => import("../components/products/Product.vue"),
             props: (route) => ({ id: parseInt(route.params.id) }),
         },
-
         {
-            path: "/:pathMatch(.*)*",
+            path: "/forbidden",
             name: "Forbidden",
             component: () => import("@/views/Forbidden.vue"),
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "NotFound",
+            component: () => import("@/views/NotFound.vue"),
         },
     ],
 })
@@ -155,7 +159,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "newProduct") {
-        if (userStore.user === null || userStore.user.type != "EM") {
+        if (!userStore.user || userStore.user.type != "EM") {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },
@@ -167,7 +171,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Products") {
-        if (userStore.user === null || userStore.user.type != "EM") {
+        if (!userStore.user || userStore.user.type != "EM") {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },

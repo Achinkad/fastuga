@@ -25,10 +25,10 @@ onBeforeUnmount(() => {
             <div class="row justify-content-center">
                 <div class="col-xxl-4 col-lg-5">
                     <div class="position-absolute top-50 start-50 translate-middle">
-                        <h4 class="">Uhm.. you shouldn't be here!</h4>
-                        <p class="text-center mt-3">Better go back
+                        <h4 class="">Well, there's nothing to see here.</h4>
+                        <p class="text-center mt-3">Wanna go back
                             <router-link :to="{ name: 'Dashboard' }" style="color:#212529!important;">
-                                <b>home.</b>
+                                <b>home?</b>
                             </router-link>
                         </p>
                     </div>
