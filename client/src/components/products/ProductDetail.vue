@@ -155,10 +155,12 @@ const photoFullUrl = computed(() => {
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label">Photo</label>
-                                                <br>
-                                                <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'" />
+                                                
                                                 <input type="file" class="form-control" name='upload' @change="handleUpload"
                                                 required>
+                                                <br>
+                                                <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'" />
+
                                                 <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                                             </div>
                                         </div>
@@ -182,7 +184,7 @@ const photoFullUrl = computed(() => {
                                     </button>
                                     </div>
                                     <div class="mb-3 px-1">
-                                    <button type="button" class="btn btn-light px-5" @click="cancel">
+                                    <button type="button" class="btn btn-light px-4" @click="cancel">
                                         Cancel
                                     </button>
                                     </div>

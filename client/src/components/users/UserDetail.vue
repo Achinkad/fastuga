@@ -100,7 +100,6 @@ const cancel = () => {
 <template>
   <div class="container-fluid">
 
-    <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
       <div class="row">
         <div class="col-12">
           <div class="d-flex p-title-box">
@@ -110,6 +109,8 @@ const cancel = () => {
           </div>
         </div>
       </div>
+      <form class="row g-3 needs-validation" novalidate @submit.prevent="save">
+
       <div class="row">
         <div class="col-12">
           <div class="card">
@@ -146,31 +147,33 @@ const cancel = () => {
                       <field-error-message :errors="errors" fieldName="password"></field-error-message>
                     </div>
                   </div>
+
+                  <div class="col-xl-6">
+                    <div class="mb-3 px-1">
+                      <label class="form-label">Photo</label>
+                        <input type="file" class="form-control" name='upload' @change="handleUpload" required>
+                          <br>
+                        <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'" />
+                      <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
+                    </div>
+                  </div>
+
                   <div class="col-xl-6">
                     <div class="mb-3 px-1">
                       <label for="type" class="form-label">Role</label>
-                      <select id="type" name="type" class="form-select" v-model="editingUser.type">
+                      <select v-if="editingUser.type!='C'" id="type" name="type" class="form-select" v-model="editingUser.type">
                         <option value="EM">Manager</option>
                         <option value="EC">Chef</option>
                         <option value="ED">Delivery</option>
+                      </select>
+                      <select v-else id="type" name="type" class="form-select" v-model="editingUser.type">
+                        <option value="C">Costumer</option>
                       </select>
                       <field-error-message :errors="errors" fieldName="type"></field-error-message>
                     </div>
                   </div>
 
-                  <div class="col-xl-6">
-
-
-                    <div class="mb-3 px-1">
-                      <label class="form-label">Photo</label>
-                      <br>
-                      <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'" />
-
-                      <input type="file" class="form-control" name='upload' @change="handleUpload" required>
-                      <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
-                    </div>
-                  </div>
-
+                  
                 </div>
                 <div v-if="(editingUser.type!='C') || (userStore.user.type!='EM')">
                 <div class="mb-3 d-flex justify-content-end">
