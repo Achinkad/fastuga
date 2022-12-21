@@ -59,7 +59,7 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
-        if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$customer->id) ) { abort(403); }
+        if ((Auth()->guard('api')->user()->type != "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$customer->id) ) { abort(403); }
 
         return new CustomerResource($customer);
     }
