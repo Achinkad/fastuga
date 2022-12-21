@@ -91,7 +91,6 @@ class UserController extends Controller
           /* --- Authorization --- */
           if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$user->id) ) { abort(403); }
         $user->fill($request->validated());
-        $user->blocked = $user->blocked==1 ? 0 : 1;
 
         if ($request->has('photo_url')) {
 
