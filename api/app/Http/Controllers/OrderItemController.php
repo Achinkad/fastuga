@@ -79,4 +79,5 @@ class OrderItemController extends Controller
 
         return OrderItemResource::collection($order_items);
     }
+    
 }

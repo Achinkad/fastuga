@@ -33,7 +33,7 @@ const handleUpload = (e) => {
   reader.readAsDataURL(image);
   reader.onload = e => {
     previewImage = e.target.result;
-    console.log(previewImage);
+    
   }
 }
 
@@ -161,17 +161,6 @@ const cancel = () => {
                       <field-error-message :errors="errors" fieldName="type"></field-error-message>
                     </div>
                   </div>
-                  <div class="col-xl-6" v-if="$route.name == 'User'">
-
-                    <div class="mb-3 px-1">
-                      <label for="blocked" class="form-label">Blocked</label>
-                      <select id="blocked" name="blocked" class="form-select" v-model="editingUser.blocked">
-                        <option value="false">Unblocked</option>
-                        <option value="true">Blocked</option>
-                      </select>
-                      <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
-                    </div>
-                  </div>
 
                   <div class="col-xl-6">
 
@@ -188,11 +177,15 @@ const cancel = () => {
 
                 </div>
                 <div class="mb-3 d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary px-5" @click="add" v-if="$route.name == 'newUser'">Add
+                  <div class="mb-3 px-1">
+                  <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newUser'">Add
                     User</button>
-                  <button type="button" class="btn btn-primary px-5" @click="save" v-if="$route.name == 'User'">Save
+                  <button type="button" class="btn btn-warning px-4 btn-add" @click="save" v-if="$route.name == 'User'">Save
                     User</button>
-                  <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+                    </div>
+                    <div class="mb-3 px-1">
+                  <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
+                  </div>
                 </div>
               </div>
             </div>

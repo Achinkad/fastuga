@@ -114,8 +114,7 @@ const socket = inject("socket")
     function save (user_values, user_id) {
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
         .then((response) => {
-            //user.value = response.data.data
-            //originalValueStr = dataAsString()
+           
             toast.success('User #' + user_id + ' was updated successfully.')
 
         })

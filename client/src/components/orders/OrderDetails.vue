@@ -87,6 +87,7 @@ const add = () => {
     }
 
     if (editingOrder.value.customer_id != undefined) {
+       
         formData.append('customer_id', editingOrder.value.customer_id);
 
     }
@@ -161,6 +162,7 @@ watch(
     (newCustomer) => {
 
         customer.value = newCustomer
+        editingOrder.value.customer_id=newCustomer.id
         editingOrder.value.payment_reference=newCustomer.default_payment_reference
         editingOrder.value.payment_type=newCustomer.default_payment_type
     }
@@ -293,8 +295,19 @@ onMounted(() => {
                         <div class="col">
                             <div class="card widget-flat">
                                 <div class="card-body d-flex align-items-center">
-                                    <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                    </div>
+                                    <div class="col">
+                                        <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
+                                    </div>
+                                    
                                 </div>
+                                    
+                                    
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -441,12 +454,16 @@ onMounted(() => {
             </div>
 
         <div class="mb-3 d-flex justify-content-end" v-if="$route.name == 'NewOrder'">
-            <button type="button" id="button" class="btn btn-warning px-4 btn-add me-2" @click="add">
+            <div class="mb-3 px-1">
+            <button type="button" id="button" class="btn btn-warning px-4 btn-add" @click="add">
                 Add a New Order
             </button>
+        </div>
+        <div class="mb-3 px-1">
             <button type="button" class="btn btn-light px-4" @click="cancel">
                 Cancel
             </button>
+        </div>
         </div>
     </form>
 </div>

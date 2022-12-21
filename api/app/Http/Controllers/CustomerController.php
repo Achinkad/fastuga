@@ -19,48 +19,18 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:viewAny')->only('viewAny');
-        $this->middleware('can:create')->only('create');
-        $this->middleware('can:update')->only('update');
-        $this->middleware('can:delete')->only('delete');
-        /*
-        $this->middleware('auth.manager', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
 
-
-        ]]);
-        /*
-        $this->middleware('auth.chef', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
-
-
-        ]]);
-        $this->middleware('auth.delivery', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
-
-
-        ]]);
-        */
     }
     public function index()
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
         return CustomerResource::collection(Customer::all());
     }
 
     public function store(StoreCustomerRequest $customer_request, StoreUserRequest $user_request)
     {
+        if (Auth()->guard('api')->user()->type != "C") { abort(403); }
+
         /* --- DB Transaction -> Create User + Customer --- */
         $new_customer = DB::transaction(function () use ($customer_request, $user_request) : Customer {
             // -> Creates User
@@ -89,11 +59,15 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
+        if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$customer->id) ) { abort(403); }
+
         return new CustomerResource($customer);
     }
 
     public function update(StoreCustomerRequest $customer_request, UpdateUserRequest $user_request, Customer $customer)
     {
+        if (Auth()->guard('api')->user()->type != "C") { abort(403); }
+
         $updated_customer = DB::Transaction(function () use ($customer_request, $user_request, $customer) : Customer {
             // -> Updates User
             $updated_user = (new UserController)->update($user_request, $customer->user);
@@ -146,6 +120,8 @@ class CustomerController extends Controller
 
     public function destroy($id) // -> Boolean Return
     {
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+
         return DB::transaction(function () use ($id) {
             $customer = Customer::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
             $customer->user->delete();

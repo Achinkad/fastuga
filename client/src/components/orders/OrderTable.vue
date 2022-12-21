@@ -57,7 +57,7 @@ watch(
                 <th >Ticket Number</th>
                 <th v-if=" (userStore.user && userStore.user.type != 'C')">Customer ID</th>
                 <th v-if="userStore.user && userStore.user.type == 'C'">Points Gained</th>
-                <th >Price</th>
+                <th v-if="userStore.user && userStore.user.type != 'ED'">Price</th>
                 <th >Order Status</th>
                 <th class="text-center" v-if="(userStore.user && (userStore.user.type == 'EM' ||  userStore.user.type=='C')) || !userStore.user" style="width:10%">Actions</th>
             </tr>
@@ -70,14 +70,19 @@ watch(
             <tr v-for="order in orders" :key="order.id">
                 <td >#{{ order.id }}</td>
                 <td>{{ order.ticket_number }}</td>
-                <td v-if="order.customer && userStore.user.type == 'EM'">
+                <td v-if="order.customer && (userStore.user.type == 'EM' || userStore.user.type == 'ED')">
+                    <div v-if = "userStore.user.type == 'EM'" >
                     <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
-                        #{{ order.customer_id }}
-                    </router-link>
+                        {{ order.customer_id }}
+                    </router-link></div>
+                    <div v-if = "userStore.user.type == 'ED'" >
+                   
+                        {{ order.customer_id }}
+                   </div>
                 </td>
-                <td v-if="!order.customer && (userStore.user && userStore.user.type != 'C')"> -- </td>
+                <td v-if="order.customer_id == null" > -- </td>
                 <td v-if="userStore.user && userStore.user.type == 'C'">{{ order.points_gained }}</td>
-                <td>{{ order.total_price }}€</td>
+                <td  v-if="userStore.user && userStore.user.type != 'ED'" >{{ order.total_price }}€</td>
                 <td >
                     <span v-if="order.status == 'P'">
                         <span class="badge badge-info-lighten">Preparing</span>

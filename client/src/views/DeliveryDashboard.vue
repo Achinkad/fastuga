@@ -30,7 +30,7 @@ const all_orders = computed(() => {
 
 
 const acceptOrder = (order) => {
-    console.log(order)
+
     orderStore.update_order_status(order, "D")
         .then((response) => {
             toast.info("Order " + order.id + " was delivered!")
