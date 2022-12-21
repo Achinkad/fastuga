@@ -35,9 +35,12 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-        if (Auth()->guard('api')->user()->type == "ED" || Auth()->guard('api')->user()->type == "EC" ) { abort(403); }
+        if (Auth()->guard('api')->user() != null) {
+            if (Auth()->guard('api')->user()->type != "C") {
+                abort(403);
+            }
+        }
 
-        
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
