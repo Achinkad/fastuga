@@ -3,12 +3,10 @@ import { inject, onMounted, ref, watch, computed } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 import { useProductStore } from '../../stores/product.js'
-
-
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
-const axios = inject('axios')
+
 
 const productStore = useProductStore()
 
@@ -58,7 +56,7 @@ watch(value_type, () => {
 })
 
 const loadProducts = (page = 1) => {
-   productStore.load_products(page,value_type.value)
+    productStore.load_products(page, value_type.value)
 }
 
 const paginationNewOrder = computed(() => { return productStore.get_page() })
@@ -77,19 +75,11 @@ const add = () => {
     let formData = new FormData()
 
     formData.append('total_price', editingOrder.value.total_price);
-
-    if (editingOrder.value.payment_type != undefined) {
-        formData.append('payment_type', editingOrder.value.payment_type);
-    }
-
-    if (editingOrder.value.payment_reference != undefined) {
-        formData.append('payment_reference', editingOrder.value.payment_reference);
-    }
-
+    formData.append('payment_type', editingOrder.value.payment_type);
+    formData.append('payment_reference', editingOrder.value.payment_reference);
     if (editingOrder.value.customer_id != undefined) {
-       
-        formData.append('customer_id', editingOrder.value.customer_id);
 
+        formData.append('customer_id', editingOrder.value.customer_id);
     }
     if (userStore.user && userStore.user.type == 'EM') {
         editingOrder.value.points_used_to_pay = 0;
@@ -162,9 +152,9 @@ watch(
     (newCustomer) => {
 
         customer.value = newCustomer
-        editingOrder.value.customer_id=newCustomer.id
-        editingOrder.value.payment_reference=newCustomer.default_payment_reference
-        editingOrder.value.payment_type=newCustomer.default_payment_type
+        editingOrder.value.customer_id = newCustomer.id
+        editingOrder.value.payment_reference = newCustomer.default_payment_reference
+        editingOrder.value.payment_type = newCustomer.default_payment_type
     }
 )
 
@@ -212,35 +202,43 @@ onMounted(() => {
         <form class="needs-validation" novalidate @submit.prevent="save">
             <div class="row">
                 <div class="col-8">
-                    <div class="card h-100" v-if="(!userStore.user || (userStore.user && userStore.user.type == 'C')) && $route.name == 'NewOrder'">
+                    <div class="card h-100"
+                        v-if="(!userStore.user || (userStore.user && userStore.user.type == 'C')) && $route.name == 'NewOrder'">
                         <div class="card-body d-flex align-items-center">
                             <div class="w-100">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span> </label>
-                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type">
+                                        <label for="payment_type" class="form-label">Payment Type <span
+                                                class="text-danger">*</span> </label>
+                                        <select id="payment_type" name="payment_type" class="form-select"
+                                            v-model="editingOrder.payment_type">
                                             <option value="VISA">Visa</option>
                                             <option value="PAYPAL">PayPal</option>
                                             <option value="MBWAY">MBWay</option>
                                         </select>
-                                        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+                                        <field-error-message :errors="errors"
+                                            fieldName="payment_type"></field-error-message>
                                     </div>
 
                                     <div class="col">
-                                        <label for="inputPaymentReference" class="form-label">Payment Reference <span class="text-danger">*</span></label>
+                                        <label for="inputPaymentReference" class="form-label">Payment Reference <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="inputPaymentReference"
-                                        :placeholder="payment_type" required
-                                        v-model="editingOrder.payment_reference"
-                                        v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
-                                        <field-error-message :errors="errors" fieldName="payment_reference"></field-error-message>
+                                            :placeholder="payment_type" required
+                                            v-model="editingOrder.payment_reference"
+                                            v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
+                                        <field-error-message :errors="errors"
+                                            fieldName="payment_reference"></field-error-message>
                                     </div>
                                 </div>
                                 <div class="row mt-3 mb-3" v-if="userStore.user && userStore.user.type == 'C'">
                                     <div class="col">
                                         <label class="form-label">Points to use</label>
-                                        <select name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
+                                        <select name="points" class="form-select"
+                                            v-model="editingOrder.points_used_to_pay">
                                             <option value="0" selected>0</option>
-                                            <option v-if="Math.floor(customer.points / 10) > 0" v-for="n in Math.floor(customer.points / 10)" :value="n * 10">
+                                            <option v-if="Math.floor(customer.points / 10) > 0"
+                                                v-for="n in Math.floor(customer.points / 10)" :value="n * 10">
                                                 {{ n * 10 }}
                                             </option>
                                         </select>
@@ -268,18 +266,26 @@ onMounted(() => {
                                         </thead>
                                         <tbody>
                                             <tr v-if="editingOrder.order_item.length == 0">
-                                                <td colspan="3" class="text-center" style="height:55px!important;">You don't have any products :(</td>
+                                                <td colspan="3" class="text-center" style="height:55px!important;">You
+                                                    don't have any products :(</td>
                                             </tr>
                                             <tr v-for="n in editingOrder.order_item.length">
                                                 <td>
-                                                    <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo"/>
-                                                    <span class="ms-3">{{ editingOrder.order_item[n - 1].product.name }}</span>
+                                                    <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)"
+                                                        class="rounded-circle img_photo" />
+                                                    <span class="ms-3">{{ editingOrder.order_item[n - 1].product.name
+                                                    }}</span>
                                                 </td>
                                                 <td>{{ editingOrder.order_item[n - 1].product.price }}€</td>
                                                 <td class="center">
-                                                    <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n - 1].notes" v-if="$route.name == 'NewOrder'"></textarea>
-                                                    <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n - 1].notes" v-if="$route.name == 'Order'" readonly></textarea>
-                                                    <field-error-message :errors="errors" fieldName="notes"></field-error-message>
+                                                    <textarea class="form-control" id="inputNotes" rows="1"
+                                                        v-model="editingOrder.order_item[n - 1].notes"
+                                                        v-if="$route.name == 'NewOrder'"></textarea>
+                                                    <textarea class="form-control" id="inputNotes" rows="1"
+                                                        v-model="editingOrder.order_item[n - 1].notes"
+                                                        v-if="$route.name == 'Order'" readonly></textarea>
+                                                    <field-error-message :errors="errors"
+                                                        fieldName="notes"></field-error-message>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -295,19 +301,20 @@ onMounted(() => {
                         <div class="col">
                             <div class="card widget-flat">
                                 <div class="card-body d-flex align-items-center">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
+                                        </div>
+                                        <div class="col">
+                                            <field-error-message :errors="errors"
+                                                fieldName="total_price"></field-error-message>
+                                        </div>
+
                                     </div>
-                                    <div class="col">
-                                        <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
-                                    </div>
-                                    
+
+
                                 </div>
-                                    
-                                    
-                                </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -319,7 +326,8 @@ onMounted(() => {
                                         <h3 class="mt-2 mb-2 fw-bold">You've {{ customer.points }} Points!</h3>
                                         <p class="mb-2 text-muted">
                                             <span class="text-muted me-2">
-                                                You can discount until {{(Math.floor(customer.points / 10)) * 5}}€ in this order.
+                                                You can discount until {{ (Math.floor(customer.points / 10)) * 5 }}€ in
+                                                this order.
                                             </span>
                                         </p>
                                     </div>
@@ -327,7 +335,8 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
+                    <div class="row"
+                        v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">
@@ -384,18 +393,26 @@ onMounted(() => {
                                         </thead>
                                         <tbody>
                                             <tr v-if="editingOrder.order_item.length == 0">
-                                                <td colspan="3" class="text-center" style="height:55px!important;">You don't have any products selected yet :(</td>
+                                                <td colspan="3" class="text-center" style="height:55px!important;">You
+                                                    don't have any products selected yet :(</td>
                                             </tr>
                                             <tr v-for="n in editingOrder.order_item.length">
                                                 <td>
-                                                    <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)" class="rounded-circle img_photo"/>
-                                                    <span class="ms-3">{{ editingOrder.order_item[n - 1].product.name }}</span>
+                                                    <img :src="productPhotoFullUrl(editingOrder.order_item[n - 1].product)"
+                                                        class="rounded-circle img_photo" />
+                                                    <span class="ms-3">{{ editingOrder.order_item[n - 1].product.name
+                                                    }}</span>
                                                 </td>
                                                 <td>{{ editingOrder.order_item[n - 1].product.price }}€</td>
                                                 <td class="center">
-                                                    <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n - 1].notes" v-if="$route.name == 'NewOrder'"></textarea>
-                                                    <textarea class="form-control" id="inputNotes" rows="1" v-model="editingOrder.order_item[n - 1].notes" v-if="$route.name == 'Order'" readonly></textarea>
-                                                    <field-error-message :errors="errors" fieldName="notes"></field-error-message>
+                                                    <textarea class="form-control" id="inputNotes" rows="1"
+                                                        v-model="editingOrder.order_item[n - 1].notes"
+                                                        v-if="$route.name == 'NewOrder'"></textarea>
+                                                    <textarea class="form-control" id="inputNotes" rows="1"
+                                                        v-model="editingOrder.order_item[n - 1].notes"
+                                                        v-if="$route.name == 'Order'" readonly></textarea>
+                                                    <field-error-message :errors="errors"
+                                                        fieldName="notes"></field-error-message>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -428,22 +445,26 @@ onMounted(() => {
                                 </div>
 
                                 <div class="col-4 d-flex justify-content-end align-items-end">
-                                    <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
+                                    <Bootstrap5Pagination :data="paginationNewOrder"
+                                        @pagination-change-page="loadProducts" :limit="1"></Bootstrap5Pagination>
                                 </div>
                             </div>
                             <div class="mb-3 mt-2">
                                 <div v-for="n in products.length" class="mb-4">
                                     <div class="row">
                                         <div class="col-1">
-                                            <img :src="productPhotoFullUrl(products[n - 1])" class="rounded-circle img_photo" />
+                                            <img :src="productPhotoFullUrl(products[n - 1])"
+                                                class="rounded-circle img_photo" />
                                         </div>
                                         <div class="col-7">
                                             <span class="ms-3"> <b>{{ products[n - 1].name }}</b> </span><br>
                                             <span class="ms-3"> {{ products[n - 1].price }}€</span>
                                         </div>
                                         <div class="col-4">
-                                            <button type="button" class="btn btn-menu bi bi-plus" id="add" @click="addProduct(products[n - 1]); countProduct(products[n - 1])"></button>
-                                            <button type="button" class="btn btn-menu bi bi-dash ms-2" id="add" @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
+                                            <button type="button" class="btn btn-menu bi bi-plus" id="add"
+                                                @click="addProduct(products[n - 1]); countProduct(products[n - 1])"></button>
+                                            <button type="button" class="btn btn-menu bi bi-dash ms-2" id="add"
+                                                @click="deleteProductInAdd(products[n - 1]); countProduct(products[n - 1])"></button>
                                         </div>
                                     </div>
                                 </div>
@@ -453,24 +474,23 @@ onMounted(() => {
                 </div>
             </div>
 
-        <div class="mb-3 d-flex justify-content-end" v-if="$route.name == 'NewOrder'">
-            <div class="mb-3 px-1">
-            <button type="button" id="button" class="btn btn-warning px-4 btn-add" @click="add">
-                Add a New Order
-            </button>
-        </div>
-        <div class="mb-3 px-1">
-            <button type="button" class="btn btn-light px-4" @click="cancel">
-                Cancel
-            </button>
-        </div>
-        </div>
-    </form>
-</div>
+            <div class="mb-3 d-flex justify-content-end" v-if="$route.name == 'NewOrder'">
+                <div class="mb-3 px-1">
+                    <button type="button" id="button" class="btn btn-warning px-4 btn-add" @click="add">
+                        Add a New Order
+                    </button>
+                </div>
+                <div class="mb-3 px-1">
+                    <button type="button" class="btn btn-light px-4" @click="cancel">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </template>
 
 <style scoped>
-
 td {
     word-wrap: break-word;
 }
