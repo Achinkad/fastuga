@@ -140,8 +140,8 @@ public function get_number_customers_created_this_month(){
     }
 }
 
-    public function show_by_user(User $user){
+    public function show_by_user(User $user) {
         if(Auth()->guard('api')->user()->id!=$user->id) { abort(403); }
-        return new CustomerResource($user->customer); }
-
+        return new CustomerResource($user->customer);
+    }
 }

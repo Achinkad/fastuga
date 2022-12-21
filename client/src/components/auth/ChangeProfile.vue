@@ -267,9 +267,11 @@ fieldName
 
                 <label class="form-label">Photo</label>
                 <div class="mb-3">
-                    <img :src="photoFullUrl" class="img-thumbnail" />
-                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                  <input type="file" class="form-control" name='upload' @change="handleUpload"
                         required>
+                        <br>
+                    <img :src="photoFullUrl" class="img-thumbnail" />
+
                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                 </div>
       </div>
@@ -278,11 +280,15 @@ fieldName
 
     
     <div class="mb-3 d-flex justify-content-end">
-            <button  v-if="userStore.user.type == 'C'" type="button" class="btn btn-primary px-5" @click="updateCostumer">Save
+      <div class="mb-3 px-1">
+            <button  v-if="userStore.user.type == 'C'" type="button" class="btn btn-warning px-4 btn-add" @click="updateCostumer">Save
                 User</button>
-            <button v-else type="button" class="btn btn-primary px-5" @click="save">Save
+            <button v-else type="button" class="btn btn-warning px-4 btn-add" @click="save">Save
                 User</button>
-      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
+      </div>
+      <div class="mb-3 px-1">
+      <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
