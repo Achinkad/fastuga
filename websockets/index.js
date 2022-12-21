@@ -21,7 +21,7 @@ io.on("connection", (socket) => {
    
     }
     if (order.status == "P") {
-      console.log(order)
+    
       socket.to("Chef").emit("newOrder", order);
    
     }
@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
   {
     socket.emit("loggedOut", user);
     socket.leave(user.id);
-    console.log(user.id)
     if (user.type == "EM") {
       socket.leave("Manager");
     }
