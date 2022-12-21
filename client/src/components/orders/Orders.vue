@@ -75,9 +75,10 @@ onMounted(() => {
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div class="d-flex align-items-center">
+                                    <div  class="d-flex align-items-center">
                                         <label for="selectCompleted" class="me-2">Status</label>
-                                        <select class="form-select" id="selectCompleted" v-model="status">
+                                        
+                                        <select  class="form-select" id="selectCompleted" v-model="status">
                                             <option value="all" selected>Any</option>
                                             <option value="P">Preparing</option>
                                             <option value="R">Ready</option>
@@ -85,6 +86,15 @@ onMounted(() => {
                                             <option value="C">Canceled</option>
                                         </select>
                                     </div>
+                                   <!-- <div v-if = "userStore.user.type == 'ED'" class="d-flex align-items-center">
+                                        <label for="selectCompleted" class="me-2">Status</label>
+                                        
+                                        <select  class="form-select" id="selectCompleted" v-model="status">
+                                            <option value="R" selected>Ready</option>
+                                            <option value="D">Delivered</option>
+                                            <option value="C">Canceled</option>
+                                        </select>
+                                    </div>-->
                                 </div>
                             </div>
 

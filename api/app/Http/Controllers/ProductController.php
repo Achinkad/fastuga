@@ -11,6 +11,7 @@ use App\Http\Resources\ProductResource;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -32,42 +33,14 @@ class ProductController extends Controller
         $product = new Product;
         $product->fill($request->validated());
 
-        // -> Stores Product Photo
-        if ($request->has('photo_url') && $request->file('photo_url')->isValid()) {
-            /*
-            $photo = $request->file('photo_url');
-            $photo_id = $photo->hashName();
-            Storage::putFileAs('public/products', $photo, $photo_id);
-            $product->photo_url = $photo_id;
-            */
-            $folderPath = "public/products/";
-
-            $image_parts = explode(";base64,", $product->photo_url);
-
-            $image_type_aux = explode("image/", $image_parts[0]);
-
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-
-
-            $uniqid=uniqid();
-
-
-            $file="{$uniqid}.{$image_type}";
-
-            // -> Stores the new photo
-
-            Storage::put($folderPath.$file, $image_base64);
-
-
-            $product->photo_url = $file;
-
+        if ($request->has("photo_url")) {
+            $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
+            Storage::put("public/products/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $product->photo_url)));
+            $product->photo_url = $image_id;
+        } else {
+            $product->photo_url = "product-none.png";
         }
-        else{
-            $product->photo_url="product-none.png";
 
-        }
         $product->save();
         return new ProductResource($product);
     }
@@ -88,35 +61,12 @@ class ProductController extends Controller
             if(Storage::disk('public')->exists($product->photo_url)) {
                 Storage::delete($product->photo_url);
             }
-            /*
-            // -> Stores the new photo
-            $photo = $request->file('photo_url');
-            $photo_id = $photo->hashName();
-            Storage::putFileAs('public/products', $photo, $photo_id);
-            $product->photo_url = $photo_id;
-            */
-            $folderPath = "public/products/";
 
-            $image_parts = explode(";base64,", $product->photo_url);
-
-            $image_type_aux = explode("image/", $image_parts[0]);
-
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-
-
-            $uniqid=uniqid();
-
-
-            $file="{$uniqid}.{$image_type}";
-
-            // -> Stores the new photo
-
-            Storage::put($folderPath.$file, $image_base64);
-
-
-            $product->photo_url = $file;
+            $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
+            Storage::put("public/products/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $product->photo_url)));
+            $product->photo_url = $image_id;
+        } else {
+            $product->photo_url = "product-none.png";
         }
 
         $product->save();

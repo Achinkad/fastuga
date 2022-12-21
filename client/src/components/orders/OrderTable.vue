@@ -71,9 +71,14 @@ watch(
                 <td >#{{ order.id }}</td>
                 <td>{{ order.ticket_number }}</td>
                 <td v-if="order.customer && (userStore.user.type == 'EM' || userStore.user.type == 'ED')">
+                    <div v-if = "userStore.user.type == 'EM'" >
                     <router-link :to="{ name: 'User', params: { id: order.customer.user_id } }" :title="`View profile of ${order.customer.user.name}`">
-                        #{{ order.customer_id }}
-                    </router-link>
+                        {{ order.customer_id }}
+                    </router-link></div>
+                    <div v-if = "userStore.user.type == 'ED'" >
+                   
+                        {{ order.customer_id }}
+                   </div>
                 </td>
                 <td v-if="order.customer_id == null" > -- </td>
                 <td v-if="userStore.user && userStore.user.type == 'C'">{{ order.points_gained }}</td>

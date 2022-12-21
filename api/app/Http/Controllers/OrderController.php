@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
-    
+
     public function __construct()
-    
+
     {
 
     }
@@ -107,7 +107,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
          /* --- Authorization --- */
-         if ((!Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$order->user_id) ) { abort(403); }
+         if ((Auth()->guard('api')->user()->type != "EM") && (Auth()->guard('api')->user()->type !="EM" && Auth()->guard('api')->user()->id!=$order->user_id) ) { abort(403); }
         return new OrderResource($order);
     }
 
@@ -195,13 +195,7 @@ class OrderController extends Controller
         if (Auth()->guard('api')->user()->type != "ED" && Auth()->guard('api')->user()->type != "C") { abort(403); }
 
         $request->validate(['status' => 'sometimes|in:all,P,R,D,C']);
-        if(auth()->guard('api')->user()->type == "ED") {
-            if($request->has('status')) {
 
-                $orders = Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
-                return OrderResource::collection($orders);
-            }
-        }
 
         switch (auth()->guard('api')->user()->type) {
             case 'ED':

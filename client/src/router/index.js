@@ -139,7 +139,7 @@ router.beforeEach(async (to, from, next) => {
 
         switch (userStore.user.type) {
             case "C":
-                if (userStore.user) userStore.get_customer(userStore.user)
+                if (userStore.user) userStore.loadCustomer(userStore.user)
                 next({ name: "CustomerDashboard" }); return
                 break;
 

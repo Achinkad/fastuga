@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -20,6 +21,7 @@ class UserController extends Controller
     {
 
     }
+    
     public function index(Request $request)
     {
          /* --- Authorization --- */
@@ -34,44 +36,17 @@ class UserController extends Controller
         if ($request['type'] != 'C' && Auth()->guard('api')->user()->type != "EM") { abort(403); }
 
         $new_user = DB::transaction(function () use ($request) : User {
-            $user = User::create($request->validated());
+            $user = new User;
+            $user->fill($request->validated());
             $password_hashed = Hash::make($request->input('password'));
             $user->password = $password_hashed;
 
             if ($request->has('photo_url')) {
-
-                /*
-
-                // -> Check if a previous file exists and deletes it
-                //This isn't working
-                if(Storage::disk('public')->exists($user->photo_url)) {
-                    Storage::delete($user->photo_url);
-                }
-                  */
-                $folderPath = "public/fotos/";
-
-                $image_parts = explode(";base64,", $user->photo_url);
-
-                $image_type_aux = explode("image/", $image_parts[0]);
-
-                $image_type = $image_type_aux[1];
-
-                $image_base64 = base64_decode($image_parts[1]);
-
-                dd($image_base64);
-
-                $uniqid=uniqid();
-                $id_user=$user->id;
-
-
-                $file="{$id_user}_ {$uniqid}.{$image_type}";
-
-                Storage::put($folderPath.$file, $image_base64);
-
-
-                $user->photo_url = $file;
-
+                $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
+                Storage::put("public/fotos/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $user->photo_url)));
+                $user->photo_url = $image_id;
             }
+
             $user->save();
             return $user;
         });
@@ -93,44 +68,11 @@ class UserController extends Controller
         $user->fill($request->validated());
 
         if ($request->has('photo_url')) {
-
-
-
-            // -> Check if a previous file exists and deletes it
-            //This isn't working
-            if(Storage::disk('public')->exists($user->photo_url)) {
-                Storage::delete($user->photo_url);
-            }
-
-
-            $folderPath = "public/fotos/";
-
-            $image_parts = explode(";base64,", $user->photo_url);
-
-            $image_type_aux = explode("image/", $image_parts[0]);
-
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-
-
-
-
-
-            $uniqid=uniqid();
-            $id_user=$user->id;
-
-
-            $file="{$id_user}_ {$uniqid}.{$image_type}";
-
-            // -> Stores the new photo
-
-            Storage::put($folderPath.$file, $image_base64);
-
-
-            $user->photo_url = $file;
-
+            $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
+            Storage::put("public/fotos/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $user->photo_url)));
+            $user->photo_url = $image_id;
         }
+
         $user->save();
         return new UserResource($user);
     }
