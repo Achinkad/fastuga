@@ -18,33 +18,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('can:viewAny')->only('viewAny');
-        //$this->middleware('can:create')->only('create');
-        //$this->middleware('can:update')->only('update');
-        //$this->middleware('can:delete')->only('delete');
-        //$this->middleware('can:show_me')->only('show_me');
-        //$this->middleware('can:toogle')->only('toogle');
-        //$this->middleware('can:new_password')->only('new_password');
 
-
-
-        /*
-        $this->middleware('auth.manager', ['except' => [
-            'show',
-            'store',
-            'status',
-            'update',
-            'show_me',
-            'new_password'
-
-        ]]);
-        /*
-        $this->middleware('auth.chef', ['except' => [
-            'update',
-            'show_me',
-            'new_password'
-        ]]);
-        */
     }
     public function index(Request $request)
     {

@@ -16,24 +16,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('can:viewAny')->only('viewAny');
-        //$this->middleware('can:view')->only('view');
-        //$this->middleware('can:create')->only('create');
-        //$this->middleware('can:update')->only('update');
-        //$this->middleware('can:delete')->only('delete');
-        /*
-        $this->middleware('auth.manager', ['except' => [
-            'index',
-            'show',
-            'get_best_selling_product'
-        ]]);
-        /*
-        $this->middleware('auth.chef', ['except' => [
-            'index',
-            'show',
-            'get_best_selling_product'
-        ]]);
-        */
+
     }
 
     public function index(Request $request)

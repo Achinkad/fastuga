@@ -19,44 +19,7 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('can:viewAny')->only('viewAny');
-        //$this->middleware('can:create')->only('create');
-        //$this->middleware('can:update')->only('update');
-        //$this->middleware('can:delete')->only('delete');
-        //$this->middleware('can:get_number_customers_created_this_month')->only('get_number_customers_created_this_month');
-        //$this->middleware('can:show_by_user')->only('show_by_user');
 
-
-        /*
-        $this->middleware('auth.manager', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
-
-
-        ]]);
-        /*
-        $this->middleware('auth.chef', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
-
-
-        ]]);
-        $this->middleware('auth.delivery', ['except' => [
-            'store',
-            'show',
-            'update',
-            'show_by_user',
-            'get_number_customers_created_this_month',
-
-
-        ]]);
-        */
     }
     public function index()
     {
@@ -184,21 +147,5 @@ class CustomerController extends Controller
     }
 
     public function show_by_user(User $user){ return new CustomerResource($user->customer); }
-/*
-    protected function resourceAbilityMap()
-    {
-        return array_merge(parent::resourceAbilityMap(), [
-            'get_number_customers_created_this_month' => 'get_number_customer_created_this_month',
-            'show_by_user' => 'show_by_user'
-    
-        ]);
-    }
-    protected function resourceMethodsWithoutModels()
-    {
-        return array_merge(parent::resourceMethodsWithoutModels(), [
-            'get_number_customers_created_this_month',
-            'show_by_user',
-        ]);
-    }
-    */
+
 }
