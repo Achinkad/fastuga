@@ -1,5 +1,5 @@
 <script setup>
-import { inject, onMounted, ref, watch,computed } from "vue"
+import { inject, onMounted, ref, watch, computed } from "vue"
 import { useUserStore } from '../../stores/user.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 import { useProductStore } from '../../stores/product.js'
@@ -147,21 +147,6 @@ const countProduct = (product) => {
 
 const cancel = () => { emit("cancel", editingOrder.value) }
 
-const points_stack_val = ref(null)
-
-const points_stack = (points) => {
-   
-    console.log(points)
-    let p = 0, x = 0, arr = []
-    for (var i = 0; i < Math.floor(points / 10); i++) {
-        p = (x += 10)
-        arr.push(p)
-    }
-    points_stack_val.value = arr;
-    console.log(points_stack_val.value)
-    return points_stack_val.value
-}
-
 const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl
 }
@@ -174,7 +159,7 @@ watch(() => editingOrder.value.points_used_to_pay, (newValue) => {
 watch(
     () => props.customer,
     (newCustomer) => {
-        
+
         customer.value = newCustomer
         editingOrder.value.payment_reference=newCustomer.default_payment_reference
         editingOrder.value.payment_type=newCustomer.default_payment_type
@@ -206,7 +191,7 @@ watch(() => editingOrder.value.payment_type, (newValue) => {
 
 onMounted(() => {
     loadProducts()
-    
+
 })
 </script>
 
@@ -253,10 +238,9 @@ onMounted(() => {
                                         <label class="form-label">Points to use</label>
                                         <select name="points" class="form-select" v-model="editingOrder.points_used_to_pay">
                                             <option value="0" selected>0</option>
-                                           <option v-if="Math.floor(customer.points / 10) > 0" v-for="n in Math.floor(customer.points / 10)" :value="n*10">
-                                            {{ n * 10 }}
+                                            <option v-if="Math.floor(points() / 10) > 0" v-for="n in Math.floor(points() / 10)" :value="n * 10">
+                                                {{ n * 10 }}
                                             </option>
-            
                                         </select>
                                     </div>
                                 </div>
@@ -440,7 +424,7 @@ onMounted(() => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-4 d-flex justify-content-end align-items-end">
                                     <Bootstrap5Pagination :data="paginationNewOrder" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
                                 </div>

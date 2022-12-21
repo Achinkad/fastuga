@@ -5,12 +5,10 @@ import { useUserStore } from '../../stores/user.js'
 import { useConfigStore } from '../../stores/config.js'
 
 const router = useRouter()
-
-
-const toast = inject('toast')
-
 const userStore = useUserStore()
 const configStore = useConfigStore()
+
+const toast = inject('toast')
 
 const credentials = ref({
     username: '',
@@ -46,7 +44,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-
     <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
         <div class="container">
             <div class="row justify-content-center">
