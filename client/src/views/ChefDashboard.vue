@@ -61,7 +61,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    {{ order_items_preparing }}
+  
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">

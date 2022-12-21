@@ -205,7 +205,7 @@ export const useOrderStore = defineStore("orders", () => {
   }
 
   async function update_order_items_status(order_item, status) {
-    
+    console.log(order_item)
     if (userStore.user && userStore.user.type == "EC") {
       data = {
         status: status,
