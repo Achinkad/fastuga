@@ -271,12 +271,13 @@ button[type="button"]:focus {
     border: none;
     text-align: center;
     font-size: 14px;
+    position: relative;
 }
 
 .footer {
     bottom: 0;
     padding: 19px 24px 20px;
-    position: absolute;
+    position: relative;
     right: 0;
     transition: all .2s ease-in-out;
 }

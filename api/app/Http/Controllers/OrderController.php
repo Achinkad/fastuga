@@ -35,9 +35,12 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-        if (Auth()->guard('api')->user()->type == "ED" || Auth()->guard('api')->user()->type == "EC" ) { abort(403); }
+        if (Auth()->guard('api')->user() != null) {
+            if (Auth()->guard('api')->user()->type != "C") {
+                abort(403);
+            }
+        }
 
-        
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
@@ -199,7 +202,13 @@ class OrderController extends Controller
 
         switch (auth()->guard('api')->user()->type) {
             case 'ED':
-                $orders = $request->status != 'all' ? Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20) : Order::whereNull('delivered_by')->paginate(20);
+                if($request->input('status')!='R'){
+                    $orders = $request->status != 'all' ? Order::where('delivered_by',$id)->where('status', $request->input('status'))->paginate(20) : Order::where('delivered_by',$id)->whereIn('status',['D','C'])->paginate(20);
+                }
+                else{
+                    $orders= Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
+                }
+                
                 break;
 
             case 'C':
