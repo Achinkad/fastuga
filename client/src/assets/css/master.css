@@ -50,8 +50,18 @@ h3 {
 }
 
 @media (max-width: 767.98px) {
-    .sidebar {
-        top: 0rem;
+    .navbar {
+        left: 0 !important;
+    }
+    main{
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    #sharefastuga{
+        display: none;
+    }
+    #login2{
+        display: inline !important;
     }
 }
 

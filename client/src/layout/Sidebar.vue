@@ -4,6 +4,8 @@ import { useUserStore } from '../stores/user.js'
 const userStore = useUserStore()
 </script>
 <template>
+
+<div class="container-fluid">
     <nav id="sidebarMenu" class="d-md-block sidebar collapse">
         <div class="logo">
             <router-link class="nav-link" :to="{ name: 'Dashboard' }">
@@ -93,7 +95,8 @@ const userStore = useUserStore()
                     </li>
                 </div>
 
-                <li class="nav-item">
+
+                <li class="nav-item" id="sharefastuga">
                     <div class="d-flex justify-content-center">
                         <a href="#" class="btn btn-secondary d-flex align-items-center justify-content-center btn-share">
                             <i class="bi bi-fire me-2"></i>
@@ -102,12 +105,127 @@ const userStore = useUserStore()
                     </div>
                 </li>
 
+            
+            <hr>
+            <li class="nav flex-column mb-2" id="login2">
+            <li class="nav-item nav-item-title">User Space</li>
+          
+                <li class="nav-item" v-if="!userStore.user">
+                    <router-link class="nav-link" :class="{ active: $route.name === 'Register' }"
+                        :to="{ name: 'Register' }">
+                        Register
+                    </router-link>
+                </li>
+                <li class="nav-item" v-if="!userStore.user">
+                    <router-link style="vertical-align:middle;" class="nav-link"
+                        :class="{ active: $route.name === 'Login' }" :to="{ name: 'Login' }">
+                        Login
+                    </router-link>
+                </li>
+                
+              
+                <li class="nav-item dropdown nav-user" v-if="userStore.user" >
+                    <a class="nav-link" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="account-user-avatar">
+                            <img alt="user image" :src="userStore.userPhotoUrl" class="rounded-circle img_photo">
+                        </span>
+                        <span>
+                        
+                            <span class="account-user-name">{{ userStore.user.name }}</span>
+                            <span class="account-position" v-if="userStore.user.type == 'EM'">Manager</span>
+                            <span class="account-position" v-if="userStore.user.type == 'EC'">Chef</span>
+                            <span class="account-position" v-if="userStore.user.type == 'ED'">Delivery</span>
+                            <span class="account-position" v-if="userStore.user.type == 'C'">Customer</span>
+                        
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <li>
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangeProfile' }"
+                                :to="{ name: 'ChangeProfile' }">
+                                Profile
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :class="{ active: $route.name === 'ChangePassword' }"
+                                :to="{ name: 'ChangePassword' }">
+                                Change password
+                            </router-link>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item" @click.prevent="logout" style="cursor:pointer;">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+                <li  v-else="!userStore.user">
+                    <a class="nav-link" href="#" role="button">
+                        <span class="avatar-text">Customer (Anonymous)</span>
+                    </a>
+                </li>
+            </li>
+   
             </ul>
         </div>
     </nav>
+</div>
+
 </template>
 
 <style scoped>
+
+#login2{
+    display: none;
+}
+.img_photo {
+    width: 32px;
+    height: 32px;
+}
+
+.nav-user {
+    padding: calc(31px * .5) 20px calc(31px * .5) 57px !important;
+    text-align: left !important;
+    position: relative;
+    border-width: 0 1px;
+    min-height: 70px;
+    transition: none;
+}
+.nav-user .account-user-avatar {
+    position: absolute;
+    top: calc(9px * .5);
+    left: -35px;
+}
+
+.nav-user .account-user-name {
+    display: block;
+    font-weight: 600;
+}
+.nav-user .account-position {
+    display: block;
+    font-size: 12px;
+    margin-top: -3px;
+    text-align: initial;
+}
+.navbar {
+    height: 4.375rem;
+    padding: 0 12px;
+    min-height: 70px;
+    position: fixed;
+    left: 260px;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 0 35px 0 rgba(154, 161, 171, .15) !important;
+    background-color: #fff;
+}
+
+.avatar-text {
+    display: flex;
+}
+
 #sidebarMenu {
     width: 260px;
     min-width: 260px;

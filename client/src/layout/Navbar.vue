@@ -25,11 +25,21 @@ const logout = () => {
 
 <template>
     <nav class="navbar navbar-expand-md flex-md-nowrap">
-        <button id="buttonSidebarExpandId" class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="container-fluid">
+        <button
+        id="buttonSidebarExpandId"
+        ref="buttonSidebarExpand"
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        style="position:absolute;top:15px;"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
@@ -88,10 +98,14 @@ const logout = () => {
                 </li>
             </ul>
         </div>
+    </div>
     </nav>
 </template>
 
 <style scoped>
+#sidebarMenu {
+  overflow-y: auto;
+}
 .img_photo {
     width: 32px;
     height: 32px;

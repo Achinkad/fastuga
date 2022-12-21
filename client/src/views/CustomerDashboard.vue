@@ -43,7 +43,7 @@ const capitalize = (word) => {
 }
 
 watch(() => userStore.user, function() {
-    // userStore.get_customer()
+    userStore.loadCustomer()
     loadOrders()
 
 })
