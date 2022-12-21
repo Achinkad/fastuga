@@ -48,31 +48,31 @@ onBeforeMount(() => {
 <template>
     <div class="container-fluid" v-if="active_page != null">
         <div class="row">
-            <div class="col-12">
-                <div class="d-flex p-title-box justify-content-center align-items-center">
-                    <h4 class="p-title me-auto">Our Menu, Just for You</h4>
-                    <div class="p-title-right">
+            <div class="col-md-12">
+                <div class="row d-flex p-title-box justify-content-center align-items-center">
+                    <h4 class="p-title me-auto col-sm-12 col-md-6">Our Menu, Just for You</h4>
+                    <div class="p-title-right col-sm-12 col-md-6">
                         <button type="button" name="button" class="btn btn-menu ms-3"
                             :class="{ active : active_el == 'all' }"
                             @click="selectType('all')">
                             All Products
                         </button>
-                        <button type="button" name="button" class="btn btn-menu ms-3"
+                        <button type="button" name="button" class="btn btn-menu ms-3 "
                             :class="{ active : active_el == 'hot dish' }"
                             @click="selectType('hot dish')">
                             Hot Dishes
                         </button>
-                        <button type="button" name="button" class="btn btn-menu ms-3"
+                        <button type="button" name="button" class="btn btn-menu  ms-3"
                             :class="{ active : active_el == 'cold dish' }"
                             @click="selectType('cold dish')">
                             Cold Dishes
                         </button>
-                        <button type="button" name="button" class="btn btn-menu ms-3"
+                        <button type="button" name="button" class="btn btn-menu  ms-3"
                             :class="{ active : active_el == 'dessert' }"
                             @click="selectType('dessert')">
                             Dessert
                         </button>
-                        <button type="button" name="button" class="btn btn-menu ms-3"
+                        <button type="button" name="button" class="btn btn-menu  ms-3"
                             :class="{ active : active_el == 'drink' }"
                             @click="selectType('drink')">
                             Drinks
@@ -82,16 +82,16 @@ onBeforeMount(() => {
             </div>
         </div>
         <div class="row mt-2">
-            <div class="col-6" v-for="product in products" :key="product.id">
+            <div class="col-sm-12 col-md-6" v-for="product in products" :key="product.id">
                 <div class="card">
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
-                            <div class="col-2 image">
+                            <div class="col-md-2 col-sm-6 image">
                                 <img :src="photoFullUrl(product)" class="product-photo"/>
                             </div>
                             <div class="col-10">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-24-sd col-12-md">
                                         <span class="fw-bold product-name">{{product.name}}</span>
                                         <span class="ms-3">
                                             <i>
