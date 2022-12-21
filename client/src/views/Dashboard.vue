@@ -103,9 +103,9 @@ onMounted(async () => {
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-5 col-lg-6">
+            <div class="col-xl-5 col-lg-12">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-md-12 col-lg-6">
                         <div class="card widget-flat">
                             <div class="card-body">
                                 <div class="float-end">
@@ -128,7 +128,7 @@ onMounted(async () => {
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-md-12 col-lg-6">
                         <div class="card widget-flat">
                             <div class="card-body">
                                 <div class="float-end">
@@ -151,7 +151,7 @@ onMounted(async () => {
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-md-12 col-lg-6">
                         <div class="card widget-flat">
                             <div class="card-body">
                                 <div class="float-end">
@@ -175,7 +175,7 @@ onMounted(async () => {
                         </div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-md-12 col-lg-6">
                         <div class="card widget-flat">
                             <div class="card-body">
                                 <div class="float-end">
@@ -201,7 +201,7 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <div class="col-xl-7 col-lg-6">
+            <div class="col-xl-7 col-lg-12">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
                         <h4 class="header-title">Orders Per Month</h4>

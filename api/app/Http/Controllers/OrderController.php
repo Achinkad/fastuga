@@ -41,7 +41,6 @@ class OrderController extends Controller
             }
         }
 
-        
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 

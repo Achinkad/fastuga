@@ -49,22 +49,6 @@ h3 {
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
-@media (max-width: 767.98px) {
-    .navbar {
-        left: 0 !important;
-    }
-    main{
-        margin-left: 0 !important;
-        width: 100% !important;
-    }
-    #sharefastuga{
-        display: none;
-    }
-    #login2{
-        display: inline !important;
-    }
-}
-
 .sidebar-sticky {
     position: relative;
     top: 0;
@@ -134,7 +118,7 @@ h3 {
 }
 
 .footer {
-    width: calc(100% - 260px) !important;
+    width: calc(100% - 260px);
     border-top: 1px solid rgba(138,150,156,.2);
     bottom: 0;
     padding: 19px 24px 20px;
@@ -150,4 +134,48 @@ h3 {
     text-decoration: none;
     margin-left: 1.5rem;
     color: #8a969c !important;
+}
+
+@media (max-width: 767.98px) {
+    .navbar {
+        left: 0 !important;
+    }
+
+    main{
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    footer {
+        left: 0 !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    #sidebarMenu {
+        top: 4.375rem;
+        width: 100% !important;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    #sharefastuga{
+        display: none;
+    }
+
+    #login2{
+        display: inline !important;
+    }
+
+    .logo {
+        display: none !important;
+    }
+
+    .logo-alt {
+        display: block !important;
+    }
+
+    #nav-flex-sidebar {
+        padding: .75rem;
+    }
 }
