@@ -17,15 +17,10 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-
-    }
-    
     public function index(Request $request)
     {
-         /* --- Authorization --- */
-         if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+        /* --- Authorization --- */
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
         $users = $request->type != 'all' ? User::where('type', $request->input('type'))->paginate(10) : User::paginate(10);
         return UserResource::collection($users);
     }
@@ -63,8 +58,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-          /* --- Authorization --- */
-          if ((Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->id!=$user->id) ) { abort(403); }
+        /* --- Authorization --- */
+        if ((Auth()->guard('api')->user()->type == "EM") && (Auth()->guard('api')->user()->id!=$user->id) ) { abort(403); }
         $user->fill($request->validated());
 
         if ($request->has('photo_url')) {
@@ -79,8 +74,8 @@ class UserController extends Controller
 
     public function destroy($id) // -> Boolean Return
     {
-         /* --- Authorization --- */
-         if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
+        /* --- Authorization --- */
+        if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
         return DB::transaction(function () use ($id) {
             $user = User::where(['id' => $id], ['deleted_at' => null])->firstOrFail();
             if ($user->customer) { $user->customer->delete(); }
@@ -110,23 +105,23 @@ class UserController extends Controller
         $user->save();
         return new UserResource($user);
     }
-/*
+    /*
     protected function resourceAbilityMap()
     {
-        return array_merge(parent::resourceAbilityMap(), [
-            'show_me' => 'show_me',
-            'toogle' => 'toogle',
-            'new_password' => 'new_password'
-    
-        ]);
-    }
-    protected function resourceMethodsWithoutModels()
-    {
-        return array_merge(parent::resourceMethodsWithoutModels(), [
-            'show_me',
-            'toogle',
-            'new_password'
-        ]);
-    }
-    */
+    return array_merge(parent::resourceAbilityMap(), [
+    'show_me' => 'show_me',
+    'toogle' => 'toogle',
+    'new_password' => 'new_password'
+
+]);
+}
+protected function resourceMethodsWithoutModels()
+{
+return array_merge(parent::resourceMethodsWithoutModels(), [
+'show_me',
+'toogle',
+'new_password'
+]);
+}
+*/
 }
