@@ -54,12 +54,14 @@ class OrderItemController extends Controller
         return new OrderItemResource($order_item);
     }
 
-    public function get_order_items_by_chef(User $user) // -> Gets All Order Items From a Chef
+    public function get_order_items_by_chef(Request $request,$id) // -> Gets All Order Items From a Chef
     {
-        if ($user->type != "EC") { abort(403); }
+        
+        if (auth()->guard('api')->user()->type != "EC") { abort(403); }
+      //  if ($user->type != "EC") { abort(403); }
 
-        $order_items = OrderItem::where('preparation_by', $user->id)->paginate(10);
-
+        $order_items = OrderItem::where('preparation_by', $id)->where('status',$request->input('status'))->paginate(10);
+       
         return OrderItemResource::collection($order_items);
     }
 

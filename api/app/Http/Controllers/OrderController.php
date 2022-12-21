@@ -199,7 +199,13 @@ class OrderController extends Controller
 
         switch (auth()->guard('api')->user()->type) {
             case 'ED':
-                $orders = $request->status != 'all' ? Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20) : Order::whereNull('delivered_by')->paginate(20);
+                if($request->input('status')!='R'){
+                    $orders = $request->status != 'all' ? Order::where('delivered_by',$id)->where('status', $request->input('status'))->paginate(20) : Order::where('delivered_by',$id)->whereIn('status',['D','C'])->paginate(20);
+                }
+                else{
+                    $orders= Order::whereNull('delivered_by')->where('status', $request->input('status'))->paginate(20);
+                }
+                
                 break;
 
             case 'C':
