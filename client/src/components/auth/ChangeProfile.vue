@@ -55,7 +55,7 @@
   
     errors.value = null
     if(userStore.user && userStore.user.type == "C"){
-        axios.get(serverBaseUrl+'/api/customers/user/' + userStore.user.id)
+        axios.get(serverBaseUrl+'/api/customers/users/' + userStore.user.id)
           .then((response) => {
             customer.value = response.data.data
             originalValueStr = dataAsString()
@@ -274,18 +274,15 @@ fieldName
                 </div>
       </div>
     </div>
+
+
+    
     <div class="mb-3 d-flex justify-content-end">
-      <div class="mb-3 px-1">
-            <button  v-if="userStore.user.type == 'C'" type="button" class="btn btn-warning px-4 btn-add" @click="updateCostumer">Save
+            <button  v-if="userStore.user.type == 'C'" type="button" class="btn btn-primary px-5" @click="updateCostumer">Save
                 User</button>
-   
-      
-            <button v-else type="button" class="btn btn-warning px-4 btn-add" @click="save">Save
+            <button v-else type="button" class="btn btn-primary px-5" @click="save">Save
                 User</button>
-              </div>
-                <div class="mb-3 px-1">
-      <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
-    </div>
+      <button type="button" class="btn btn-light px-5" @click="cancel">Cancel</button>
     </div>
   </div>
 </div>

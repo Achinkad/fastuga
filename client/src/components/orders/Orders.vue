@@ -97,7 +97,7 @@ onMounted(() => {
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 d-flex justify-content-end align-items-end" v-if="!userStore.user || (userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C'))">
+                            <div class="col-xl-4 d-flex justify-content-end align-items-end" v-if="!userStore.user || (userStore.user && userStore.user.type == 'C')">
                                 <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
                                     <i class="bi bi-xs bi-plus-circle me-2"></i>Add Order
                                 </button>

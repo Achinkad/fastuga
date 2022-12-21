@@ -83,14 +83,11 @@ const save = () => {
   } else {
     formData.append('blocked', 1);
   }
-
-
-
   if (previewImage != null) {
     formData.append('photo_url', previewImage);
   }
   formData.append('_method', 'PUT');
-
+  
   userStore.save(formData, props.user.id);
 
 }
