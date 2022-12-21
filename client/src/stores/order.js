@@ -249,7 +249,7 @@ export const useOrderStore = defineStore("orders", () => {
 
   socket.on("newOrder", (order) => {
     order.order_item.forEach(item => {
-      console.log(item)
+
       order_items.value.push(item);
     });
     toast.info(  `A new order has arrived. Check your order menu. (#${order.id})`  );
