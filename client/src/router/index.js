@@ -111,11 +111,15 @@ const router = createRouter({
             component: () => import("../components/products/Product.vue"),
             props: (route) => ({ id: parseInt(route.params.id) }),
         },
-
         {
-            path: "/:pathMatch(.*)*",
+            path: "/forbidden",
             name: "Forbidden",
             component: () => import("@/views/Forbidden.vue"),
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "NotFound",
+            component: () => import("@/views/NotFound.vue"),
         },
     ],
 })
@@ -129,12 +133,13 @@ router.beforeEach(async (to, from, next) => {
         handlingFirstRoute = false
         await userStore.restoreToken()
     }
-    
+
     if (to.name == "Dashboard") {
         if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
 
         switch (userStore.user.type) {
             case "C":
+                if (userStore.user) userStore.get_customer(userStore.user)
                 next({ name: "CustomerDashboard" }); return
                 break;
 
@@ -154,7 +159,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "newProduct") {
-        if (userStore.user === null || userStore.user.type != "EM") {
+        if (!userStore.user || userStore.user.type != "EM") {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },
@@ -166,7 +171,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Products") {
-        if (userStore.user === null || userStore.user.type != "EM") {
+        if (!userStore.user || userStore.user.type != "EM") {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },

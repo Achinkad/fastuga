@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted, computed } from 'vue'
+import { ref,onMounted, computed, inject } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'
@@ -7,52 +7,31 @@ import { useProductStore } from '../stores/product.js'
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 const productStore = useProductStore()
+
+const axios = inject('axios')
+const serverBaseUrl = inject("serverBaseUrl")
+
+const orders = ref([])
+const status = ref("all")
 const series = ref([{
     name: 'Orders',
     data: []
 }])
 
+const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 const loadBestProducts = () => { productStore.load_best_products() }
 const best_products = computed(() => { return productStore.best_products })
-
-const loadCustomersCreatedThisMonth = () => {
-
-    userStore.loadCustomersCreatedThisMonth()
-
-}
-
-const customers_this_month = computed(() => {
-    return userStore.get_customers_this_month()
-})
+const loadCustomersCreatedThisMonth = () => { userStore.loadCustomersCreatedThisMonth() }
+const customers_this_month = computed(() => { return userStore.get_customers_this_month() })
+const loadRevenueOrders = () => { orderStore.loadRevenueOrders() }
+const loadNumberOrdersThisMonth = () => { orderStore.loadNumberOrdersThisMonth() }
+const orders_this_month = computed(() => { return orderStore.get_orders_this_month() })
+const revenue = computed(() => { return orderStore.get_revenue_orders() })
 
 const loadNumberOrdersMonth = async () => {
-
     const numbers = await orderStore.loadNumberOrdersMonth()
-
     series.value[0].data = numbers
-
 }
-
-const loadRevenueOrders = () => {
-
-    orderStore.loadRevenueOrders()
-
-}
-
-const loadNumberOrdersThisMonth = () => {
-
-    orderStore.loadNumberOrdersThisMonth()
-
-}
-
-const orders_this_month = computed(() => {
-    return orderStore.get_orders_this_month()
-})
-
-
-const revenue = computed(() => {
-    return orderStore.get_revenue_orders()
-})
 
 const capitalize = (word) => {
     const capitalizedFirst = word[0].toUpperCase()
@@ -60,14 +39,6 @@ const capitalize = (word) => {
     return capitalizedFirst + rest
 }
 
-
-onMounted(async () => {
-   await loadNumberOrdersMonth()
-   await loadRevenueOrders()
-   await loadNumberOrdersThisMonth()
-   await loadCustomersCreatedThisMonth()
-   await loadBestProducts()
-})
 const options = {
     chart: {
         id: 'orders-per-month',
@@ -111,14 +82,16 @@ const options = {
     }
 }
 
-
-
-
-
+onMounted(async () => {
+   await loadNumberOrdersMonth()
+   await loadRevenueOrders()
+   await loadNumberOrdersThisMonth()
+   await loadCustomersCreatedThisMonth()
+   await loadBestProducts()
+})
 </script>
 
 <template>
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -210,11 +183,17 @@ const options = {
                                 </div>
                                 <h5 class="text-muted fw-normal mt-0">Best Selling Products</h5>
                                 <br>
-                                <div class="row mb-3" v-for="(product,index) in best_products" :key="product.id">
-                               <a> {{index+1}}.</a>
-                                <router-link :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`">
-                                    {{product.name}}
-                                </router-link>
+                                <div class="row mb-2" v-for="(product,index) in best_products" :key="product.id">
+                                    <div class="row d-flex">
+                                        <div class="col">
+                                            <span class="me-1">{{index+1}}.</span>
+                                            <router-link
+                                            style="text-decoration:underline;color:#212529;"
+                                            :to="{ name: 'Product', params: { id: product.id } }" :title="`View product ${product.name}`">
+                                                {{product.name}}
+                                            </router-link>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

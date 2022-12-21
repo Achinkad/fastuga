@@ -12,9 +12,10 @@ export const useUserStore = defineStore('user', () => {
 const socket = inject("socket")
     const errors = ref(null)
     const number_customers_this_month = ref([])
-
     const user = ref(null)
-    const customer = ref(null)
+    const customer = ref([])
+    const users = ref([])
+    const pagination = ref([])
 
     const userPhotoUrl = computed(() => {
         if (!user.value?.photo_url) {
@@ -27,7 +28,28 @@ const socket = inject("socket")
         return user.value?.id ?? -1
     })
 
+    async function load_users(page,type) {
 
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: `users?page=${page}`,
+                params: {
+                    type: type
+                }
+            })
+            
+            users.value = response.data.data
+            pagination.value = response.data
+            return users.value
+        } catch (error) {
+
+            throw error
+        }
+    }
+    const get_users = (() => { return users.value })
+    const get_page = (() => { return pagination.value })
+    const total_users = computed(() => { return users.value.length })
 
     async function loadUser () {
         try {
@@ -38,6 +60,7 @@ const socket = inject("socket")
             throw error
         }
     }
+    
 
     function clearUser () {
         delete axios.defaults.headers.common.Authorization
@@ -91,8 +114,7 @@ const socket = inject("socket")
     function save (user_values, user_id) {
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
         .then((response) => {
-            //user.value = response.data.data
-            //originalValueStr = dataAsString()
+           
             toast.success('User #' + user_id + ' was updated successfully.')
 
         })
@@ -107,7 +129,7 @@ const socket = inject("socket")
         })
     }
 
-    async function get_customer(user) {
+    async function loadCustomer(user) {
         try {
             const response = await axios.get('customers/users/' + user.id)
             customer.value = response.data.data
@@ -116,6 +138,8 @@ const socket = inject("socket")
             throw error
         }
     }
+
+    const get_customer = (() => { return customer.value })
 
     async function loadCustomersCreatedThisMonth() {
 
@@ -140,6 +164,7 @@ const socket = inject("socket")
         user,
         userId,
         customer,
+        loadCustomer,
         get_customer,
         userPhotoUrl,
         login,
@@ -147,6 +172,10 @@ const socket = inject("socket")
         restoreToken,
         save,
         get_customers_this_month,
-        loadCustomersCreatedThisMonth
+        loadCustomersCreatedThisMonth,
+        load_users,
+        get_users,
+        get_page,
+        total_users
     }
 })

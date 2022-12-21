@@ -17,6 +17,7 @@ import "bootstrap"
 
 const app = createApp(App)
 const serverBaseUrl = import.meta.env.VITE_API_URL
+const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 /* --- AXIOS --- */
 app.provide('axios', axios.create({
@@ -37,7 +38,7 @@ app.use(Toaster, {
 app.provide('toast', app.config.globalProperties.$toast)
 
 /* --- SOCKET.IO --- */
-app.provide('socket', io("http://localhost:8080"))
+app.provide('socket', io(wsConnection))
 
 /* --- APEX CHARTS --- */
 app.use(VueApexCharts)

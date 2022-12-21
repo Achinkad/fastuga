@@ -42,7 +42,11 @@ const capitalize = (word) => {
     return capitalizedFirst + rest
 }
 
-watch(() => userStore.user, function() { loadOrders() })
+watch(() => userStore.user, function() {
+    // userStore.get_customer()
+    loadOrders()
+
+})
 
 onBeforeMount(() => {
     loadOrders()
@@ -51,7 +55,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="userStore.customer && orders_from_user != null">
         <div class="row">
             <div class="col-12">
                 <div class="p-title-box">
@@ -87,9 +91,8 @@ onBeforeMount(() => {
                                             <img :src="photoFullUrl(product)" class="product-photo"/>
                                         </div>
                                         <div class="col-auto">
-                                            <span><b>{{product.name}}</b></span>
-                                            <span class="ms-2"><i>{{product.price}}€</i></span> <br>
-                                            <span style="font-size:14px;">{{capitalize(product.type)}}</span>
+                                            <span><b>{{product.name}}</b></span> <br>
+                                            <span style="font-size:14px;"><i>{{product.price}}€</i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +105,7 @@ onBeforeMount(() => {
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="orders_from_user.length != 0">Orders In Pending ({{orders_from_user.length}})</h4>
+                        <h4 class="header-title" v-if="orders_from_user.length != undefined">Orders In Pending ({{orders_from_user.length}})</h4>
                         <h4 class="header-title" v-else>Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
