@@ -18,8 +18,6 @@ use App\Policies\OrderPolicy;
 Route::get('customers/numbers', [CustomerController::class, 'get_number_customers_created_this_month']);
 Route::get('customers/users/{user}', [CustomerController::class, 'show_by_user']); // -> Get Customer From User
 Route::resource('customers', CustomerController::class);
-Route::get('customers/user/{user}', [CustomerController::class, 'show_by_user']); // -> Get Customer From User
-
 
 
 /* --- [API Routes] -> Users --- */
