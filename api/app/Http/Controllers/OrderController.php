@@ -17,9 +17,9 @@ use App\Models\OrderItem;
 
 class OrderController extends Controller
 {
-    
+
     public function __construct()
-    
+
     {
         $this->middleware('can:viewAny')->only('viewAny');
         $this->middleware('can:create')->only('create');
