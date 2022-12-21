@@ -146,6 +146,8 @@ class CustomerController extends Controller
         }
     }
 
-    public function show_by_user(User $user){ return new CustomerResource($user->customer); }
+    public function show_by_user(User $user){ 
+        if(Auth()->guard('api')->user()->id!=$user->id) { abort(403); }
+        return new CustomerResource($user->customer); }
 
 }
