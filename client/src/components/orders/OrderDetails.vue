@@ -87,7 +87,7 @@ const add = () => {
     }
 
     if (editingOrder.value.customer_id != undefined) {
-        console.log("id:"+editingOrder.value.customer_id)
+       
         formData.append('customer_id', editingOrder.value.customer_id);
 
     }

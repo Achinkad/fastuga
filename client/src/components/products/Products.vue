@@ -23,7 +23,7 @@ const loadProducts = (page = 1) => {
 const pagination = computed(() => { return productStore.get_page() })
 const products = computed(() => { return productStore.get_products() })
 
-//WATCH PARA ESTAR SEMPRE A VER O VALOR DE VALUE_TYPE(valor do filtro)
+
 watch(value_type, () => {
     
     loadProducts()
@@ -48,7 +48,7 @@ const total = computed(() => {
 
 const forceRerender = () => {
     loadProducts()
-    console.log("reload")
+   
 }
 
 
