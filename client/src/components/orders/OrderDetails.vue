@@ -87,7 +87,7 @@ const add = () => {
     }
 
     if (editingOrder.value.customer_id != undefined) {
-        console.log("id:"+editingOrder.value.customer_id)
+       
         formData.append('customer_id', editingOrder.value.customer_id);
 
     }
@@ -454,12 +454,16 @@ onMounted(() => {
             </div>
 
         <div class="mb-3 d-flex justify-content-end" v-if="$route.name == 'NewOrder'">
-            <button type="button" id="button" class="btn btn-warning px-4 btn-add me-2" @click="add">
+            <div class="mb-3 px-1">
+            <button type="button" id="button" class="btn btn-warning px-4 btn-add" @click="add">
                 Add a New Order
             </button>
+        </div>
+        <div class="mb-3 px-1">
             <button type="button" class="btn btn-light px-4" @click="cancel">
                 Cancel
             </button>
+        </div>
         </div>
     </form>
 </div>

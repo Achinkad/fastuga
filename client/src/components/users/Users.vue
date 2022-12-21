@@ -8,15 +8,15 @@ import { useUserStore } from '../../stores/user.js'
 const userStore = useUserStore()
 const router = useRouter()
 
-const axios = inject('axios')
+
 
 const pagination_aux = ref({});
 
-const serverBaseUrl = inject("serverBaseUrl")
+
 
 const forceRerender = () => {
     loadUsers()
-    console.log("reload")
+
 }
 
 var total_users = 0

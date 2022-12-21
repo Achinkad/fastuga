@@ -49,11 +49,10 @@ const loadProduct = (id) => {
 }
 
 const save = (product_values) => {
-    console.log("entrou na função save")
-
+    
     axios.post(serverBaseUrl + '/api/products/' + props.id, product_values)
         .then((response) => {
-            console.log("feito a foto")
+       
             toast.success("Product updated successfuly")
         })
         .catch((error) => {
@@ -72,7 +71,7 @@ const save = (product_values) => {
 const add = (product_values) => {
     axios.post(serverBaseUrl + '/api/products', product_values)
         .then((response) => {
-            console.log("feito")
+    
     
             toast.success("Product added successfuly")
             router.push({ name: 'Products' })

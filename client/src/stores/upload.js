@@ -11,7 +11,7 @@ export const useUploadStore = defineStore('upload', () => {
         reader.readAsDataURL(image);
         reader.onload = e =>{
             previewImage = e.target.result;
-            console.log(previewImage);
+            
         }
 }
 return {previewImage,handleUpload}
