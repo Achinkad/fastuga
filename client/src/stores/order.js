@@ -287,9 +287,8 @@ export const useOrderStore = defineStore("orders", () => {
     return orders.value.length;
   });
   const my_orders = computed(() => {
-
-    return orders.value.filter((or) => userStore.costumer.id); 
    
+    return orders.value.filter((or) => userStore.customer.id); 
   });
   const my_orders_delivery = computed(() => {
     return orders.value.filter((or) => userStore.userId);

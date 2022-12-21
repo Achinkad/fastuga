@@ -201,23 +201,20 @@ onMounted(() => {
         </div>
         <form class="needs-validation" novalidate @submit.prevent="save">
             <div class="row">
-                <div class="col-8">
+                <div class="col-lg-8 col-md-12 mb-3">
                     <div class="card h-100"
                         v-if="(!userStore.user || (userStore.user && userStore.user.type == 'C')) && $route.name == 'NewOrder'">
                         <div class="card-body d-flex align-items-center">
                             <div class="w-100">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="payment_type" class="form-label">Payment Type <span
-                                                class="text-danger">*</span> </label>
-                                        <select id="payment_type" name="payment_type" class="form-select"
-                                            v-model="editingOrder.payment_type">
+                                        <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span> </label>
+                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type">
                                             <option value="VISA">Visa</option>
                                             <option value="PAYPAL">PayPal</option>
                                             <option value="MBWAY">MBWay</option>
                                         </select>
-                                        <field-error-message :errors="errors"
-                                            fieldName="payment_type"></field-error-message>
+                                        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
                                     </div>
 
                                     <div class="col">
@@ -296,7 +293,7 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <div class="col-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="row">
                         <div class="col">
                             <div class="card widget-flat">
@@ -306,15 +303,10 @@ onMounted(() => {
                                             <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
                                         </div>
                                         <div class="col">
-                                            <field-error-message :errors="errors"
-                                                fieldName="total_price"></field-error-message>
+                                            <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
                                         </div>
-
                                     </div>
-
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -335,8 +327,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row"
-                        v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
+                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">
@@ -375,7 +366,7 @@ onMounted(() => {
                 </div>
             </div>
             <div class="row mt-4" v-if="$route.name == 'NewOrder'">
-                <div class="col-7">
+                <div class="col-xl-7 col-lg-12">
                     <div class="card">
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
                             <h4 class="header-title">Your Order Products</h4>
@@ -422,14 +413,14 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <div class="col-5">
+                <div class="col-xl-5 col-lg-12">
                     <div class="card">
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
                             <h4 class="header-title">Menu of products</h4>
                         </div>
                         <div class="card-body">
                             <div class="row d-flex align-item-center">
-                                <div class="col-8">
+                                <div class="col">
                                     <div class="d-flex">
                                         <div class="d-flex align-items-center">
                                             <label for="selectType" class="me-2">Type</label>
