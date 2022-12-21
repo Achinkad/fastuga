@@ -28,7 +28,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("deliveredOrder", (order) => {
-    socket.to("Manager").to(order.customer.user.id).emit("deliveredOrder", order);
+    if(order.customer== null){
+      socket.to("Manager").to("Anonymous").emit("deliveredOrder", order);
+
+    }else{
+       socket.to("Manager").to(order.customer.user.id).emit("deliveredOrder", order);
+    }
+   
   });
 
   socket.on("deleteOrder", (order) => {
@@ -38,10 +44,15 @@ io.on("connection", (socket) => {
   socket.on("updatedOrderChef", (order) => {
     socket.to("Delivery").to("Manager").emit("updatedOrderChef",order);
   });
-
+  socket.on("Anonymous", () => {
+    console.log("ENTROU")
+    socket.join("Anonymous");
+  });
   socket.on("loggedIn", function (user) {
+    
     socket.emit("loggedIn", user);
     socket.join(user.id);
+    socket.leave("Anonymous")
     if (user.type == "EM") {
       socket.join("Manager");
 
@@ -54,9 +65,7 @@ io.on("connection", (socket) => {
     }
     if (user.type == "EC") {
       socket.join("Chef");
-    } else {
-      socket.join("Anonymous");
-    }
+    } 
   });
 
   socket.on("loggedOut", function (user)
@@ -74,9 +83,7 @@ io.on("connection", (socket) => {
     }
     if (user.type == "EC") {
       socket.leave("Chef");
-    } else {
-      socket.leave("Anonymous");
-    }
+    } 
   });
 
 

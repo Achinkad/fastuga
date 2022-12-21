@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onBeforeMount, inject} from 'vue'
+
+import { computed, onBeforeMount, inject,onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
@@ -7,7 +8,7 @@ import { useProductStore } from '../stores/product.js'
 const productStore = useProductStore()
 const orderStore = useOrderStore()
 const router = useRouter()
-
+const socket = inject("socket");
 const serverBaseUrl = inject("serverBaseUrl")
 
 const loadBestProducts = () => {
@@ -24,6 +25,9 @@ const editClick = (order) => { router.push({ name: "Order", params: { id: order.
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
 
+onMounted(()=>{
+    socket.emit("Anonymous")
+})
 
 onBeforeMount(() => {
     loadBestProducts()
