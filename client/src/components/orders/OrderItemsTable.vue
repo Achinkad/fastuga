@@ -24,25 +24,28 @@ const photoFullUrl = (product) => {
     <table class="table align-middle mt-4">
         <thead class="table-light">
       <tr>
+        <th >ID</th>
         <th >Product Photo</th>
         <th >Product Name</th>
         <th >Status</th>
         <th >Notes</th>
         <th>Date</th>
-        <th >Order_id</th>
+        
 
       </tr>
     </thead>
     <tbody>
       <tr v-for="order_item in order_items">
+      <td>{{ order_item.order.ticket_number }}-{{order_item.order_local_number}}</td>
         <td  class="align-middle">
           <img alt="product" :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
         </td>
+        
         <td>{{ order_item.product.name }}</td>
         <td>{{ order_item.status }}</td>
         <td>{{ order_item.notes }}</td>
        <td>{{ order_item.order.date }}</td>
-        <td>{{ order_item.order_id }}</td>
+        
       </tr>
     </tbody>
   </table>
