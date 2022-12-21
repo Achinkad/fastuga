@@ -23,8 +23,15 @@ export const useOrderStore = defineStore("orders", () => {
   let url = null;
 
   async function load_orders(page, status) {
-    if (userStore.user && userStore.user.type == "EM"){ url = `orders?page=${page}` }
-    if (userStore.user && (userStore.user.type == "ED" || userStore.user.type == "C")) { url = `users/${userStore.userId}/orders?page=${page}` }
+    if (userStore.user && userStore.user.type == "EM") {
+      url = `orders?page=${page}`;
+    }
+    if (
+      userStore.user &&
+      (userStore.user.type == "ED" || userStore.user.type == "C")
+    ) {
+      url = `users/${userStore.userId}/orders?page=${page}`;
+    }
 
     try {
       const response = await axios({
@@ -97,18 +104,18 @@ export const useOrderStore = defineStore("orders", () => {
     }
   }
 
-  async function loadOrderItems(page,status) {
+  async function loadOrderItems(page, status) {
     try {
       const response = await axios({
         method: "GET",
         url: "users/" + userStore.user.id + "/order-items?page=" + page,
         params: {
-            status: status,
-          },
+          status: status,
+        },
       });
-     
+
       order_items.value = response.data.data;
-      
+
       pagination.value = response.data;
       return order_items.value;
     } catch (error) {
@@ -204,7 +211,6 @@ export const useOrderStore = defineStore("orders", () => {
   }
 
   async function update_order_items_status(order_item, status) {
-
     if (userStore.user && userStore.user.type == "EC") {
       data = {
         status: status,
@@ -218,7 +224,6 @@ export const useOrderStore = defineStore("orders", () => {
       params: data,
     });
 
-
     if (status == "P") {
       remove_order_item(response.data.data, order_items);
       loadOrderItemsPreparing();
@@ -231,11 +236,11 @@ export const useOrderStore = defineStore("orders", () => {
 
     return response.data.data;
   }
-  
- socket.on("updatedOrderChef", (order) => {
-        orders.value.push(order);
-        toast.info(`The Order (#${order.id}) was updated to status ready!`);
-      });
+
+  socket.on("updatedOrderChef", (order) => {
+    orders.value.push(order);
+    toast.info(`The Order (#${order.id}) was updated to status ready!`);
+  });
   socket.on("deliveredOrder", (order) => {
     remove_order(order);
     orders.value.push(order);
@@ -243,11 +248,9 @@ export const useOrderStore = defineStore("orders", () => {
   });
 
   socket.on("newOrder", (order) => {
-  
-    orders.value.push(order);
-    toast.info(
-      `A new order has arrived. Check your order menu. (#${order.id})`
-    );
+    order_items_preparing.value.push(order);
+
+    toast.info(  `A new order has arrived. Check your order menu. (#${order.id})`  );
   });
   socket.on("deleteOrder", (order) => {
     remove_order(order);
@@ -288,9 +291,7 @@ export const useOrderStore = defineStore("orders", () => {
     return orders.value.length;
   });
   const my_orders = computed(() => {
-
-    return orders.value.filter((or) => userStore.costumer.id); 
-   
+    return orders.value.filter((or) => userStore.costumer.id);
   });
   const my_orders_delivery = computed(() => {
     return orders.value.filter((or) => userStore.userId);
