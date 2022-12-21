@@ -62,6 +62,7 @@ watch(
                     <th class="text-center"
                         v-if="(userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C')) || !userStore.user"
                         style="width:10%">Actions</th>
+                    <th v-if="userStore.user==null"></th>
                 </tr>
             </thead>
             <tbody>
