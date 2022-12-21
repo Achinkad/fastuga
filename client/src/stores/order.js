@@ -70,7 +70,6 @@ export const useOrderStore = defineStore("orders", () => {
         params: { status },
       });
       count_orders.value = response.data;
-      console.log(response.data.data);
       return number_orders.value;
     } catch (error) {
       throw error;

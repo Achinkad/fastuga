@@ -33,7 +33,7 @@ const handleUpload = (e) => {
   reader.readAsDataURL(image);
   reader.onload = e => {
     previewImage = e.target.result;
-    console.log(previewImage);
+    
   }
 }
 
