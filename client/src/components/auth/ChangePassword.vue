@@ -106,11 +106,18 @@
       </div>
               </div>
     <div class="mb-3 d-flex justify-content-end">
+      <div class="mb-3 px-1">
       <button
         type="button"
-        class="btn btn-primary px-5"
+        class="btn btn-warning px-4 btn-add"
         @click="changePassword"
       >Change Password</button>
+      </div>
+      <div class="mb-3 px-1">
+        <button type="button" class="btn btn-light px-5" @click="cancel">
+         Cancel
+        </button>
+      </div>
     </div>
             </div>
           </div>
