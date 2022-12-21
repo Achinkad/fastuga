@@ -36,7 +36,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updatedOrderChef", (order) => {
-
     socket.to("Delivery").to("Manager").emit("updatedOrderChef",order);
   });
 

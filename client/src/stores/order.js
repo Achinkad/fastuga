@@ -227,7 +227,6 @@ export const useOrderStore = defineStore("orders", () => {
     }
 
     if (status == "R") {
-        
       remove_order_item(response.data.data, order_items_preparing);
       socket.emit("updatedOrderChef", response.data.data.order);
     }
