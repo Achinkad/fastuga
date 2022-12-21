@@ -161,17 +161,6 @@ const cancel = () => {
                       <field-error-message :errors="errors" fieldName="type"></field-error-message>
                     </div>
                   </div>
-                  <div class="col-xl-6" v-if="$route.name == 'User'">
-
-                    <div class="mb-3 px-1">
-                      <label for="blocked" class="form-label">Blocked</label>
-                      <select id="blocked" name="blocked" class="form-select" v-model="editingUser.blocked">
-                        <option value="false">Unblocked</option>
-                        <option value="true">Blocked</option>
-                      </select>
-                      <field-error-message :errors="errors" fieldName="blocked"></field-error-message>
-                    </div>
-                  </div>
 
                   <div class="col-xl-6">
 
