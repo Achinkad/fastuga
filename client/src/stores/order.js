@@ -205,7 +205,7 @@ export const useOrderStore = defineStore("orders", () => {
   }
 
   async function update_order_items_status(order_item, status) {
-    console.log(order_item)
+
     if (userStore.user && userStore.user.type == "EC") {
       data = {
         status: status,
@@ -219,7 +219,6 @@ export const useOrderStore = defineStore("orders", () => {
       params: data,
     });
 
-    console.log(response.data.data.order)
 
     if (status == "P") {
       remove_order_item(response.data.data, order_items);
@@ -240,6 +239,7 @@ export const useOrderStore = defineStore("orders", () => {
       });
   socket.on("deliveredOrder", (order) => {
     remove_order(order);
+    orders.value.push(order);
     toast.info(`The Order (#${order.id}) was updated to status delivered!`);
   });
 

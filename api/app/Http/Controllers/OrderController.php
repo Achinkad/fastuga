@@ -37,7 +37,7 @@ class OrderController extends Controller
     {
         if (Auth()->guard('api')->user()->type == "ED" || Auth()->guard('api')->user()->type == "EC" ) { abort(403); }
 
-        $this->authorizeForUser(Auth()->guard('api')->user(),'create');
+        
         $latest_order = Order::select('ticket_number')->latest('id')->whereDate('created_at', Carbon::today())->first();
         $latest_ticket = $latest_order ? $latest_order->ticket_number : 0;
 
