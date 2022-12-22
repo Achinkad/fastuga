@@ -110,7 +110,7 @@ watch(
                         <div class="d-flex justify-content-center">
                             <div v-if="userStore.user && userStore.user.type == 'EM'">
                                 <div v-if="order.status != 'C' && order.status != 'D'">
-                                    <button class="btn btn-xs btn-light" title="Delete Order"
+                                    <button class="btn btn-xs btn-light me-2" title="Delete Order"
                                         @click="deleteClick(order)">
                                         <i class="bi bi-x-lg"></i>
                                     </button>
