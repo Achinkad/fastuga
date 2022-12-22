@@ -95,7 +95,7 @@ class UserController extends Controller
     }
 
     public function new_password(UpdateUserPasswordRequest $request, User $user) {
-        if (Auth()->guard('api')->user()->type == "EM") { abort(403); }
+        if (Auth()->guard('api')->user()->id != $user->id ) { abort(403); }
 
         $user = User::where(['id' => $user->id], ['deleted_at' => null])->firstOrFail();
         $password_hashed = Hash::make($request->input('password'));
