@@ -120,11 +120,10 @@ onBeforeMount(() => {
 
                         </table>
                         <div class="d-flex justify-content-end mt-3">
-                            <div v-if = "pagination_preparation != undefined">
-                      
+                    
                             <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="2">
                             </Bootstrap5Pagination></div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>

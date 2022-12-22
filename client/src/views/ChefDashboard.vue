@@ -24,7 +24,13 @@ const updateStatus = (order_item, status) => {
 
     orderStore.update_order_items_status(order_item, status)
         .then((response) => {
-            toast.info("Order-item " + order_item.id + " changed status!")
+            if(status == "P"){
+                   toast.info("Order-item " + order_item.id + " changed to status preparing!")
+            }
+            if(status == "R"){
+                   toast.info("Order-item " + order_item.id + " changed to status ready!")
+            }
+
         })
         .catch((error) => {
             console.log(error)
@@ -157,11 +163,11 @@ onBeforeMount(() => {
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-3">
-                            <div v-if = "pagination_preparation != undefined">
+                       
                             <Bootstrap5Pagination :data="pagination_preparation"
                                 @pagination-change-page="loadOrderItemsPreparing" :limit="2">
                             </Bootstrap5Pagination></div>
-                        </div>
+                    
                     </div>
 
                 </div>
