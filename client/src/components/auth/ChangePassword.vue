@@ -19,8 +19,6 @@
   const emit = defineEmits(['changedPassword'])
 
 
-  //let originalValueStr = ''
-
 
   const editPassword = () => {
     if (passwords.value.password==passwords.value.password_confirm){

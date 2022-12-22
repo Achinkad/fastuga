@@ -35,15 +35,6 @@ class CustomerController extends Controller
             $customer = new Customer;
             $customer->fill($customer_fields);
             $customer->user_id = trim($create_user->id);
-            /*
-            // -> Stores Customer Photo
-            if ($customer_request->has('photo_url')) {
-            $photo = $customer_request->file('photo_url');
-            $photo_id = $customer->id . '_' . $photo->hashName();
-            Storage::putFileAs('public/fotos', $photo, $photo_id);
-            $customer->photo_url = $photo_id;
-        }
-        */
         $customer->save();
         return $customer;
     });

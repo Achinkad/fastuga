@@ -58,7 +58,6 @@ class OrderItemController extends Controller
     {
         
         if (auth()->guard('api')->user()->type != "EC") { abort(403); }
-      //  if ($user->type != "EC") { abort(403); }
 
         $order_items = OrderItem::where('preparation_by', $id)->where('status',$request->input('status'))->paginate(10);
        
