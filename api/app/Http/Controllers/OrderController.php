@@ -223,7 +223,6 @@ class OrderController extends Controller
 
 
         if(auth()->guard('api')->user() && auth()->guard('api')->user()->type == "EM"){
-            //$orders_this_year=Order::whereYear('date','=',$year);
 
             $number_orders_by_month=array(Order::whereYear('date','=',date('Y'))->whereMonth('date','=',1)->count(),
                                         Order::whereYear('date','=',date('Y'))->whereMonth('date','=',2)->count(),

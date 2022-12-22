@@ -103,23 +103,5 @@ class UserController extends Controller
         $user->save();
         return new UserResource($user);
     }
-    /*
-    protected function resourceAbilityMap()
-    {
-    return array_merge(parent::resourceAbilityMap(), [
-    'show_me' => 'show_me',
-    'toogle' => 'toogle',
-    'new_password' => 'new_password'
 
-]);
-}
-protected function resourceMethodsWithoutModels()
-{
-return array_merge(parent::resourceMethodsWithoutModels(), [
-'show_me',
-'toogle',
-'new_password'
-]);
-}
-*/
 }
