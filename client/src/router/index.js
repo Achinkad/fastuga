@@ -250,7 +250,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.name == "Users") {
-    if (userStore.user && userStore.user.type != "EM") {
+    if (userStore.user && userStore.user.type == "EM") {
       next();
       return;
     }
