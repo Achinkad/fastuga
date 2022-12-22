@@ -97,7 +97,11 @@ const logout = () => {
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" :class="{ active: $route.name === 'Users' }" :to="{ name: 'Users' }">
+                        <router-link class="nav-link" :class="{
+                            active: $route.name === 'Users' ||
+                                    $route.name === 'User' ||
+                                    $route.name === 'newUser'
+                        }" :to="{ name: 'Users' }">
                             <i class="bi bi-people-fill"></i>
                             Users
                         </router-link>
