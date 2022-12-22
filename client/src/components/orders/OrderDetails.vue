@@ -6,10 +6,7 @@ import { useProductStore } from '../../stores/product.js'
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
-
-
 const productStore = useProductStore()
-
 var value_type = ref("all")
 
 
@@ -42,11 +39,8 @@ const newOrderItem = () => {
 }
 
 const emit = defineEmits(["cancel", "add"])
-
 const editingOrder = ref(props.order)
-
 const customer = ref(props.customer)
-
 editingOrder.value.points_used_to_pay = "0"
 
 watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
@@ -73,7 +67,6 @@ const addProduct = (product) => {
 const add = () => {
     fillOrder();
     let formData = new FormData()
-
     formData.append('total_price', editingOrder.value.total_price);
     formData.append('payment_type', editingOrder.value.payment_type);
     formData.append('payment_reference', editingOrder.value.payment_reference);
@@ -85,9 +78,7 @@ const add = () => {
         editingOrder.value.points_used_to_pay = 0;
     }
     formData.append('points_used_to_pay', editingOrder.value.points_used_to_pay)
-
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item)) });
-
     emit("add", formData);
 }
 
@@ -180,10 +171,8 @@ watch(() => editingOrder.value.payment_type, (newValue) => {
     }
 })
 
-
 onMounted(() => {
     loadProducts()
-
 })
 </script>
 
@@ -219,7 +208,6 @@ onMounted(() => {
                                         <field-error-message :errors="errors"
                                             fieldName="payment_type"></field-error-message>
                                     </div>
-
                                     <div class="col">
                                         <label for="inputPaymentReference" class="form-label">Payment Reference <span
                                                 class="text-danger">*</span></label>
