@@ -29,8 +29,9 @@ const editPassword = () => {
         router.back()
       })
       .catch((error) => {
+        errors.value = error.response.data.data
+
         if (error.response.status == 422) {
-          errors.value = error.response.data.data
 
           toast.error('user password was not updated due to validation errors!')
         } else {
