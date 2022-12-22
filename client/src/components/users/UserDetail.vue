@@ -175,7 +175,7 @@ const cancel = () => {
 
                   
                 </div>
-                <div v-if="(editingUser.type!='C') || (userStore.user.type!='EM')">
+                <div v-if="(editingUser.type!='C') || (userStore.user && userStore.user.type!='EM')">
                 <div class="mb-3 d-flex justify-content-end">
                   <div class="mb-3 px-1">
                   <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newUser'">Add
