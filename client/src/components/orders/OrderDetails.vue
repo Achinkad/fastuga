@@ -47,20 +47,19 @@ const editingOrder = ref(props.order)
 
 const customer = ref(props.customer)
 
-editingOrder.value.points_used_to_pay = "0"
+const paginationNewOrder = computed(() => { return productStore.get_page() })
 
-watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
-watch(value_type, () => {
-    loadProducts()
-    totalPrice()
-})
+const products = computed(() => { return productStore.get_products() })
+
+const points_to_pay = ref(0)
+
+const payment_type = ref("Payment Reference")
+
+editingOrder.value.points_used_to_pay = "0"
 
 const loadProducts = (page = 1) => {
     productStore.load_products(page, value_type.value)
 }
-
-const paginationNewOrder = computed(() => { return productStore.get_page() })
-const products = computed(() => { return productStore.get_products() })
 
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem())
@@ -142,7 +141,6 @@ const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl
 }
 
-const points_to_pay = ref(0)
 watch(() => editingOrder.value.points_used_to_pay, (newValue) => {
     points_to_pay.value = newValue
 })
@@ -158,7 +156,6 @@ watch(
     }
 )
 
-const payment_type = ref("Payment Reference")
 watch(() => editingOrder.value.payment_type, (newValue) => {
 
     switch (newValue) {
@@ -180,10 +177,15 @@ watch(() => editingOrder.value.payment_type, (newValue) => {
     }
 })
 
+watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
+watch(value_type, () => {
+    loadProducts()
+    totalPrice()
+})
+
 
 onMounted(() => {
     loadProducts()
-
 })
 </script>
 

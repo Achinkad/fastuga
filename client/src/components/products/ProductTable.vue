@@ -4,7 +4,6 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const axios = inject("axios");
 const toast = inject('toast')
-
 const serverBaseUrl = inject("serverBaseUrl")
 
 const props = defineProps({
@@ -21,8 +20,8 @@ const deleteConfirmationDialog = ref(null)
 
 const productToDeleteDescription = computed(() => {
     return productToDelete.value
-    ? `#${productToDelete.value.id} (${productToDelete.value.name})`
-    : ""
+        ? `#${productToDelete.value.id} (${productToDelete.value.name})`
+        : ""
 })
 
 watch(
@@ -34,21 +33,21 @@ watch(
 
 const photoFullUrl = (product) => {
     return product.photo_url
-    ? serverBaseUrl + "/storage/products/" + product.photo_url
-    : avatarNoneUrl;
+        ? serverBaseUrl + "/storage/products/" + product.photo_url
+        : avatarNoneUrl;
 }
 
 const dialogConfirmedDelete = () => {
     axios
-    .delete(serverBaseUrl + "/api/products/" + productToDelete.value.id)
-    .then((response) => {
-        emit("deleted", response.data.data)
-        toast.info("Product " + productToDeleteDescription.value + " was deleted")
-        emit("forceRerender", response.data.data)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
+        .delete(serverBaseUrl + "/api/products/" + productToDelete.value.id)
+        .then((response) => {
+            emit("deleted", response.data.data)
+            toast.info("Product " + productToDeleteDescription.value + " was deleted")
+            emit("forceRerender", response.data.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 const editClick = (product) => {
@@ -69,42 +68,42 @@ const capitalize = (word) => {
 
 <template>
     <confirmation-dialog ref="deleteConfirmationDialog" confirmationBtn="Delete product"
-    :msg="`Do you really want to delete the product ${productToDeleteDescription}?`" @confirmed="dialogConfirmedDelete">
-</confirmation-dialog>
-
-<div class="table-wrapper">
-    <table class="table table-responsive align-middle mt-4">
-        <thead class="table-light">
-            <tr>
-                <th >Photo</th>
-                <th class="align-middle">Name</th>
-                <th class="align-middle">Category</th>
-                <th class="align-middle">Price</th>
-                <th class="text-center" style="width:10%">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="product in products" :key="product.id">
-                <td  class="align-middle">
-                    <img alt ="product" :src="photoFullUrl(product)" class="rounded-circle img_photo" />
-                </td>
-                <td class="align-middle">{{ product.name }}</td>
-                <td class="align-middle">{{ capitalize(product.type) }}</td>
-                <td class="align-middle">{{ product.price }}€</td>
-                <td class="text-center">
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-xs btn-light" title="Edit Product" @click="editClick(product)">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-xs btn-light" title="Delete Product" @click="deleteClick(product)">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        :msg="`Do you really want to delete the product ${productToDeleteDescription}?`"
+        @confirmed="dialogConfirmedDelete">
+    </confirmation-dialog>
+    <div class="table-wrapper">
+        <table class="table table-responsive align-middle mt-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Photo</th>
+                    <th class="align-middle">Name</th>
+                    <th class="align-middle">Category</th>
+                    <th class="align-middle">Price</th>
+                    <th class="text-center" style="width:10%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="product in products" :key="product.id">
+                    <td class="align-middle">
+                        <img alt="product" :src="photoFullUrl(product)" class="rounded-circle img_photo" />
+                    </td>
+                    <td class="align-middle">{{ product.name }}</td>
+                    <td class="align-middle">{{ capitalize(product.type) }}</td>
+                    <td class="align-middle">{{ product.price }}€</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-xs btn-light" title="Edit Product" @click="editClick(product)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-xs btn-light" title="Delete Product" @click="deleteClick(product)">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <style scoped>

@@ -5,6 +5,9 @@ import { useOrderStore } from '../../stores/order.js'
 
 const userStore = useUserStore()
 const orderStore = useOrderStore()
+const editingOrders = ref(props.orders)
+const orderToDelete = ref(null)
+const deleteConfirmationDialog = ref(null)
 
 const emit = defineEmits(["completeToggled", "edit"])
 
@@ -15,9 +18,7 @@ const props = defineProps({
     },
 })
 
-const editingOrders = ref(props.orders)
-const orderToDelete = ref(null)
-const deleteConfirmationDialog = ref(null)
+
 
 const editClick = (order) => { emit("edit", order) }
 
@@ -59,14 +60,17 @@ watch(
                     <th v-if="userStore.user && userStore.user.type != 'ED'">Price</th>
                     <th v-if="userStore.user && userStore.user.type == 'ED'">Date of Order</th>
                     <th>Order Status</th>
-                    <th class="text-center" v-if="(userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C')) || !userStore.user" style="width:10%">
+                    <th class="text-center"
+                        v-if="(userStore.user && (userStore.user.type == 'EM' || userStore.user.type == 'C')) || !userStore.user"
+                        style="width:10%">
                         Actions
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="orders.length == 0">
-                    <td v-if="userStore.user" colspan="6" class="text-center" style="height:55px!important;"> No data available.</td>
+                    <td v-if="userStore.user" colspan="6" class="text-center" style="height:55px!important;"> No data
+                        available.</td>
                     <td v-else colspan="4" class="text-center" style="height:55px!important;"> No data available.</td>
                 </tr>
                 <tr v-for="order in orders" :key="order.id" style="height:55px!important;">

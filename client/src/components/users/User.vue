@@ -4,7 +4,6 @@ import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import UserDetail from "./UserDetail.vue"
 
 const router = useRouter()
-
 const axios = inject('axios')
 const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")

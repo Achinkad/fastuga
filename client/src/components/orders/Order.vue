@@ -8,7 +8,6 @@ import OrderDetail from "./OrderDetails.vue"
 const router = useRouter()
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
 const axios = inject('axios')
 const toast = inject('toast')
 const serverBaseUrl = inject("serverBaseUrl")
@@ -46,49 +45,42 @@ const newOrder = () => {
     }
 }
 
-let originalValueStr = ''
+
 const loadOrder = (id) => {
-    originalValueStr = ''
-    errors.value = null
+    console.log("aaaaa")
     if (!id || (id < 0)) {
         order.value = newOrder()
-        originalValueStr = dataAsString()
+        console.log("bbbb")
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
-        .then((response) => {
-            order.value = response.data.data
-            originalValueStr = dataAsString()
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+            .then((response) => {
+                order.value = response.data.data
+                originalValueStr = dataAsString()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }
 
 const add = (order) => {
     orderStore.insert_order(order)
-
-    .then((response) => {
-
-        toast.success("Order added successfuly!")
-        router.push({ name: 'Orders' })
-
-    })
-    .catch((error) => {
-        console.log(error);
-        if (error.response.status == 422) {
-            toast.error('Couldn\'t add the order due to validation errors!')
-
-            errors.value = error.response.data.data
-
-        } else {
-            toast.error('Couldn\'t add the order due to unknown server error!')
-        }
-    })
+        .then((response) => {
+            toast.success("Order added successfuly!")
+            router.push({ name: 'Orders' })
+        })
+        .catch((error) => {
+            console.log(error);
+            if (error.response.status == 422) {
+                toast.error('Couldn\'t add the order due to validation errors!')
+                errors.value = error.response.data.data
+            } else {
+                toast.error('Couldn\'t add the order due to unknown server error!')
+            }
+        })
 }
 
 const cancel = () => {
-    originalValueStr = dataAsString()
     router.push({ name: 'Orders' })
 }
 
@@ -100,7 +92,7 @@ const order = ref(newOrder())
 const errors = ref(null)
 
 const loadCustomer = () => {
-   userStore.loadCustomer(userStore.user)
+    userStore.loadCustomer(userStore.user)
 }
 
 const customer = computed(() => { return userStore.get_customer() })
@@ -114,10 +106,9 @@ watch(
     { immediate: true }
 )
 
-onMounted(() => {
+onBeforeMount(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
-
     }
 })
 
