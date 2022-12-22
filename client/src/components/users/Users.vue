@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject, watch,computed } from 'vue'
+import { ref, onMounted, watch,computed } from 'vue'
 import { useRouter } from 'vue-router'
 import UserTable from "./UserTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';

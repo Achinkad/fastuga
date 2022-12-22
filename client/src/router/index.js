@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useOrderStore } from "../stores/order.js";
 import { useUserStore } from "../stores/user.js";
 
 const router = createRouter({
@@ -128,11 +129,13 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
-
+    
+    
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await userStore.restoreToken()
-    }
+    
+    }  
 
     if (to.name == "Dashboard") {
         if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
@@ -169,7 +172,6 @@ router.beforeEach(async (to, from, next) => {
             return
         }
     }
-
     if (to.name == "newUser") {
         if (!userStore.user || userStore.user.type != "EM") {
             next({

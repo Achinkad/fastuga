@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted, computed, inject } from 'vue'
+import { ref,onMounted, computed } from 'vue'
 import { useOrderStore } from '../stores/order.js'
 import { useUserStore } from '../stores/user.js'
 import { useProductStore } from '../stores/product.js'
@@ -8,17 +8,11 @@ const userStore = useUserStore()
 const orderStore = useOrderStore()
 const productStore = useProductStore()
 
-const axios = inject('axios')
-const serverBaseUrl = inject("serverBaseUrl")
-
-const orders = ref([])
-const status = ref("all")
 const series = ref([{
     name: 'Orders',
     data: []
 }])
 
-const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 const loadBestProducts = () => { productStore.load_best_products() }
 const best_products = computed(() => { return productStore.best_products })
 const loadCustomersCreatedThisMonth = () => { userStore.loadCustomersCreatedThisMonth() }
@@ -33,11 +27,6 @@ const loadNumberOrdersMonth = async () => {
     series.value[0].data = numbers
 }
 
-const capitalize = (word) => {
-    const capitalizedFirst = word[0].toUpperCase()
-    const rest = word.slice(1)
-    return capitalizedFirst + rest
-}
 
 const options = {
     chart: {
