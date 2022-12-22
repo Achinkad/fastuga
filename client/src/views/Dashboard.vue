@@ -27,7 +27,6 @@ const loadNumberOrdersMonth = async () => {
     series.value[0].data = numbers
 }
 
-
 const options = {
     chart: {
         id: 'orders-per-month',
@@ -70,7 +69,6 @@ const options = {
         borderColor: '#f9f9f9',
     }
 }
-
 onMounted(async () => {
    await loadNumberOrdersMonth()
    await loadRevenueOrders()
@@ -116,7 +114,6 @@ onMounted(async () => {
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12 col-lg-6">
                         <div class="card widget-flat">
                             <div class="card-body">

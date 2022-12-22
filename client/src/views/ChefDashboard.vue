@@ -7,10 +7,7 @@ import { Bootstrap5Pagination } from 'laravel-vue-pagination'
 const toast = inject("toast")
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
-
 const serverBaseUrl = inject("serverBaseUrl")
-
 const user = ref(userStore.user)
 
 
@@ -32,13 +29,13 @@ const updateStatus = (order_item, status) => {
         .catch((error) => {
             console.log(error)
         })
-
 }
+
 const pagination = computed(() => {
     return orderStore.get_page()
 })
-const pagination_preparation = computed(() => { return orderStore.get_page_preparation() })
 
+const pagination_preparation = computed(() => { return orderStore.get_page_preparation() })
 const order_items_waiting = computed(() => { return orderStore.get_order_items_waiting() })
 const order_items_preparing = computed(() => { return orderStore.get_order_items_preparing() })
 
@@ -91,7 +88,6 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-
                                 <tr v-if="order_items_waiting.length == 0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data
                                         available.</td>
@@ -139,7 +135,6 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-
                                 <tr v-if="order_items_preparing.length == 0">
                                     <td colspan="6" class="text-center" style="height:55px!important;">No data
                                         available.</td>

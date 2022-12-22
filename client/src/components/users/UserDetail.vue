@@ -47,16 +47,16 @@ const validations = (data) => {
     data.forEach((item, i) => {
         switch (i) {
             case "name":
-                if(item.length === 0) errors.value.name = ["Enter a valid name."]
+                if (item.length === 0) errors.value.name = ["Enter a valid name."]
                 break;
             case "email":
-                if(item.length === 0) errors.value.email = ["Enter a valid e-mail address."]
+                if (item.length === 0) errors.value.email = ["Enter a valid e-mail address."]
                 break;
             case "type":
-                if(item.length === 0 || (item.length > 0 && (item != "EM" && item != "ED" && item != "EC" && item != "C"))) errors.value.type = ["Select a valid role type."]
+                if (item.length === 0 || (item.length > 0 && (item != "EM" && item != "ED" && item != "EC" && item != "C"))) errors.value.type = ["Select a valid role type."]
                 break;
             case "password":
-                if(item.length < 8) errors.value.password = ["Enter a password greater than 8 digits."]
+                if (item.length < 8) errors.value.password = ["Enter a password greater than 8 digits."]
                 break;
         }
     })
@@ -71,7 +71,6 @@ const add = () => {
     formData.append('type', editingUser.value.type)
     formData.append('password', editingUser.value.password)
     formData.append('blocked', 0)
-
     if (previewImage) formData.append('photo_url', previewImage)
     if (validations(formData)) emit("add", formData)
 }
@@ -94,7 +93,8 @@ const save = () => {
 }
 
 watch(() => props.user, (newUser) => {
-    editingUser.value = newUser },
+    editingUser.value = newUser
+},
     { immediate: true }
 )
 </script>
@@ -104,12 +104,13 @@ watch(() => props.user, (newUser) => {
         <div class="row">
             <div class="col-12">
                 <div class="d-flex p-title-box">
-                    <h4 class="p-title me-auto" v-if="$route.name == 'User'">Editing User - {{ editingUser.name }} (#{{ editingUser.id }})</h4>
+                    <h4 class="p-title me-auto" v-if="$route.name == 'User'">Editing User - {{ editingUser.name }} (#{{
+                            editingUser.id
+                    }})</h4>
                     <h4 class="p-title me-auto" v-if="$route.name == 'newUser'">Add a new User</h4>
                 </div>
             </div>
         </div>
-
         <form class="pe-2 needs-validation" novalidate @submit.prevent="save">
             <div class="row mb-3">
                 <div class="col-md-8 col-sm-12">
@@ -119,37 +120,51 @@ watch(() => props.user, (newUser) => {
                                 <div class="d-flex flex-wrap justify-content-between">
                                     <div class="col-xl-6">
                                         <div class="mb-3 px-1">
-                                            <label for="inputName" class="form-label">Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="inputName" placeholder="Enter a name" required v-model="editingUser.name" />
-                                            <field-error-message :errors="errors" fieldName="name"></field-error-message>
+                                            <label for="inputName" class="form-label">Name <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="inputName"
+                                                placeholder="Enter a name" required v-model="editingUser.name" />
+                                            <field-error-message :errors="errors"
+                                                fieldName="name"></field-error-message>
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="mb-3 px-1">
-                                            <label for="inputEmail" class="form-label">E-mail address <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" id="inputEmail" placeholder="Enter an e-mail" required v-model="editingUser.email" />
-                                            <field-error-message :errors="errors" fieldName="email"></field-error-message>
+                                            <label for="inputEmail" class="form-label">E-mail address <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="email" class="form-control" id="inputEmail"
+                                                placeholder="Enter an e-mail" required v-model="editingUser.email" />
+                                            <field-error-message :errors="errors"
+                                                fieldName="email"></field-error-message>
                                         </div>
                                     </div>
                                     <div class="col-xl-6" v-if="$route.name == 'newUser'">
                                         <div class="mb-3 px-1">
-                                            <label for="inputPassword" class="form-label">Password <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" id="inputPassword" placeholder="Enter a password" required v-model="editingUser.password" />
-                                            <field-error-message :errors="errors" fieldName="password"></field-error-message>
+                                            <label for="inputPassword" class="form-label">Password <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" id="inputPassword"
+                                                placeholder="Enter a password" required
+                                                v-model="editingUser.password" />
+                                            <field-error-message :errors="errors"
+                                                fieldName="password"></field-error-message>
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="mb-3 px-1">
-                                            <label for="type" class="form-label">Role <span class="text-danger">*</span></label>
-                                            <select v-if="userStore.user.type == 'EM'" id="type" name="type" class="form-select" v-model="editingUser.type">
+                                            <label for="type" class="form-label">Role <span
+                                                    class="text-danger">*</span></label>
+                                            <select v-if="userStore.user.type == 'EM'" id="type" name="type"
+                                                class="form-select" v-model="editingUser.type">
                                                 <option value="EM" selected>Manager</option>
                                                 <option value="EC">Chef</option>
                                                 <option value="ED">Delivery</option>
                                             </select>
-                                            <select v-else id="type" name="type" class="form-select" v-model="editingUser.type">
+                                            <select v-else id="type" name="type" class="form-select"
+                                                v-model="editingUser.type">
                                                 <option value="C">Customer</option>
                                             </select>
-                                            <field-error-message :errors="errors" fieldName="type"></field-error-message>
+                                            <field-error-message :errors="errors"
+                                                fieldName="type"></field-error-message>
                                         </div>
                                     </div>
                                 </div>
@@ -163,9 +178,10 @@ watch(() => props.user, (newUser) => {
                             <div>
                                 <div class="mb-3 px-1">
                                     <label class="form-label">Photo</label>
-                                    <input type="file" class="form-control" name='upload' @change="handleUpload" required>
+                                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                                        required>
                                     <br>
-                                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'"/>
+                                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'User'" />
                                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                                 </div>
                             </div>
@@ -176,10 +192,12 @@ watch(() => props.user, (newUser) => {
             <div v-if="editingUser.type == 'C' || userStore.user.type == 'EM'">
                 <div class="mb-3 d-flex justify-content-end">
                     <div class="mb-3 px-1">
-                        <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newUser'">
+                        <button type="button" class="btn btn-warning px-4 btn-add" @click="add"
+                            v-if="$route.name == 'newUser'">
                             Add User
                         </button>
-                        <button type="button" class="btn btn-warning px-4 btn-add" @click="save" v-if="$route.name == 'User'">
+                        <button type="button" class="btn btn-warning px-4 btn-add" @click="save"
+                            v-if="$route.name == 'User'">
                             Save User
                         </button>
                     </div>

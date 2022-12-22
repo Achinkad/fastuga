@@ -25,7 +25,7 @@ const handleUpload = (e) => {
     const image = e.target.files[0]
     const reader = new FileReader()
     reader.readAsDataURL(image)
-    reader.onload = e =>{
+    reader.onload = e => {
         previewImage = e.target.result
     }
 }
@@ -39,16 +39,16 @@ const validations = (data) => {
     data.forEach((item, i) => {
         switch (i) {
             case "name":
-                if(item.length === 0) errors.value.name = ["Enter a valid name."]
+                if (item.length === 0) errors.value.name = ["Enter a valid name."]
                 break;
             case "price":
-                if(item.length === 0 || (item.length > 0 && item <= 0)) errors.value.price = ["Enter a valid price."]
+                if (item.length === 0 || (item.length > 0 && item <= 0)) errors.value.price = ["Enter a valid price."]
                 break;
             case "type":
-                if(item.length === 0 || (item.length > 0 && (item != "hot dish" && item != "cold dish" && item != "drink" && item != "dessert"))) errors.value.type = ["Select a valid type."]
+                if (item.length === 0 || (item.length > 0 && (item != "hot dish" && item != "cold dish" && item != "drink" && item != "dessert"))) errors.value.type = ["Select a valid type."]
                 break;
             case "description":
-                if(item.length === 0) errors.value.description = ["Enter a valid description."]
+                if (item.length === 0) errors.value.description = ["Enter a valid description."]
                 break;
         }
     })
@@ -61,13 +61,10 @@ const save = () => {
     formData.append('price', editingProduct.value.price)
     formData.append('type', editingProduct.value.type)
     formData.append('description', editingProduct.value.description)
-
     for (var x of formData) {
         console.log(x[0] + " => " + x[1])
     }
-
     formData.append('_method', 'PUT')
-
     if (previewImage) { formData.append('photo_url', previewImage) }
     if (validations(formData)) emit("save", formData)
 }
@@ -78,7 +75,6 @@ const add = () => {
     formData.append('price', editingProduct.value.price)
     formData.append('type', editingProduct.value.type)
     formData.append('description', editingProduct.value.description)
-
     if (previewImage) { formData.append('photo_url', previewImage) }
     if (validations(formData)) emit("add", formData)
 }
@@ -97,7 +93,8 @@ const photoFullUrl = computed(() => {
         <div class="row">
             <div class="col-12">
                 <div class="d-flex p-title-box">
-                    <h4 class="p-title me-auto" v-if="$route.name == 'Product'">Editing Product #{{ editingProduct.id }} - {{ editingProduct.name }}</h4>
+                    <h4 class="p-title me-auto" v-if="$route.name == 'Product'">Editing Product #{{ editingProduct.id }}
+                        - {{ editingProduct.name }}</h4>
                     <h4 class="p-title me-auto" v-if="$route.name == 'newProduct'">Adding New Product</h4>
                 </div>
             </div>
@@ -111,36 +108,48 @@ const photoFullUrl = computed(() => {
                                 <div class="row mb-3">
                                     <div class="col">
                                         <div class="mb-3">
-                                            <label for="inputName" class="form-label">Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="inputName" placeholder="Insert a name" required v-model="editingProduct.name" />
-                                            <field-error-message :errors="errors" fieldName="name"></field-error-message>
+                                            <label for="inputName" class="form-label">Name <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="inputName"
+                                                placeholder="Insert a name" required v-model="editingProduct.name" />
+                                            <field-error-message :errors="errors"
+                                                fieldName="name"></field-error-message>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
-                                            <label for="inputPrice" class="form-label">Price <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="inputPrice" placeholder="Product Price" required v-model="editingProduct.price" />
-                                            <field-error-message :errors="errors" fieldName="price"></field-error-message>
+                                            <label for="inputPrice" class="form-label">Price <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="inputPrice"
+                                                placeholder="Product Price" required v-model="editingProduct.price" />
+                                            <field-error-message :errors="errors"
+                                                fieldName="price"></field-error-message>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
-                                            <label for="type" class="form-label">Type <span class="text-danger">*</span></label>
-                                            <select id="type" name="type" class="form-select" v-model="editingProduct.type" required>
+                                            <label for="type" class="form-label">Type <span
+                                                    class="text-danger">*</span></label>
+                                            <select id="type" name="type" class="form-select"
+                                                v-model="editingProduct.type" required>
                                                 <option value="hot dish">Hot Dish</option>
                                                 <option value="cold dish">Cold Dish</option>
                                                 <option value="drink">Drink</option>
                                                 <option value="dessert">Dessert</option>
                                             </select>
-                                            <field-error-message :errors="errors" fieldName="type"></field-error-message>
+                                            <field-error-message :errors="errors"
+                                                fieldName="type"></field-error-message>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col pe-4">
                                     <div class="mb-3 px-1">
-                                        <label for="inputDescription" class="form-label">Description <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" id="inputDescription" rows="4" v-model="editingProduct.description" required></textarea>
-                                        <field-error-message :errors="errors" fieldName="description"></field-error-message>
+                                        <label for="inputDescription" class="form-label">Description <span
+                                                class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="inputDescription" rows="4"
+                                            v-model="editingProduct.description" required></textarea>
+                                        <field-error-message :errors="errors"
+                                            fieldName="description"></field-error-message>
                                     </div>
                                 </div>
                             </div>
@@ -153,9 +162,10 @@ const photoFullUrl = computed(() => {
                             <div>
                                 <div class="mb-3">
                                     <label class="form-label">Photo</label>
-                                    <input type="file" class="form-control" name='upload' @change="handleUpload" required>
+                                    <input type="file" class="form-control" name='upload' @change="handleUpload"
+                                        required>
                                     <br>
-                                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'"/>
+                                    <img :src="photoFullUrl" class="img-thumbnail" v-if="$route.name == 'Product'" />
                                     <field-error-message :errors="errors" fieldName="photo_url"></field-error-message>
                                 </div>
                             </div>
@@ -165,10 +175,12 @@ const photoFullUrl = computed(() => {
             </div>
             <div class="mb-3 d-flex justify-content-end">
                 <div class="mb-3 px-1">
-                    <button type="button" class="btn btn-warning px-4 btn-add" @click="add" v-if="$route.name == 'newProduct'">
+                    <button type="button" class="btn btn-warning px-4 btn-add" @click="add"
+                        v-if="$route.name == 'newProduct'">
                         Add Product
                     </button>
-                    <button type="button" class="btn btn-warning px-4 btn-add" @click="save" v-if="$route.name == 'Product'">
+                    <button type="button" class="btn btn-warning px-4 btn-add" @click="save"
+                        v-if="$route.name == 'Product'">
                         Save Product
                     </button>
                 </div>

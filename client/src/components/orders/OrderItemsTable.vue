@@ -30,8 +30,8 @@ const photoFullUrl = (product) => {
             </thead>
             <tbody>
                 <tr v-for="order_item in order_items">
-                    <td>{{ order_item.order.ticket_number }}-{{order_item.order_local_number}}</td>
-                    <td  class="align-middle">
+                    <td>{{ order_item.order.ticket_number }}-{{ order_item.order_local_number }}</td>
+                    <td class="align-middle">
                         <img alt="product" :src="photoFullUrl(order_item.product)" class="rounded-circle img_photo" />
                     </td>
                     <td>{{ order_item.product.name }}</td>

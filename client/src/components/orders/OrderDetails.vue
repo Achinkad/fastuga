@@ -208,13 +208,16 @@ onMounted(() => {
                             <div class="w-100">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span> </label>
-                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type">
+                                        <label for="payment_type" class="form-label">Payment Type <span
+                                                class="text-danger">*</span> </label>
+                                        <select id="payment_type" name="payment_type" class="form-select"
+                                            v-model="editingOrder.payment_type">
                                             <option value="VISA">Visa</option>
                                             <option value="PAYPAL">PayPal</option>
                                             <option value="MBWAY">MBWay</option>
                                         </select>
-                                        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+                                        <field-error-message :errors="errors"
+                                            fieldName="payment_type"></field-error-message>
                                     </div>
 
                                     <div class="col">
@@ -226,7 +229,6 @@ onMounted(() => {
                                             v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
                                         <field-error-message :errors="errors"
                                             fieldName="payment_reference"></field-error-message>
-                                            
                                     </div>
                                 </div>
                                 <div class="row mt-3 mb-3" v-if="userStore.user && userStore.user.type == 'C'">
@@ -242,22 +244,18 @@ onMounted(() => {
                                         </select>
                                     </div>
                                 </div>
-                               <field-error-message :errors="errors" fieldName="items"></field-error-message>
-                               <field-error-message :errors="errors" fieldName="points_price"></field-error-message>
-                          
+                                <field-error-message :errors="errors" fieldName="items"></field-error-message>
+                                <field-error-message :errors="errors" fieldName="points_price"></field-error-message>
                             </div>
-                            
                         </div>
                     </div>
 
                     <div class="card" v-if="$route.name == 'Order'">
-                    
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
                             <h4 class="header-title">Your Order Products</h4>
                         </div>
-                         
                         <div class="card-body">
-                        
+
                             <div class="row mb-2">
                                 <div class="col-md">
                                     <table class="table table-responsive align-middle">
@@ -310,7 +308,8 @@ onMounted(() => {
                                             <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
                                         </div>
                                         <div class="col">
-                                            <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
+                                            <field-error-message :errors="errors"
+                                                fieldName="total_price"></field-error-message>
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +333,8 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
+                    <div class="row"
+                        v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">

@@ -5,7 +5,6 @@ import { useUserStore } from "./user.js";
 export const useOrderStore = defineStore("orders", () => {
   const userStore = useUserStore();
 
-  
   const socket = inject("socket");
   const axios = inject("axios");
   const toast = inject("toast");

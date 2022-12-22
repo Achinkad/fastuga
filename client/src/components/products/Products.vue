@@ -1,31 +1,24 @@
 <script setup>
-import { ref, onMounted, inject, watch,computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import ProductTable from "./ProductTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 import { useProductStore } from '../../stores/product.js'
 
 const router = useRouter()
-const serverBaseUrl = inject("serverBaseUrl")
-
-const axios = inject('axios')
-
 const pagination_aux = ref({});
-
 const productStore = useProductStore()
-
 var total_products = 0
 var value_type = ref("all")
 
 const loadProducts = (page = 1) => {
-   productStore.load_products(page,value_type.value)
+    productStore.load_products(page, value_type.value)
 }
 const pagination = computed(() => { return productStore.get_page() })
 const products = computed(() => { return productStore.get_products() })
 
 
 watch(value_type, () => {
-    
     loadProducts()
 })
 
@@ -38,19 +31,16 @@ const editProduct = (product) => {
 
 const total = computed(() => {
     pagination_aux.value = productStore.get_page()
-  
     if (pagination_aux.value.meta != undefined) {
-       total_products = pagination_aux.value.meta.total
+        total_products = pagination_aux.value.meta.total
     }
-    
     return total_products
 })
 
 const forceRerender = () => {
     loadProducts()
-   
-}
 
+}
 
 onMounted(() => {
     loadProducts()
@@ -64,7 +54,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <h4 class="p-title me-auto">Products List</h4>
                     <div class="p-title-right">
-                        <h6 class="p-title">Viewing {{productStore.total_products}} of {{total}}</h6>
+                        <h6 class="p-title">Viewing {{ productStore.total_products }} of {{ total }}</h6>
                     </div>
                 </div>
             </div>
@@ -88,23 +78,16 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-xl-4 d-flex justify-content-end align-items-end">
                                 <button type="button" class="btn btn-add px-4 align-self-end" @click="addProduct">
                                     <i class="bi bi-xs bi-plus-circle me-2"></i> Add Product
                                 </button>
                             </div>
-
-                            <product-table
-                                :products="products"
-                                @edit="editProduct"
-                                @forceRerender="forceRerender"
-                              
-                            >
+                            <product-table :products="products" @edit="editProduct" @forceRerender="forceRerender">
                             </product-table>
-
                             <div class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts" :limit="5"></Bootstrap5Pagination>
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadProducts"
+                                    :limit="5"></Bootstrap5Pagination>
                             </div>
                         </div>
                     </div>
@@ -119,6 +102,7 @@ onMounted(() => {
 .filter-div {
     min-width: 12rem;
 }
+
 .total-filtro {
     margin-top: 2.3rem;
 }

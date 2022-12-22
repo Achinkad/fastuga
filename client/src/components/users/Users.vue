@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch,computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import UserTable from "./UserTable.vue"
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
@@ -7,23 +7,17 @@ import { useUserStore } from '../../stores/user.js'
 
 const userStore = useUserStore()
 const router = useRouter()
-
-
-
 const pagination_aux = ref({});
-
-
-
-const forceRerender = () => {
-    loadUsers()
-
-}
-
 var total_users = 0
 var value_role = ref("all")
 
+const forceRerender = () => {
+    loadUsers()
+}
+
+
 const loadUsers = (page = 1) => {
-   userStore.load_users(page,value_role.value)
+    userStore.load_users(page, value_role.value)
 }
 
 const pagination = computed(() => { return userStore.get_page() })
@@ -33,16 +27,16 @@ const total = computed(() => {
     pagination_aux.value = userStore.get_page()
 
     if (pagination_aux.value.meta != undefined) {
-       total_users = pagination_aux.value.meta.total
+        total_users = pagination_aux.value.meta.total
     }
 
     return total_users
 })
 
 watch(value_role, () => {
-
     loadUsers()
 })
+
 const addUser = () => {
     router.push({ name: "newUser" });
 };
@@ -62,7 +56,7 @@ onMounted(() => {
                 <div class="d-flex p-title-box">
                     <h4 class="p-title me-auto">Users List</h4>
                     <div class="p-title-right">
-                        <h6 class="p-title">Viewing {{userStore.total_users}} of {{total}}</h6>
+                        <h6 class="p-title">Viewing {{ userStore.total_users }} of {{ total }}</h6>
                     </div>
                 </div>
             </div>
@@ -91,8 +85,7 @@ onMounted(() => {
                                         class="bi bi-xs bi-plus-circle me-2"></i> Add User
                                 </button>
                             </div>
-                            <user-table :users="users"  @edit="editUser"
-                                @forceRerender="forceRerender"></user-table>
+                            <user-table :users="users" @edit="editUser" @forceRerender="forceRerender"></user-table>
                             <div class="d-flex justify-content-end mt-3">
                                 <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadUsers" :limit="5">
                                 </Bootstrap5Pagination>
