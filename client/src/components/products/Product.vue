@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, inject } from 'vue'
+import { ref, watch, inject, onBeforeMount } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
 import { useRouter } from 'vue-router'
 
@@ -100,6 +100,16 @@ watch(
     { immediate: true }
 )
 
+onBeforeMount(async () => {
+    if (props.id != null) {
+        await axios.get(serverBaseUrl + '/api/products/' + props.id)
+        .catch((error) => {
+            if (error.response.status == 404) {
+                router.push({ name: 'NotFound' })
+            }
+        })
+    }
+})
 
 </script>
 

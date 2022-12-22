@@ -97,8 +97,7 @@ const loadCustomer = () => {
 
 const customer = computed(() => { return userStore.get_customer() })
 
-watch(
-    () => props.id,
+watch(() => props.id,
     (newValue) => {
 
         loadOrder(newValue)
@@ -106,19 +105,19 @@ watch(
     { immediate: true }
 )
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
     }
-})
-
-onBeforeMount(async () => {
-    await axios.get(serverBaseUrl + '/api/orders/' + props.id)
-    .catch((error) => {
-        if (error.response.status == 404) {
-            router.push({ name: 'NotFound' })
-        }
-    })
+    
+    if (props.id != null) {
+        await axios.get(serverBaseUrl + '/api/orders/' + props.id)
+        .catch((error) => {
+            if (error.response.status == 404) {
+                router.push({ name: 'NotFound' })
+            }
+        })
+    }
 })
 </script>
 
