@@ -157,10 +157,11 @@ onBeforeMount(() => {
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-3">
+                  
                             <Bootstrap5Pagination :data="pagination_preparation"
                                 @pagination-change-page="loadOrderItemsPreparing" :limit="2">
-                            </Bootstrap5Pagination>
-                        </div>
+                            </Bootstrap5Pagination></div>
+                        
                     </div>
 
                 </div>
