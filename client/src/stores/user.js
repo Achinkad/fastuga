@@ -1,15 +1,17 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
+import { useOrderStore } from "./order.js";
 
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
-
-
 export const useUserStore = defineStore('user', () => {
+    const orderStore = useOrderStore()
+
     const toast = inject("toast")
     const axios = inject('axios')
+    const socket = inject("socket")
     const serverBaseUrl = inject('serverBaseUrl')
-const socket = inject("socket")
+
     const errors = ref(null)
     const number_customers_this_month = ref([])
     const user = ref(null)
@@ -28,8 +30,7 @@ const socket = inject("socket")
         return user.value?.id ?? -1
     })
 
-    async function load_users(page,type) {
-
+    async function load_users(page, type) {
         try {
             const response = await axios({
                 method: 'GET',
@@ -38,7 +39,7 @@ const socket = inject("socket")
                     type: type
                 }
             })
-            
+
             users.value = response.data.data
             pagination.value = response.data
             return users.value
@@ -60,7 +61,6 @@ const socket = inject("socket")
             throw error
         }
     }
-    
 
     function clearUser () {
         delete axios.defaults.headers.common.Authorization
@@ -73,10 +73,13 @@ const socket = inject("socket")
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
-           
-            await loadUser()   
+
+            sessionStorage.removeItem('order')
+            orderStore.anonymous_orders = []
+
+            await loadUser()
             socket.emit('loggedIn', user.value)
-          
+
             if (user.value.type == "C") { await get_customer(user.value) }
             return true
         }
@@ -102,7 +105,7 @@ const socket = inject("socket")
         let storedToken = sessionStorage.getItem('token')
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
-            
+
             await loadUser()
             socket.emit('loggedIn', user)
             return true
@@ -114,7 +117,7 @@ const socket = inject("socket")
     function save (user_values, user_id) {
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
         .then((response) => {
-           
+
             toast.success('User #' + user_id + ' was updated successfully.')
 
         })
@@ -158,7 +161,6 @@ const socket = inject("socket")
     }
 
     const get_customers_this_month = (() => { return number_customers_this_month.value })
-
 
     return {
         user,

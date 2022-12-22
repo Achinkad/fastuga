@@ -1,3 +1,4 @@
+import { inject } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { useOrderStore } from "../stores/order.js";
 import { useUserStore } from "../stores/user.js";
@@ -121,7 +122,7 @@ const router = createRouter({
             path: "/:pathMatch(.*)*",
             name: "NotFound",
             component: () => import("@/views/NotFound.vue"),
-        },
+        }
     ],
 })
 
@@ -129,21 +130,18 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
-  
-    
+    const orderStore = useOrderStore()
+
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await userStore.restoreToken()
-    
-    }  
+        await orderStore.restoreToken()
+    }
 
     if (to.name == "Dashboard") {
-        
-        if (!userStore.user) { 
-           
+        if (!userStore.user) {
             next({ name: "AnonymousDashboard" });
-            
-            return 
+            return
         }
 
         switch (userStore.user.type) {
@@ -178,6 +176,7 @@ router.beforeEach(async (to, from, next) => {
             return
         }
     }
+
     if (to.name == "newUser") {
         if (!userStore.user || userStore.user.type != "EM") {
             next({
@@ -189,6 +188,7 @@ router.beforeEach(async (to, from, next) => {
             return
         }
     }
+
     if (to.name == "Products") {
         if (!userStore.user || userStore.user.type != "EM") {
             next({
@@ -220,6 +220,7 @@ router.beforeEach(async (to, from, next) => {
             next()
             return
         }
+
         next({
             name: "Forbidden",
             params: { pathMatch: to.path.substring(1).split("/") },
