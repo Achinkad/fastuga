@@ -55,13 +55,37 @@ const loadCustomer = () => {
             customer.value = response.data.data
             originalValueStr = dataAsString()
         })
-        .catch((error) => {
-            console.log(error)
-        })
     }
     else {
         customer.value.user = userStore.user
     }
+}
+
+const validations = (data) => {
+    errors.value = {}
+    data.forEach((item, i) => {
+        switch (i) {
+            case "name":
+            if (item.length === 0) errors.value.name = ["Enter a valid name."]
+            break;
+            case "phone":
+            if (item.length == 0 || item.length < 9 || item.length >= 20) errors.value.phone = ["Enter a valid phone number."]
+            break;
+            case "nif":
+            if (item.length > 0 && (item.length != 9)) errors.value.nif = ["Enter a valid NIF."]
+            break;
+            case "default_payment_type":
+            if (item.length > 0 && (item != "VISA" && item != "MBWAY" && item != "PAYPAL")) errors.value.default_payment_type = ["Select a valid payment type."]
+            break;
+            case "email":
+            if (item.length === 0) errors.value.email = ["Enter a valid e-mail address."]
+            break;
+            case "password":
+            if (item.length < 8) errors.value.password = ["Password should be at least 8 characters."]
+            break;
+        }
+    })
+    return Object.keys(errors.value).length === 0 ? true : false
 }
 
 const save = () => {
@@ -69,19 +93,19 @@ const save = () => {
     formData.append('name', customer.value.user.name);
     formData.append('email', customer.value.user.email);
     formData.append('type', customer.value.user.type);
+
     if (customer.value.user.blocked == false) {
         formData.append('blocked', 0);
     } else {
         formData.append('blocked', 1);
     }
-    if (previewImage != null) {
-        formData.append('photo_url', previewImage);
+
+    if (previewImage) formData.append('photo_url', previewImage)
+
+    if (validations(formData)) {
+        userStore.save(formData, userStore.user.id)
+        router.push({ name: "Dashboard" })
     }
-
-    formData.append('_method', 'PUT');
-    router.back();
-    userStore.save(formData, userStore.user.id);
-
 }
 
 const photoFullUrl = computed(() => {
@@ -90,52 +114,49 @@ const photoFullUrl = computed(() => {
 
 const cancel = () => { router.back() }
 
-onMounted(() => {
-    loadCustomer()
-})
-
 const updateCostumer = () => {
     errors.value = null
     let formData = new FormData()
-    formData.append('phone', customer.value.phone);
-    formData.append('points', customer.value.points);
-    if (customer.value.nif != undefined) {
-        formData.append('nif', customer.value.nif);
-    }
-    if (customer.value.default_payment_type != undefined) {
-        formData.append('default_payment_type', customer.value.default_payment_type);
-    }
-    if (customer.value.default_payment_reference != undefined) {
-        formData.append('default_payment_reference', customer.value.default_payment_reference);
-    }
-    if (previewImage != null) {
-        formData.append('photo_url', previewImage);
-    }
-    formData.append('name', customer.value.user.name);
-    formData.append('email', customer.value.user.email);
-    formData.append('type', customer.value.user.type);
+
+    formData.append('phone', customer.value.phone)
+    formData.append('points', customer.value.points)
+    formData.append('nif', customer.value.nif)
+    formData.append('default_payment_type', customer.value.default_payment_type);
+    formData.append('default_payment_reference', customer.value.default_payment_reference);
+    formData.append('name', customer.value.user.name)
+    formData.append('email', customer.value.user.email)
+    formData.append('type', customer.value.user.type)
+
+    if (previewImage != null) formData.append('photo_url', previewImage)
+
     if (customer.value.user.blocked == false) {
         formData.append('blocked', 0);
     } else {
         formData.append('blocked', 1);
     }
 
-    axios.put(serverBaseUrl + '/api/customers/' + customer.value.id, formData)
-    .then((response) => {
-        customer.value = response.data.data
-        originalValueStr = dataAsString()
-        toast.success('Register was done successfully.')
-        router.back()
-    })
-    .catch((error) => {
-      errors.value = error.response.data.errors
-        if (error.response.status == 422) {
-            toast.error('User was not created due to validation errors!')
-        } else {
-            toast.error('User was not created due to unknown server error!')
-        }
-    })
+    if (validations(formData)) {
+        axios.put(serverBaseUrl + '/api/customers/' + customer.value.id, formData)
+        .then((response) => {
+            customer.value = response.data.data
+            originalValueStr = dataAsString()
+            toast.success('Your profile was updated successfully!')
+            router.push({ name: "Dashboard" })
+        })
+        .catch((error) => {
+            if (error.response.status == 422) {
+                toast.error('Customer was not updated due to validation errors!')
+                errors.value = error.response.data.errors
+            } else {
+                toast.error('Customer was not updated due to unknown server error!')
+            }
+        })
+    }
 }
+
+onMounted(() => {
+    loadCustomer()
+})
 </script>
 
 <template>
@@ -148,18 +169,17 @@ const updateCostumer = () => {
             </div>
         </div>
 
-        <form>
+        <form class="pe-2 needs-validation" novalidate enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-2">
+                            <div class="row mb-3">
                                 <div class="d-flex flex-wrap justify-content-between">
                                     <div class="col-xl-6">
                                         <div class="mb-3 px-1">
                                             <label for="inputName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="inputName" placeholder="User Name" required
-                                            v-model="customer.user.name" />
+                                            <input type="text" class="form-control" id="inputName" placeholder="User Name" required v-model="customer.user.name" />
                                             <field-error-message :errors="errors" fieldName="name"></field-error-message>
                                         </div>
                                     </div>
@@ -214,23 +234,24 @@ const updateCostumer = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 d-flex justify-content-end">
-                                <div class="mb-3 px-1">
-                                    <button v-if="userStore.user.type == 'C'" type="button" class="btn btn-warning px-4 btn-add"
-                                    @click="updateCostumer">Save
-                                    User</button>
-                                    <button v-else type="button" class="btn btn-warning px-4 btn-add" @click="save">Save
-                                        User</button>
-                                    </div>
-                                    <div class="mb-3 px-1">
-                                        <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="mb-3 d-flex justify-content-end">
+                    <div class="mb-3 px-1">
+                        <button v-if="userStore.user.type == 'C'" type="button" class="btn btn-warning px-4 btn-add" @click="updateCostumer">
+                            Save User
+                        </button>
+                        <button v-else type="button" class="btn btn-warning px-4 btn-add" @click="save">
+                            Save User
+                        </button>
+                    </div>
+                    <div class="mb-3 px-1">
+                        <button type="button" class="btn btn-light px-4" @click="cancel">Cancel</button>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 </template>
