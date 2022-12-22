@@ -228,7 +228,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Users") {
-        if (userStore.user && userStore.user.type != "EM") {
+        if (userStore.user && userStore.user.type == "EM") {
             next()
             return
         }
@@ -258,7 +258,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "User") {
-        if (userStore.user === null ||userStore.user.type != "EM" /*|| userStore.user.id == to.params.id*/ ) {
+        if (userStore.user === null || userStore.user.type != "EM" /*|| userStore.user.id == to.params.id*/ ) {
             next({
                 name: "Forbidden",
                 params: { pathMatch: to.path.substring(1).split("/") },
@@ -267,6 +267,7 @@ router.beforeEach(async (to, from, next) => {
             });
             return
         }
+
         if (userStore.user.type == "EM" || userStore.user.id == to.params.id) {
             next()
             return
