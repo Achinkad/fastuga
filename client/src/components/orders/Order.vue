@@ -50,7 +50,11 @@ const loadOrder = (id) => {
 
     if (!id || (id < 0)) {
         order.value = newOrder()
+<<<<<<< HEAD
      
+=======
+      
+>>>>>>> a8420e5a317b100874557f9303c374da619ad38b
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
             .then((response) => {

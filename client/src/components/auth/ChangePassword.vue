@@ -29,9 +29,11 @@ const editPassword = () => {
         router.back()
       })
       .catch((error) => {
+        errors.value = error.response.data.data
+
         if (error.response.status == 422) {
+
           toast.error('user password was not updated due to validation errors!')
-          errors.value = error.response.data.errors
         } else {
           toast.error('user password was not updated due to unknown server error!')
         }
@@ -76,8 +78,6 @@ const changePassword = () => {
                     <label for="inputPasswordConfirm" class="form-label">Password Confirmmation</label>
                     <input type="password" class="form-control" id="inputPasswordConfirm" required
                       v-model="passwords.password_confirm">
-                      <field-error-message :errors="errors" fieldName="password"></field-error-message>
-
                   </div>
                 </div>
                 <div class="mb-3 d-flex justify-content-end">
