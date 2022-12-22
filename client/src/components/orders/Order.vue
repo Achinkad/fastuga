@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, inject,computed,onMounted } from 'vue'
+import { ref, watch, inject,computed,onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
@@ -48,21 +48,21 @@ const newOrder = () => {
     }
 }
 
-let originalValueStr = ''
+
 const loadOrder = (id) => {
-    originalValueStr = ''
-    errors.value = null
+ 
     if (!id || (id < 0)) {
         order.value = newOrder()
-        originalValueStr = dataAsString()
+        
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
         .then((response) => {
             order.value = response.data.data
-            originalValueStr = dataAsString()
+                       
         })
         .catch((error) => {
             console.log(error)
+            router.push({ name: 'Forbidden' })
         })
     }
 }
@@ -90,7 +90,6 @@ const add = (order) => {
 }
 
 const cancel = () => {
-    originalValueStr = dataAsString()
     router.push({ name: 'Orders' })
 }
 
@@ -116,10 +115,10 @@ watch(
     { immediate: true }
 )
 
-onMounted(() => {
+onBeforeMount(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
-       
+        loadOrder(props.id)
     }
 })
 
@@ -127,6 +126,6 @@ onMounted(() => {
 
 
 <template>
-
+    
     <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer" ></order-detail>
 </template>

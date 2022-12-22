@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../stores/user.js";
 
+
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -126,13 +128,17 @@ const router = createRouter({
 
 let handlingFirstRoute = true
 
+
 router.beforeEach(async (to, from, next) => {
+    
     const userStore = useUserStore()
 
     if (handlingFirstRoute) {
         handlingFirstRoute = false
         await userStore.restoreToken()
     }
+    
+    
 
     if (to.name == "Dashboard") {
         if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
@@ -170,7 +176,7 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 
-    if (to.name == "newUser") {
+     if (to.name == "newUser") {
         if (!userStore.user || userStore.user.type != "EM") {
             next({
                 name: "Forbidden",
@@ -181,6 +187,7 @@ router.beforeEach(async (to, from, next) => {
             return
         }
     }
+
     if (to.name == "Products") {
         if (!userStore.user || userStore.user.type != "EM") {
             next({
@@ -194,7 +201,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Product") {
-        if (userStore.user.type == "EM") {
+        if (userStore.user && userStore.user.type == "EM") {
             next()
             return
         }
@@ -208,7 +215,9 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name == "Order") {
-        if ((userStore.user && (userStore.user.type == "EM" || userStore.user.type == "C")) || !userStore.user) {
+
+        if (userStore.user && (userStore.user.type == "EM" || userStore.user.type == "C")) {
+            
             next()
             return
         }

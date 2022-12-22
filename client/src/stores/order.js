@@ -263,6 +263,7 @@ export const useOrderStore = defineStore("orders", () => {
     const get_orders = () => {
         return orders.value;
     };
+
     const get_anonymous_orders = computed(() => {
         return anonymous_orders.value;
     });
@@ -330,5 +331,6 @@ export const useOrderStore = defineStore("orders", () => {
         get_order_items_preparing,
         update_order_items_status,
         get_page_preparation,
+
     };
 });
