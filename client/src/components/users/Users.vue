@@ -15,7 +15,6 @@ const forceRerender = () => {
     loadUsers()
 }
 
-
 const loadUsers = (page = 1) => {
     userStore.load_users(page, value_role.value)
 }

@@ -92,10 +92,6 @@ const dataAsString = () => {
     return JSON.stringify(product.value)
 }
 
-
-
-
-
 const product = ref(newProduct())
 const errors = ref(null)
 
@@ -112,7 +108,5 @@ watch(
 </script>
 
 <template>
-
-
     <product-detail :product="product" :errors="errors" @save="save" @cancel="cancel" @add="add"></product-detail>
 </template>

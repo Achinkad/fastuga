@@ -67,20 +67,15 @@ const loadOrder = (id) => {
 
 const add = (order) => {
     orderStore.insert_order(order)
-
         .then((response) => {
-
             toast.success("Order added successfuly!")
             router.push({ name: 'Orders' })
-
         })
         .catch((error) => {
             console.log(error);
             if (error.response.status == 422) {
                 toast.error('Couldn\'t add the order due to validation errors!')
-
                 errors.value = error.response.data.data
-
             } else {
                 toast.error('Couldn\'t add the order due to unknown server error!')
             }
@@ -117,7 +112,6 @@ watch(
 onMounted(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
-
     }
 })
 

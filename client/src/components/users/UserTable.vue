@@ -63,13 +63,13 @@ const dialogConfirmedDelete = () => {
         .catch((error) => {
             console.log(error)
         })
-
 }
 
 const deleteClick = (user) => {
     userToDelete.value = user
     deleteConfirmationDialog.value.show()
 }
+
 </script>
 
 <template>

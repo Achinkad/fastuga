@@ -4,7 +4,6 @@ import { useUserStore } from '../../stores/user.js'
 import avatarNoneUrl from '@/assets/avatar-none.png'
 
 const userStore = useUserStore()
-
 const serverBaseUrl = inject("serverBaseUrl")
 var previewImage = null
 
@@ -77,11 +76,9 @@ const add = () => {
 
 const save = () => {
     let formData = new FormData()
-
     formData.append('name', editingUser.value.name)
     formData.append('email', editingUser.value.email)
     formData.append('type', editingUser.value.type)
-
     if (editingUser.value.blocked == false) {
         formData.append('blocked', 0)
     } else {
