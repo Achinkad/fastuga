@@ -59,11 +59,11 @@ const loadOrder = (id) => {
             })
             .catch((error) => {
                 console.log(error)
-                /*
-                if(error.response.data==''){
+                
+                if(error.response.status=='403'){
                     router.push({name:"Forbidden"})
                 }
-                */
+                
             })
     }
 }

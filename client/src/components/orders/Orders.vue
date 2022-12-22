@@ -41,7 +41,9 @@ const order_items = computed(() => { return orderStore.get_order_items() })
 const pagination = computed(() => { return orderStore.get_page() })
 
 const addOrder = () => { router.push({ name: "NewOrder" }) }
-const editOrder = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
+const editOrder = (order) => { 
+
+    router.push({ name: "Order", params: { id: order.id } }) }
 
 watch(status, () => {
 
