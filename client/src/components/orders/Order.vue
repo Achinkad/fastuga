@@ -48,17 +48,23 @@ const newOrder = () => {
 
 const loadOrder = (id) => {
 
+
     if (!id || (id < 0)) {
         order.value = newOrder()
-      
+     
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
             .then((response) => {
                 order.value = response.data.data
-                originalValueStr = dataAsString()
+                
             })
             .catch((error) => {
                 console.log(error)
+                
+                if(error.response.status=='403'){
+                    router.push({name:"Forbidden"})
+                }
+                
             })
     }
 }
