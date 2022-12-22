@@ -256,12 +256,22 @@ export const useOrderStore = defineStore("orders", () => {
     });
 
     socket.on("newOrder", (order) => {
+        console.log("HEEEEERE")
+      if (order.status == "R") {
+        orders.value.push(order);
+        toast.info(
+          `A new order has arrived. Check your order menu. (#${order.id})`
+        );
+      } else {
         order.order_item.forEach((item) => {
+          if (item.product.type == "hot dish") {
             order_items.value.push(item);
+          }
         });
         toast.info(
-            `A new order has arrived. Check your order menu. (#${order.id})`
+          `A new order has arrived. Check your order menu. (#${order.id})`
         );
+      }
     });
 
     socket.on("deleteOrder", (order) => {
