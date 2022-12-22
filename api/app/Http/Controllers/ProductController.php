@@ -15,11 +15,6 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
-
-    }
-
     public function index(Request $request)
     {
         $products = $request->type != 'all' ? Product::where('type', $request->input('type'))->paginate(10) : Product::paginate(10);

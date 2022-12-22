@@ -31,6 +31,7 @@ const logout = () => {
                         || $route.name === 'CustomerDashboard'
                         || $route.name === 'AnonymousDashboard'
                         || $route.name === 'ChefDashboard'
+                        || $route.name === 'DeliveryDashboard'
                         }"
                         :to="{ name: 'Dashboard' }">
                         <i class="bi bi-house-fill"></i>
@@ -103,7 +104,6 @@ const logout = () => {
                     </li>
                 </div>
 
-
                 <li class="nav-item" id="sharefastuga">
                     <div class="d-flex justify-content-center">
                         <a href="#" class="btn btn-secondary d-flex align-items-center justify-content-center btn-share">
@@ -113,8 +113,8 @@ const logout = () => {
                     </div>
                 </li>
 
-
                 <hr>
+
                 <li class="nav flex-column mb-2" id="login2">
                     <li class="nav-item nav-item-title" v-if="!userStore.user">User Space (Anonymous Customer)</li>
                     <li class="nav-item nav-item-title" v-else="!userStore.user">User Space</li>
