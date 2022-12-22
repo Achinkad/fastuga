@@ -15,6 +15,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\OrderItemController;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -48,8 +49,10 @@ class OrderController extends Controller
         if ($order->customer_id) {
             $discount_value = $order->points_used_to_pay / 2;
 
-            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay !=0) { return response()->json(["msg" => "Invalid number of points!"], 422); }
-            if ($discount_value >= $order->total_price) { return response()->json(["msg" => "Points exceed order price!"], 422); }
+            if (!$order->points_used_to_pay % 2 && $order->points_used_to_pay !=0) {  return response()->json(['success' => false,
+                                                                                                                'data' => ['points' => ['Invalid number of points!']]], 422);}
+            if ($discount_value >= $order->total_price) { return response()->json(['success' => false,
+                                                                                    'data' => ['points_price' => ['Number of points greater than price']]], 422);}
 
             $order->total_paid_with_points = $discount_value;
             $order->total_paid = $order->total_price - $discount_value;
