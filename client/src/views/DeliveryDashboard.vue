@@ -9,25 +9,19 @@ const toast = inject("toast")
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 
-
-
 const pagination = computed(() => { return orderStore.get_page() })
 
 const loadOrders = (page = 1) => {
     orderStore.load_orders(page, "R")
 }
-
-
 const loadCountOrders = () => {
     orderStore.count_orders_by_status('P')
 }
-
 
 const orders_from_user = computed(() => { return orderStore.my_orders_delivery })
 const all_orders = computed(() => {
     return orderStore.count_orders
 })
-
 
 const acceptOrder = (order) => {
 
@@ -38,7 +32,6 @@ const acceptOrder = (order) => {
         .catch((error) => {
             console.log(error)
         })
-
 }
 
 watch(() => userStore.user, function () {
@@ -81,7 +74,6 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
@@ -110,13 +102,10 @@ onBeforeMount(() => {
                                     <td>
                                         <div v-if="order.customer != null">
                                             {{ order.customer.user.name }}
-
                                         </div>
                                         <div v-else>--</div>
 
                                     </td>
-
-
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
                                             <button class="btn btn-xs btn-light" title="Accept Order"

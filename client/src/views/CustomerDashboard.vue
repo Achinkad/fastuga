@@ -10,23 +10,21 @@ const userStore = useUserStore()
 const orderStore = useOrderStore()
 const productStore = useProductStore()
 const router = useRouter()
-
 const serverBaseUrl = inject("serverBaseUrl")
-
 const user = ref(userStore.user)
 
 const loadOrders = (page = 1) => {
     orderStore.load_orders(page, "P")
-    .catch((error) => {
-        console.log(error)
-    })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 const loadBestProducts = () => {
     productStore.load_best_products()
-    .catch((error) => {
-        console.log(error)
-    })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 const pagination = computed(() => { return orderStore.get_page() })
@@ -36,13 +34,7 @@ const best_products = computed(() => { return productStore.best_products })
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
-const capitalize = (word) => {
-    const capitalizedFirst = word[0].toUpperCase()
-    const rest = word.slice(1)
-    return capitalizedFirst + rest
-}
-
-watch(() => userStore.user, function() {
+watch(() => userStore.user, function () {
     userStore.loadCustomer()
     loadOrders()
 
@@ -74,25 +66,26 @@ onBeforeMount(() => {
                                 <h3 class="mt-2 mb-2 fw-bold">You've {{ userStore.customer.points }} Points!</h3>
                                 <p class="mb-0 text-muted">
                                     <span class="text-muted me-2">
-                                        You can discount until {{ (Math.floor(userStore.customer.points / 10)) * 5 }}€ in your next order.
+                                        You can discount until {{ (Math.floor(userStore.customer.points / 10)) * 5 }}€
+                                        in your next order.
                                     </span>
                                 </p>
                             </div>
                         </div>
-
                         <div class="card">
                             <div class="d-flex card-header justify-content-between align-items-center">
                                 <h4 class="header-title">Best selled products</h4>
                             </div>
                             <div class="card-body pt-0">
                                 <div class="best-products">
-                                    <div class="row mb-3 align-items-center" v-for="product in best_products" :key="product.id">
+                                    <div class="row mb-3 align-items-center" v-for="product in best_products"
+                                        :key="product.id">
                                         <div class="col-auto image">
-                                            <img :src="photoFullUrl(product)" class="product-photo"/>
+                                            <img :src="photoFullUrl(product)" class="product-photo" />
                                         </div>
                                         <div class="col-auto">
-                                            <span><b>{{product.name}}</b></span> <br>
-                                            <span style="font-size:14px;"><i>{{product.price}}€</i></span>
+                                            <span><b>{{ product.name }}</b></span> <br>
+                                            <span style="font-size:14px;"><i>{{ product.price }}€</i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -101,11 +94,11 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
-                        <h4 class="header-title" v-if="orders_from_user.length != undefined">Orders In Pending ({{orders_from_user.length}})</h4>
+                        <h4 class="header-title" v-if="orders_from_user.length != undefined">Orders In Pending
+                            ({{ orders_from_user.length }})</h4>
                         <h4 class="header-title" v-else>Orders In Pending</h4>
                     </div>
                     <div class="card-body pt-0">
@@ -120,17 +113,19 @@ onBeforeMount(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="orders_from_user.length==0">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">No data available.</td>
+                                <tr v-if="orders_from_user.length == 0">
+                                    <td colspan="6" class="text-center" style="height:55px!important;">No data
+                                        available.</td>
                                 </tr>
                                 <tr v-for="order in orders_from_user" :key="order.id">
-                                    <td>#{{order.id}}</td>
-                                    <td>{{order.ticket_number}}</td>
-                                    <td>{{order.points_gained}}</td>
-                                    <td>{{order.total_price}}€</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.ticket_number }}</td>
+                                    <td>{{ order.points_gained }}</td>
+                                    <td>{{ order.total_price }}€</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)">
+                                            <button class="btn btn-xs btn-light" title="View Order"
+                                                @click="editClick(order)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                         </div>
@@ -139,7 +134,8 @@ onBeforeMount(() => {
                             </tbody>
                         </table>
                         <div v-if="userStore.user" class="d-flex justify-content-end mt-3">
-                            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+                            <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5">
+                            </Bootstrap5Pagination>
                         </div>
                     </div>
                 </div>

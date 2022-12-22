@@ -1,6 +1,6 @@
 <script setup>
 
-import { computed, onBeforeMount, inject,onMounted} from 'vue'
+import { computed, onBeforeMount, inject, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '../stores/order.js'
 import { useProductStore } from '../stores/product.js'
@@ -13,19 +13,18 @@ const serverBaseUrl = inject("serverBaseUrl")
 
 const loadBestProducts = () => {
     productStore.load_best_products()
-    .catch((error) => {
-        console.log(error)
-    })
+        .catch((error) => {
+            console.log(error)
+        })
 }
 
 const anonymous_orders = computed(() => { return orderStore.get_anonymous_orders })
 const best_products = computed(() => { return productStore.best_products })
-
 const editClick = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" + product.photo_url }
 
 
-onMounted(()=>{
+onMounted(() => {
     socket.emit("Anonymous")
 })
 
@@ -52,7 +51,8 @@ onBeforeMount(() => {
                         <div class="card widget-flat orange-bg">
                             <div class="card-body">
                                 <h3 class="mt-2 mb-2 fw-bold">
-                                    <router-link :to="{ name: 'Register' }" style="text-decoration:none!important;color:#1f2937;">
+                                    <router-link :to="{ name: 'Register' }"
+                                        style="text-decoration:none!important;color:#1f2937;">
                                         Let's create an account!
                                     </router-link>
                                 </h3>
@@ -63,20 +63,20 @@ onBeforeMount(() => {
                                 </p>
                             </div>
                         </div>
-
                         <div class="card">
                             <div class="d-flex card-header justify-content-between align-items-center">
                                 <h4 class="header-title">Our top 5 products</h4>
                             </div>
                             <div class="card-body pt-0">
                                 <div class="best-products">
-                                    <div class="row mb-3 align-items-center" v-for="product in best_products" :key="product.id">
+                                    <div class="row mb-3 align-items-center" v-for="product in best_products"
+                                        :key="product.id">
                                         <div class="col-2 image">
-                                            <img :src="photoFullUrl(product)" class="product-photo"/>
+                                            <img :src="photoFullUrl(product)" class="product-photo" />
                                         </div>
                                         <div class="col-10">
-                                            <span><b>{{product.name}}</b></span> <br>
-                                            <span style="font-size:14px;"><i>{{product.price}}€</i></span>
+                                            <span><b>{{ product.name }}</b></span> <br>
+                                            <span style="font-size:14px;"><i>{{ product.price }}€</i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +85,6 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-8 col-lg-8">
                 <div class="card card-h-100">
                     <div class="d-flex card-header justify-content-between align-items-center">
@@ -104,12 +103,13 @@ onBeforeMount(() => {
                             </thead>
                             <tbody>
                                 <tr v-if="anonymous_orders.length == 0">
-                                    <td colspan="6" class="text-center" style="height:55px!important;">You don't have any orders... yet!</td>
+                                    <td colspan="6" class="text-center" style="height:55px!important;">You don't have
+                                        any orders... yet!</td>
                                 </tr>
                                 <tr v-for="order in anonymous_orders" :key="order.id">
-                                    <td>#{{order.id}}</td>
-                                    <td>{{order.ticket_number}}</td>
-                                    <td>{{order.total_price}}€</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.ticket_number }}</td>
+                                    <td>{{ order.total_price }}€</td>
                                     <td>
                                         <span v-if="order.status == 'P'">
                                             <span class="badge badge-info-lighten">Preparing</span>
@@ -126,7 +126,8 @@ onBeforeMount(() => {
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-xs btn-light" title="View Order" @click="editClick(order)">
+                                            <button class="btn btn-xs btn-light" title="View Order"
+                                                @click="editClick(order)">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                         </div>

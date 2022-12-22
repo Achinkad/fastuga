@@ -12,6 +12,7 @@ const productStore = useProductStore()
 
 var value_type = ref("all")
 
+
 const userStore = useUserStore()
 
 const props = defineProps({
@@ -185,7 +186,6 @@ watch(value_type, () => {
 
 onMounted(() => {
     loadProducts()
-
 })
 </script>
 

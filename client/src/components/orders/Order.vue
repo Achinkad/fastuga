@@ -1,16 +1,18 @@
 <script setup>
+<<<<<<< HEAD
 import { ref, watch, inject,computed,onBeforeMount } from 'vue'
+=======
+import { ref, watch, inject, computed, onMounted } from 'vue'
+>>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
 import OrderDetail from "./OrderDetails.vue"
 
 const serverBaseUrl = inject("serverBaseUrl")
-
 const router = useRouter()
 const userStore = useUserStore()
 const orderStore = useOrderStore()
-
 const axios = inject('axios')
 const toast = inject('toast')
 
@@ -56,6 +58,7 @@ const loadOrder = (id) => {
         console.log("bbbb")
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
+<<<<<<< HEAD
         .then((response) => {
             order.value = response.data.data
             console.log(order.value)
@@ -64,29 +67,33 @@ const loadOrder = (id) => {
             console.log(error)
             router.push({ name: 'Forbidden' })
         })
+=======
+            .then((response) => {
+                order.value = response.data.data
+                originalValueStr = dataAsString()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+>>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
     }
 }
 
 const add = (order) => {
     orderStore.insert_order(order)
-    
-    .then((response) => {
-   
-        toast.success("Order added successfuly!")
-        router.push({ name: 'Orders' })
-        
-    })
-    .catch((error) => {
-
-        if (error.response.status == 422) {
-            toast.error('Couldn\'t add the order due to validation errors!')
-
-            errors.value = error.response.data.data
-     
-        } else {
-            toast.error('Couldn\'t add the order due to unknown server error!')
-        }
-    })
+        .then((response) => {
+            toast.success("Order added successfuly!")
+            router.push({ name: 'Orders' })
+        })
+        .catch((error) => {
+            console.log(error);
+            if (error.response.status == 422) {
+                toast.error('Couldn\'t add the order due to validation errors!')
+                errors.value = error.response.data.data
+            } else {
+                toast.error('Couldn\'t add the order due to unknown server error!')
+            }
+        })
 }
 
 const cancel = () => {
@@ -101,7 +108,7 @@ const order = ref(newOrder())
 const errors = ref(null)
 
 const loadCustomer = () => {
-   userStore.loadCustomer(userStore.user)
+    userStore.loadCustomer(userStore.user)
 }
 
 const customer = computed(() => { return userStore.get_customer() })
@@ -109,7 +116,7 @@ const customer = computed(() => { return userStore.get_customer() })
 watch(
     () => props.id,
     (newValue) => {
-        
+
         loadOrder(newValue)
     },
     { immediate: true }
@@ -118,7 +125,10 @@ watch(
 onBeforeMount(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
+<<<<<<< HEAD
         loadOrder(props.id)
+=======
+>>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
     }
 })
 
@@ -126,6 +136,11 @@ onBeforeMount(() => {
 
 
 <template>
+<<<<<<< HEAD
     
     <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer" ></order-detail>
+=======
+
+    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer"></order-detail>
+>>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
 </template>

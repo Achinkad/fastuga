@@ -35,13 +35,11 @@ class UserController extends Controller
             $user->fill($request->validated());
             $password_hashed = Hash::make($request->input('password'));
             $user->password = $password_hashed;
-
             if ($request->has('photo_url')) {
                 $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
                 Storage::put("public/fotos/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $user->photo_url)));
                 $user->photo_url = $image_id;
             }
-
             $user->save();
             return $user;
         });
@@ -105,23 +103,5 @@ class UserController extends Controller
         $user->save();
         return new UserResource($user);
     }
-    /*
-    protected function resourceAbilityMap()
-    {
-    return array_merge(parent::resourceAbilityMap(), [
-    'show_me' => 'show_me',
-    'toogle' => 'toogle',
-    'new_password' => 'new_password'
 
-]);
-}
-protected function resourceMethodsWithoutModels()
-{
-return array_merge(parent::resourceMethodsWithoutModels(), [
-'show_me',
-'toogle',
-'new_password'
-]);
-}
-*/
 }

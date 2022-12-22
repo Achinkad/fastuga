@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted, watch, computed  } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js'
 import { useOrderStore } from '../../stores/order.js'
 import { Bootstrap5Pagination } from 'laravel-vue-pagination'
-
 import OrderTable from "./OrderTable.vue"
 import OrderItemsTable from "./OrderItemsTable.vue"
 
@@ -26,12 +25,12 @@ const props = defineProps({
 })
 
 const loadOrders = (page = 1) => { orderStore.load_orders(page, status.value) }
-const loadOrderItems = (page = 1) => { orderStore.loadOrderItems(page,'R') }
+const loadOrderItems = (page = 1) => { orderStore.loadOrderItems(page, 'R') }
 
 const total = computed(() => {
     pagination_aux.value = orderStore.get_page()
     if (pagination_aux.value.meta != undefined) {
-       total_orders = pagination_aux.value.meta.total
+        total_orders = pagination_aux.value.meta.total
     }
     return total_orders
 })
@@ -78,35 +77,51 @@ onMounted(() => {
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div class="d-flex align-items-center" v-if="userStore.user && userStore.user.type!='EC'">
+                                    <div class="d-flex align-items-center"
+                                        v-if="userStore.user && userStore.user.type!='EC'">
                                         <label for="selectCompleted" class="me-2">Status</label>
                                         <select class="form-select" id="selectCompleted" v-model="status">
-                                            <option value="all" selected v-if="userStore.user && userStore.user.type!='EC'">Any</option>
-                                            <option value="P" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Preparing</option>
-                                            <option value="R" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Ready</option>
-                                            <option value="D" v-if="userStore.user && userStore.user.type!='EC'">Delivered</option>
-                                            <option value="C" v-if="userStore.user && userStore.user.type!='EC'" >Canceled</option>
+                                            <option value="all" selected
+                                                v-if="userStore.user && userStore.user.type!='EC'">Any</option>
+                                            <option value="P"
+                                                v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">
+                                                Preparing</option>
+                                            <option value="R"
+                                                v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">
+                                                Ready</option>
+                                            <option value="D" v-if="userStore.user && userStore.user.type!='EC'">
+                                                Delivered</option>
+                                            <option value="C" v-if="userStore.user && userStore.user.type!='EC'">
+                                                Canceled</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 d-flex justify-content-end align-items-end" v-if="!userStore.user || (userStore.user && userStore.user.type == 'C')">
+                            <div class="col-xl-4 d-flex justify-content-end align-items-end"
+                                v-if="!userStore.user || (userStore.user && userStore.user.type == 'C')">
                                 <button type="button" class="btn btn-warning px-4 btn-add" @click="addOrder">
                                     <i class="bi bi-xs bi-plus-circle me-2"></i>Add Order
                                 </button>
                             </div>
 
-                            <order-table :orders="orders" @edit="editOrder" v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
-                            <order-table :orders="anonymous_orders" @edit="editOrder" v-if="!userStore.user"></order-table>
+                            <order-table :orders="orders" @edit="editOrder"
+                                v-if="(userStore.user && userStore.user.type != 'EC')"></order-table>
+                            <order-table :orders="anonymous_orders" @edit="editOrder"
+                                v-if="!userStore.user"></order-table>
 
-                            <order-items-table :order_items="order_items" v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
+                            <order-items-table :order_items="order_items"
+                                v-if="userStore.user && userStore.user.type == 'EC'"></order-items-table>
 
-                            <div v-if="userStore.user && userStore.user.type != 'EC'" class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders" :limit="5"></Bootstrap5Pagination>
+                            <div v-if="userStore.user && userStore.user.type != 'EC'"
+                                class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrders"
+                                    :limit="5"></Bootstrap5Pagination>
                             </div>
-                             <div v-if="userStore.user && userStore.user.type=='EC'" class="d-flex justify-content-end mt-3">
-                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItems" :limit="5"></Bootstrap5Pagination>
+                            <div v-if="userStore.user && userStore.user.type=='EC'"
+                                class="d-flex justify-content-end mt-3">
+                                <Bootstrap5Pagination :data="pagination" @pagination-change-page="loadOrderItems"
+                                    :limit="5"></Bootstrap5Pagination>
                             </div>
                         </div>
                     </div>

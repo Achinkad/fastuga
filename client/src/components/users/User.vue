@@ -1,15 +1,12 @@
 <script setup>
 import { ref, watch, inject} from 'vue'
-import UserDetail from "./UserDetail.vue"
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
-
+import UserDetail from "./UserDetail.vue"
 
 const router = useRouter()
 const axios = inject('axios')
 const toast = inject('toast')
-
 const serverBaseUrl = inject("serverBaseUrl")
-
 
 const props = defineProps({
     id: {
@@ -18,13 +15,11 @@ const props = defineProps({
     }
 })
 
-
-
 const newUser = () => {
     return {
         name: '',
         email: '',
-        type: 'C',
+        type: '',
         photo_url: null,
         blocked: 0,
         password :'',
@@ -53,26 +48,22 @@ const loadUser = (id) => {
 const user = ref(newUser())
 
 const add = (user_values) => {
-
     axios.post(serverBaseUrl + '/api/users', user_values)
     .then((response) => {
         user.value = response.data.data
         originalValueStr = dataAsString()
-        toast.success('user #' + user.value.id + ' was created successfully.')
+        toast.success(user.value.name + ' (#' + user.value.id + ') was created successfully!')
         router.back()
     })
     .catch((error) => {
-
         if (error.response.status == 422) {
-            toast.error('user was not created due to validation errors!')
+            toast.error('You messed up. Check the form again!')
             errors.value = error.response.data.data
         } else {
-            toast.error('user was not created due to unknown server error!')
+            toast.error('Oops, something went wrong on the server side.')
         }
     })
 }
-
-
 
 const cancel = () => {
     originalValueStr = dataAsString()
@@ -101,11 +92,8 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-
 const errors = ref(null)
 const confirmationLeaveDialog = ref(null)
-
-
 
 watch(
     () => props.id,
