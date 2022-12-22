@@ -84,7 +84,7 @@ const router = createRouter({
             props: { onlyCurrentOrders: true, ordersTitle: "Current Order" },
         },
         {
-            path: "/order/new",
+            path: "/orders/new",
             name: "NewOrder",
             component: () => import("../components/orders/Order.vue"),
             props: { id: -1 },

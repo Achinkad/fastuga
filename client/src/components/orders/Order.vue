@@ -50,15 +50,15 @@ const newOrder = () => {
 
 
 const loadOrder = (id) => {
- 
+    console.log("aaaaa")
     if (!id || (id < 0)) {
         order.value = newOrder()
-        
+        console.log("bbbb")
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
         .then((response) => {
             order.value = response.data.data
-                       
+            console.log(order.value)
         })
         .catch((error) => {
             console.log(error)
