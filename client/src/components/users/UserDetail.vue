@@ -153,7 +153,7 @@ watch(() => props.user, (newUser) => {
                                         <div class="mb-3 px-1">
                                             <label for="type" class="form-label">Role <span
                                                     class="text-danger">*</span></label>
-                                            <select v-if="userStore.user.type == 'EM'" id="type" name="type"
+                                            <select v-if="userStore.user.type == 'EM' && editingUser.type != 'C'" id="type" name="type"
                                                 class="form-select" v-model="editingUser.type">
                                                 <option value="EM" selected>Manager</option>
                                                 <option value="EC">Chef</option>
@@ -189,7 +189,7 @@ watch(() => props.user, (newUser) => {
                     </div>
                 </div>
             </div>
-            <div v-if="editingUser.type == 'C' || userStore.user.type == 'EM'">
+            <div v-if="editingUser.type != 'C' && userStore.user.type == 'EM'">
                 <div class="mb-3 d-flex justify-content-end">
                     <div class="mb-3 px-1">
                         <button type="button" class="btn btn-warning px-4 btn-add" @click="add"
