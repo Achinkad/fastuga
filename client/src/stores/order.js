@@ -220,7 +220,7 @@ export const useOrderStore = defineStore("orders", () => {
         prepared_by: userStore.user.id,
       };
     }
-  
+
     const response = await axios({
       method: "PATCH",
       url: "order-items/" + order_item.id + "/status",
@@ -237,44 +237,50 @@ export const useOrderStore = defineStore("orders", () => {
       socket.emit("updatedOrderChef", response.data.data.order);
     }
     return response.data.data;
-}
-    const get_order_items_preparing = () => {
-        return order_items_preparing.value;
-    };
-    const get_orders = () => {
-        return orders.value;
-    };
+  }
+  const get_order_items_preparing = () => {
+    return order_items_preparing.value;
+  };
+  const get_orders = () => {
+    return orders.value;
+  };
 
-    const get_anonymous_orders = computed(() => {
-        return anonymous_orders.value;
-    });
-    const get_order_items = () => {
-        return order_items.value;
-    };
-    const get_order_items_waiting = () => {
-        return order_items.value;
-    };
-    const get_orders_this_month = () => {
-        return number_orders_this_month.value;
-    };
-    const get_revenue_orders = () => {
-        return revenue_orders.value;
-    };
-    const get_page = () => {
-        return pagination.value;
-    };
-    const get_page_preparation = () => {
-        return pagination_preparation.value;
-    };
-    const clear_orders = () => {
-        orders.value = [];
-    };
-    const total_orders = computed(() => {
-        return orders.value.length;
-    });
-    const my_orders = computed(() => {
-        return orders.value.filter((or) => userStore.customer.id);
-      });
+  const get_anonymous_orders = computed(() => {
+    return anonymous_orders.value;
+  });
+  const get_order_items = () => {
+    return order_items.value;
+  };
+  const get_order_items_waiting = () => {
+    return order_items.value;
+  };
+  const get_orders_this_month = () => {
+    return number_orders_this_month.value;
+  };
+  const get_revenue_orders = () => {
+    return revenue_orders.value;
+  };
+  const get_page = () => {
+    return pagination.value;
+  };
+  const get_page_preparation = () => {
+    return pagination_preparation.value;
+  };
+  const clear_orders = () => {
+    orders.value = [];
+  };
+  const total_orders = computed(() => {
+    return orders.value.length;
+  });
+  const my_orders = computed(() => {
+    return orders.value.filter((or) => userStore.customer.id);
+  });
+  const my_orders_delivery = computed(() => {
+    return orders.value.filter((or) => userStore.userId);
+  });
+  const total_my_orders = computed(() => {
+    return my_orders.value.length;
+  });
 
   socket.on("updatedOrderChef", (order) => {
     orders.value.push(order);
@@ -298,35 +304,34 @@ export const useOrderStore = defineStore("orders", () => {
     toast.info(`The Order (#${order.id}) was deleted!`);
   });
 
-    return {
-        orders,
-        my_orders,
-        total_my_orders,
-        get_anonymous_orders,
-        loadNumberOrdersMonth,
-        load_orders,
-        get_page,
-        get_orders,
-        total_orders,
-        insert_order,
-        delete_order,
-        loadNumberOrdersMonth,
-        loadRevenueOrders,
-        get_revenue_orders,
-        loadNumberOrdersThisMonth,
-        get_orders_this_month,
-        loadOrderItems,
-        get_order_items,
-        loadOrderItemsWaiting,
-        get_order_items_waiting,
-        my_orders_delivery,
-        update_order_status,
-        count_orders,
-        count_orders_by_status,
-        loadOrderItemsPreparing,
-        get_order_items_preparing,
-        update_order_items_status,
-        get_page_preparation,
-
-    };
+  return {
+    orders,
+    my_orders,
+    total_my_orders,
+    get_anonymous_orders,
+    loadNumberOrdersMonth,
+    load_orders,
+    get_page,
+    get_orders,
+    total_orders,
+    insert_order,
+    delete_order,
+    loadNumberOrdersMonth,
+    loadRevenueOrders,
+    get_revenue_orders,
+    loadNumberOrdersThisMonth,
+    get_orders_this_month,
+    loadOrderItems,
+    get_order_items,
+    loadOrderItemsWaiting,
+    get_order_items_waiting,
+    my_orders_delivery,
+    update_order_status,
+    count_orders,
+    count_orders_by_status,
+    loadOrderItemsPreparing,
+    get_order_items_preparing,
+    update_order_items_status,
+    get_page_preparation,
+  };
 });

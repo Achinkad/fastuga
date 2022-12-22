@@ -1,9 +1,5 @@
 <script setup>
-<<<<<<< HEAD
-import { ref, watch, inject,computed,onBeforeMount } from 'vue'
-=======
-import { ref, watch, inject, computed, onMounted } from 'vue'
->>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
+import { ref, watch, inject, computed, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
@@ -58,16 +54,6 @@ const loadOrder = (id) => {
         console.log("bbbb")
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
-<<<<<<< HEAD
-        .then((response) => {
-            order.value = response.data.data
-            console.log(order.value)
-        })
-        .catch((error) => {
-            console.log(error)
-            router.push({ name: 'Forbidden' })
-        })
-=======
             .then((response) => {
                 order.value = response.data.data
                 originalValueStr = dataAsString()
@@ -75,7 +61,6 @@ const loadOrder = (id) => {
             .catch((error) => {
                 console.log(error)
             })
->>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
     }
 }
 
@@ -125,10 +110,6 @@ watch(
 onBeforeMount(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
-<<<<<<< HEAD
-        loadOrder(props.id)
-=======
->>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
     }
 })
 
@@ -136,11 +117,6 @@ onBeforeMount(() => {
 
 
 <template>
-<<<<<<< HEAD
-    
-    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer" ></order-detail>
-=======
 
     <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer"></order-detail>
->>>>>>> 6e0e6e3ce8a7c35a4bc5f49b88e7b05e12130766
 </template>
