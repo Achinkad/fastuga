@@ -76,6 +76,8 @@ const changePassword = () => {
                     <label for="inputPasswordConfirm" class="form-label">Password Confirmmation</label>
                     <input type="password" class="form-control" id="inputPasswordConfirm" required
                       v-model="passwords.password_confirm">
+                      <field-error-message :errors="errors" fieldName="password"></field-error-message>
+
                   </div>
                 </div>
                 <div class="mb-3 d-flex justify-content-end">
