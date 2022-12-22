@@ -44,7 +44,7 @@ const pagination = computed(() => { return orderStore.get_page() })
 const addOrder = () => { router.push({ name: "NewOrder" }) }
 const editOrder = (order) => { router.push({ name: "Order", params: { id: order.id } }) }
 
-watch(status, () => { 
+watch(status, () => {
 
     loadOrders()
 })
@@ -78,21 +78,15 @@ onMounted(() => {
                         <div class="row mb-2">
                             <div class="col-xl-8">
                                 <div class="d-flex">
-                                    <div  class="d-flex align-items-center">
-                                        <div v-if="userStore.user && userStore.user.type!='EC'">
-                                            <label for="selectCompleted" class="me-2">Status</label>
-                                            
-                                            <select class="form-select" id="selectCompleted" v-model="status">
-                                                <option value="all" selected v-if="userStore.user && userStore.user.type!='EC'">Any</option>
-
-                                                <option value="P" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Preparing</option>
-
-                                                <option value="R" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Ready</option>
-                                                
-                                                <option value="D" v-if="userStore.user && userStore.user.type!='EC'">Delivered</option>
-                                                <option value="C" v-if="userStore.user && userStore.user.type!='EC'" >Canceled</option>
-                                            </select>
-                                        </div>
+                                    <div class="d-flex align-items-center" v-if="userStore.user && userStore.user.type!='EC'">
+                                        <label for="selectCompleted" class="me-2">Status</label>
+                                        <select class="form-select" id="selectCompleted" v-model="status">
+                                            <option value="all" selected v-if="userStore.user && userStore.user.type!='EC'">Any</option>
+                                            <option value="P" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Preparing</option>
+                                            <option value="R" v-if="userStore.user && userStore.user.type!='ED' && userStore.user.type!='EC'">Ready</option>
+                                            <option value="D" v-if="userStore.user && userStore.user.type!='EC'">Delivered</option>
+                                            <option value="C" v-if="userStore.user && userStore.user.type!='EC'" >Canceled</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

@@ -27,14 +27,6 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'data' => $validator->errors()
-        ], 422));
-    }
-
     public function messages()
     {
         return [

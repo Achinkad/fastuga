@@ -226,6 +226,7 @@ onMounted(() => {
                                             v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
                                         <field-error-message :errors="errors"
                                             fieldName="payment_reference"></field-error-message>
+                                            
                                     </div>
                                 </div>
                                 <div class="row mt-3 mb-3" v-if="userStore.user && userStore.user.type == 'C'">
@@ -241,16 +242,22 @@ onMounted(() => {
                                         </select>
                                     </div>
                                 </div>
+                               <field-error-message :errors="errors" fieldName="items"></field-error-message>
+                               <field-error-message :errors="errors" fieldName="points_price"></field-error-message>
+                          
                             </div>
-                            <field-error-message :errors="errors" fieldName="items"></field-error-message>
+                            
                         </div>
                     </div>
 
                     <div class="card" v-if="$route.name == 'Order'">
+                    
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
                             <h4 class="header-title">Your Order Products</h4>
                         </div>
+                         
                         <div class="card-body">
+                        
                             <div class="row mb-2">
                                 <div class="col-md">
                                     <table class="table table-responsive align-middle">
