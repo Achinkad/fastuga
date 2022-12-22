@@ -31,16 +31,16 @@ const users = computed(() => { return userStore.get_users() })
 
 const total = computed(() => {
     pagination_aux.value = userStore.get_page()
-  
+
     if (pagination_aux.value.meta != undefined) {
        total_users = pagination_aux.value.meta.total
     }
-    
+
     return total_users
 })
 
 watch(value_role, () => {
-    
+
     loadUsers()
 })
 const addUser = () => {

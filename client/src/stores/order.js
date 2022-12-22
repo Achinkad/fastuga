@@ -156,10 +156,10 @@ export const useOrderStore = defineStore("orders", () => {
         if (userStore.user) {
             orders.value.push(response.data.data);
         } else {
-            anonymous_orders.value.push(response.data.data);
+            anonymous_orders.value.push(response.data.data)
         }
 
-        socket.emit("newOrder", response.data.data);
+        socket.emit("newOrder", response.data.data)
         return response.data.data;
     }
 

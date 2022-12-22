@@ -38,7 +38,7 @@ const socket = inject("socket")
                     type: type
                 }
             })
-            
+
             users.value = response.data.data
             pagination.value = response.data
             return users.value
@@ -60,7 +60,7 @@ const socket = inject("socket")
             throw error
         }
     }
-    
+
 
     function clearUser () {
         delete axios.defaults.headers.common.Authorization
@@ -73,10 +73,10 @@ const socket = inject("socket")
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
-           
-            await loadUser()   
+
+            await loadUser()
             socket.emit('loggedIn', user.value)
-          
+
             if (user.value.type == "C") { await get_customer(user.value) }
             return true
         }
@@ -102,7 +102,7 @@ const socket = inject("socket")
         let storedToken = sessionStorage.getItem('token')
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
-            
+
             await loadUser()
             socket.emit('loggedIn', user)
             return true
@@ -114,9 +114,7 @@ const socket = inject("socket")
     function save (user_values, user_id) {
         axios.put(serverBaseUrl+'/api/users/' + user_id, user_values)
         .then((response) => {
-           
             toast.success('User #' + user_id + ' was updated successfully.')
-
         })
         .catch((error) => {
             console.log(error)

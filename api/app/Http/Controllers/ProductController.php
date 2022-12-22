@@ -48,7 +48,6 @@ class ProductController extends Controller
     public function update(StoreProductRequest $request, Product $product)
     {
         if (Auth()->guard('api')->user()->type != "EM") { abort(403); }
-
         $product->fill($request->validated());
 
         if ($request->has('photo_url')) {
@@ -60,8 +59,6 @@ class ProductController extends Controller
             $image_id = Str::random(15) . "." . explode('/', explode(';', $request->input('photo_url'))[0])[1];
             Storage::put("public/products/" . $image_id, base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $product->photo_url)));
             $product->photo_url = $image_id;
-        } else {
-            $product->photo_url = "product-none.png";
         }
 
         $product->save();
