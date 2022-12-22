@@ -128,9 +128,9 @@ const updateCostumer = () => {
         router.back()
     })
     .catch((error) => {
+      errors.value = error.response.data.errors
         if (error.response.status == 422) {
             toast.error('User was not created due to validation errors!')
-            errors.value = error.response.data.errors
         } else {
             toast.error('User was not created due to unknown server error!')
         }
