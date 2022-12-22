@@ -27,6 +27,7 @@ const photoFullUrl = (product) => { return serverBaseUrl + "/storage/products/" 
 
 onMounted(()=>{
     socket.emit("Anonymous")
+    
 })
 
 onBeforeMount(() => {

@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
     socket.to("Delivery").to("Manager").emit("updatedOrderChef",order);
   });
   socket.on("Anonymous", () => {
-    console.log("ENTROU")
+
     socket.join("Anonymous");
   });
   socket.on("loggedIn", function (user) {

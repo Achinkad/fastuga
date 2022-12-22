@@ -129,7 +129,7 @@ let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore()
-    
+  
     
     if (handlingFirstRoute) {
         handlingFirstRoute = false
@@ -138,7 +138,13 @@ router.beforeEach(async (to, from, next) => {
     }  
 
     if (to.name == "Dashboard") {
-        if (!userStore.user) { next({ name: "AnonymousDashboard" }); return }
+        
+        if (!userStore.user) { 
+           
+            next({ name: "AnonymousDashboard" });
+            
+            return 
+        }
 
         switch (userStore.user.type) {
             case "C":
