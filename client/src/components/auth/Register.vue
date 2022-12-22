@@ -42,15 +42,42 @@ const dataAsString = () => {
 
 let originalValueStr = ''
 
+const validations = (data) => {
+    errors.value = {}
+    data.forEach((item, i) => {
+        switch (i) {
+            case "phone":
+                if(item.length == 0 || item.length < 9 || item.length >= 20) errors.value.phone = ["Enter a valid phone number."]
+                break;
+            case "nif":
+                if(item.length > 0 && (item.length != 9)) errors.value.nif = ["Enter a valid NIF."]
+                break;
+            case "default_payment_type":
+                if(item.length > 0 && (item != "VISA" && item != "MBWAY" && item != "PAYPAL")) errors.value.default_payment_type = ["Select a valid payment type."]
+                break;
+            case "name":
+                if(item.length === 0) errors.value.name = ["Enter a valid name."]
+                break;
+            case "email":
+                if(item.length === 0) errors.value.email = ["Enter a valid e-mail address."]
+                break;
+            case "password":
+                if(item.length < 8) errors.value.password = ["Password should be at least 8 characters."]
+                break;
+        }
+    })
+    return Object.keys(errors.value).length === 0 ? true : false
+}
+
 const saveCostumer = () => {
     errors.value = null
-    if(credentials.value.password == credentials.value.confirmpassword){
+    if(credentials.value.password == credentials.value.confirmpassword) {
         let formData = new FormData()
 
-        formData.append('phone', saveCustomer.value.phone);
-        formData.append('points', saveCustomer.value.points);
+        formData.append('phone', saveCustomer.value.phone)
+        formData.append('points', saveCustomer.value.points)
 
-        if(saveCustomer.value.nif!=undefined) {
+        if(saveCustomer.value.nif != undefined) {
             formData.append('nif', saveCustomer.value.nif);
         }
 
@@ -68,21 +95,23 @@ const saveCostumer = () => {
         formData.append('type', saveCustomer.value.type);
         formData.append('blocked', saveCustomer.value.blocked);
 
-        axios.post(serverBaseUrl+'/api/customers', formData)
-        .then((response) => {
-            saveCustomer.value = response.data.data
-            originalValueStr = dataAsString()
-            toast.success('Register was done successfully.')
-            router.back()
-        })
-        .catch((error) => {
-            if (error.response.status == 422) {
-                toast.error('User was not created due to validation errors!')
-                errors.value = error.response.data.errors
-            } else {
-                toast.error('User was not created due to unknown server error!')
-            }
-        })
+        if (validations(formData)) {
+            axios.post(serverBaseUrl+'/api/customers', formData)
+            .then((response) => {
+                saveCustomer.value = response.data.data
+                originalValueStr = dataAsString()
+                toast.success('Register was done successfully.')
+                router.back()
+            })
+            .catch((error) => {
+                if (error.response.status == 422) {
+                    toast.error('User was not created due to validation errors!')
+                    errors.value = error.response.data.errors
+                } else {
+                    toast.error('User was not created due to unknown server error!')
+                }
+            })
+        }
     } else {
         toast.error("The passwords aren't matching.")
     }
@@ -126,14 +155,17 @@ onBeforeUnmount(() => {
                                 <div class="mb-3 col-md-6">
                                     <label for="inputName" class="form-label">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="inputName" placeholder="Enter your name" required v-model="saveCustomer.name">
+                                    <field-error-message :errors="errors" fieldName="name"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="inputUsername" class="form-label">Email Address <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="inputUsername" placeholder="Enter your email" required v-model="credentials.username">
+                                    <field-error-message :errors="errors" fieldName="email"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="inputPassword" class="form-label">Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" id="inputPassword" placeholder="Enter your password" required v-model="credentials.password">
+                                    <field-error-message :errors="errors" fieldName="password"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="inputConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
@@ -142,10 +174,12 @@ onBeforeUnmount(() => {
                                 <div class="mb-3 col-md-6">
                                     <label for="inputPhone" class="form-label">Phone <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="inputPhone" placeholder="Enter your phone" required v-model="saveCustomer.phone">
+                                    <field-error-message :errors="errors" fieldName="phone"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="inputNif" class="form-label">NIF</label>
                                     <input type="text" class="form-control" id="inputNif" placeholder="Enter your NIF" v-model="saveCustomer.nif">
+                                    <field-error-message :errors="errors" fieldName="nif"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="payment_type" class="form-label">Payment Type</label>
@@ -154,11 +188,12 @@ onBeforeUnmount(() => {
                                         <option value="PAYPAL">PayPal</option>
                                         <option value="MBWAY">MBWay</option>
                                     </select>
-                                    <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
+                                    <field-error-message :errors="errors" fieldName="default_payment_type"></field-error-message>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="inputPaymentReference" class="form-label">Default Payment Reference</label>
                                     <input type="text" class="form-control" id="inputPaymentReference" placeholder="Enter your payment reference" v-model="saveCustomer.default_payment_reference">
+                                    <field-error-message :errors="errors" fieldName="default_payment_reference"></field-error-message>
                                 </div>
                                 <div class="mb-3 d-flex justify-content-center">
                                     <button type="button" class="btn btn-primary px-3" @click="register">Sign Up</button>
