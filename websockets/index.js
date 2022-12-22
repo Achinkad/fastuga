@@ -18,23 +18,21 @@ io.on("connection", (socket) => {
   socket.on("newOrder", (order) => {
     if (order.status == "R") {
       socket.to("Delivery").emit("newOrder", order);
-   
     }
     if (order.status == "P") {
-    
       socket.to("Chef").emit("newOrder", order);
-   
     }
   });
 
   socket.on("deliveredOrder", (order) => {
-    if(order.customer== null){
+    if (order.customer == null) {
       socket.to("Manager").to("Anonymous").emit("deliveredOrder", order);
-
-    }else{
-       socket.to("Manager").to(order.customer.user.id).emit("deliveredOrder", order);
+    } else {
+      socket
+        .to("Manager")
+        .to(order.customer.user.id)
+        .emit("deliveredOrder", order);
     }
-   
   });
 
   socket.on("deleteOrder", (order) => {
@@ -42,20 +40,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updatedOrderChef", (order) => {
-    socket.to("Delivery").to("Manager").emit("updatedOrderChef",order);
+    socket.to("Delivery").to("Manager").emit("updatedOrderChef", order);
   });
   socket.on("Anonymous", () => {
-
     socket.join("Anonymous");
   });
   socket.on("loggedIn", function (user) {
-    
     socket.emit("loggedIn", user);
     socket.join(user.id);
-    socket.leave("Anonymous")
+    socket.leave("Anonymous");
     if (user.type == "EM") {
       socket.join("Manager");
-
     }
     if (user.type == "ED") {
       socket.join("Delivery");
@@ -65,11 +60,10 @@ io.on("connection", (socket) => {
     }
     if (user.type == "EC") {
       socket.join("Chef");
-    } 
+    }
   });
 
-  socket.on("loggedOut", function (user)
-  {
+  socket.on("loggedOut", function (user) {
     socket.emit("loggedOut", user);
     socket.leave(user.id);
     if (user.type == "EM") {
@@ -83,8 +77,6 @@ io.on("connection", (socket) => {
     }
     if (user.type == "EC") {
       socket.leave("Chef");
-    } 
+    }
   });
-
-
 });

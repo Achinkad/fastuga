@@ -1,16 +1,16 @@
 <script setup>
-import { ref, watch, inject, computed, onMounted } from 'vue'
+import { ref, watch, inject, computed, onMounted, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/user.js';
 import { useOrderStore } from '../../stores/order.js';
 import OrderDetail from "./OrderDetails.vue"
 
-const serverBaseUrl = inject("serverBaseUrl")
 const router = useRouter()
 const userStore = useUserStore()
 const orderStore = useOrderStore()
 const axios = inject('axios')
 const toast = inject('toast')
+const serverBaseUrl = inject("serverBaseUrl")
 
 const props = defineProps({
     id: {
@@ -22,7 +22,6 @@ const props = defineProps({
         default: null
     }
 })
-
 
 const newOrder = () => {
     return {
@@ -46,13 +45,12 @@ const newOrder = () => {
     }
 }
 
-let originalValueStr = ''
+
 const loadOrder = (id) => {
-    originalValueStr = ''
-    errors.value = null
+    console.log("aaaaa")
     if (!id || (id < 0)) {
         order.value = newOrder()
-        originalValueStr = dataAsString()
+        console.log("bbbb")
     } else {
         axios.get(serverBaseUrl + '/api/orders/' + id)
             .then((response) => {
@@ -83,7 +81,6 @@ const add = (order) => {
 }
 
 const cancel = () => {
-    originalValueStr = dataAsString()
     router.push({ name: 'Orders' })
 }
 
@@ -109,16 +106,22 @@ watch(
     { immediate: true }
 )
 
-onMounted(() => {
+onBeforeMount(() => {
     if (userStore.user && userStore.user.type == 'C') {
         loadCustomer()
     }
 })
 
+onBeforeMount(async () => {
+    await axios.get(serverBaseUrl + '/api/orders/' + props.id)
+    .catch((error) => {
+        if (error.response.status == 404) {
+            router.push({ name: 'NotFound' })
+        }
+    })
+})
 </script>
 
-
 <template>
-
-    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer"></order-detail>
+    <order-detail :order="order" :errors="errors" @cancel="cancel" @add="add" :customer="customer" ></order-detail>
 </template>

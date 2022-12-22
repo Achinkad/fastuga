@@ -61,10 +61,7 @@ const save = () => {
     formData.append('price', editingProduct.value.price)
     formData.append('type', editingProduct.value.type)
     formData.append('description', editingProduct.value.description)
-    for (var x of formData) {
-        console.log(x[0] + " => " + x[1])
-    }
-    formData.append('_method', 'PUT')
+
     if (previewImage) { formData.append('photo_url', previewImage) }
     if (validations(formData)) emit("save", formData)
 }

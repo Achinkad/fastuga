@@ -3,14 +3,10 @@ import { ref, watch, inject } from 'vue'
 import ProductDetail from "./ProductDetail.vue"
 import { useRouter } from 'vue-router'
 
-import axios from 'axios'
-
-
 const router = useRouter()
 const toast = inject('toast')
+const axios = inject('axios')
 const serverBaseUrl = inject("serverBaseUrl")
-
-axios.defaults.headers.common.Authorization = "Bearer " + sessionStorage.token
 
 const props = defineProps({
     id: {
@@ -50,7 +46,7 @@ const loadProduct = (id) => {
 }
 
 const save = (product_values) => {
-    axios.post(serverBaseUrl + '/api/products/' + props.id, product_values)
+    axios.put(serverBaseUrl + '/api/products/' + props.id, product_values)
     .then((response) => {
         toast.success("Product updated successfuly!")
         router.push({ name: 'Products' })

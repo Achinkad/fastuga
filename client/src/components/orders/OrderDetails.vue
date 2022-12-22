@@ -6,7 +6,10 @@ import { useProductStore } from '../../stores/product.js'
 import productNoneUrl from '@/assets/product-none.png'
 
 const serverBaseUrl = inject("serverBaseUrl")
+
+
 const productStore = useProductStore()
+
 var value_type = ref("all")
 
 
@@ -39,22 +42,24 @@ const newOrderItem = () => {
 }
 
 const emit = defineEmits(["cancel", "add"])
-const editingOrder = ref(props.order)
-const customer = ref(props.customer)
-editingOrder.value.points_used_to_pay = "0"
 
-watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
-watch(value_type, () => {
-    loadProducts()
-    totalPrice()
-})
+const editingOrder = ref(props.order)
+
+const customer = ref(props.customer)
+
+const paginationNewOrder = computed(() => { return productStore.get_page() })
+
+const products = computed(() => { return productStore.get_products() })
+
+const points_to_pay = ref(0)
+
+const payment_type = ref("Payment Reference")
+
+editingOrder.value.points_used_to_pay = "0"
 
 const loadProducts = (page = 1) => {
     productStore.load_products(page, value_type.value)
 }
-
-const paginationNewOrder = computed(() => { return productStore.get_page() })
-const products = computed(() => { return productStore.get_products() })
 
 const addProduct = (product) => {
     const orderItem = ref(newOrderItem())
@@ -67,6 +72,7 @@ const addProduct = (product) => {
 const add = () => {
     fillOrder();
     let formData = new FormData()
+
     formData.append('total_price', editingOrder.value.total_price);
     formData.append('payment_type', editingOrder.value.payment_type);
     formData.append('payment_reference', editingOrder.value.payment_reference);
@@ -78,7 +84,9 @@ const add = () => {
         editingOrder.value.points_used_to_pay = 0;
     }
     formData.append('points_used_to_pay', editingOrder.value.points_used_to_pay)
+
     editingOrder.value.order_item.forEach((item) => { formData.append('items[]', JSON.stringify(item)) });
+
     emit("add", formData);
 }
 
@@ -133,7 +141,6 @@ const productPhotoFullUrl = (product) => {
     return product.photo_url ? serverBaseUrl + "/storage/products/" + product.photo_url : productNoneUrl
 }
 
-const points_to_pay = ref(0)
 watch(() => editingOrder.value.points_used_to_pay, (newValue) => {
     points_to_pay.value = newValue
 })
@@ -149,7 +156,6 @@ watch(
     }
 )
 
-const payment_type = ref("Payment Reference")
 watch(() => editingOrder.value.payment_type, (newValue) => {
 
     switch (newValue) {
@@ -170,6 +176,13 @@ watch(() => editingOrder.value.payment_type, (newValue) => {
             break;
     }
 })
+
+watch(() => props.order, (newOrder) => { editingOrder.value = newOrder })
+watch(value_type, () => {
+    loadProducts()
+    totalPrice()
+})
+
 
 onMounted(() => {
     loadProducts()
@@ -197,17 +210,15 @@ onMounted(() => {
                             <div class="w-100">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="payment_type" class="form-label">Payment Type <span
-                                                class="text-danger">*</span> </label>
-                                        <select id="payment_type" name="payment_type" class="form-select"
-                                            v-model="editingOrder.payment_type">
+                                        <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span> </label>
+                                        <select id="payment_type" name="payment_type" class="form-select" v-model="editingOrder.payment_type">
                                             <option value="VISA">Visa</option>
                                             <option value="PAYPAL">PayPal</option>
                                             <option value="MBWAY">MBWay</option>
                                         </select>
-                                        <field-error-message :errors="errors"
-                                            fieldName="payment_type"></field-error-message>
+                                        <field-error-message :errors="errors" fieldName="payment_type"></field-error-message>
                                     </div>
+
                                     <div class="col">
                                         <label for="inputPaymentReference" class="form-label">Payment Reference <span
                                                 class="text-danger">*</span></label>
@@ -217,6 +228,7 @@ onMounted(() => {
                                             v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'NewOrder'" />
                                         <field-error-message :errors="errors"
                                             fieldName="payment_reference"></field-error-message>
+                                            
                                     </div>
                                 </div>
                                 <div class="row mt-3 mb-3" v-if="userStore.user && userStore.user.type == 'C'">
@@ -232,18 +244,22 @@ onMounted(() => {
                                         </select>
                                     </div>
                                 </div>
-                                <field-error-message :errors="errors" fieldName="items"></field-error-message>
-                                <field-error-message :errors="errors" fieldName="points_price"></field-error-message>
+                               <field-error-message :errors="errors" fieldName="items"></field-error-message>
+                               <field-error-message :errors="errors" fieldName="points_price"></field-error-message>
+                          
                             </div>
+                            
                         </div>
                     </div>
 
                     <div class="card" v-if="$route.name == 'Order'">
+                    
                         <div class="d-flex card-header justify-content-between align-items-center mb-0 pb-1">
                             <h4 class="header-title">Your Order Products</h4>
                         </div>
+                         
                         <div class="card-body">
-
+                        
                             <div class="row mb-2">
                                 <div class="col-md">
                                     <table class="table table-responsive align-middle">
@@ -296,8 +312,7 @@ onMounted(() => {
                                             <h3 class="mt-2 mb-2 fw-bold">Total price: {{ totalPrice() }}€</h3>
                                         </div>
                                         <div class="col">
-                                            <field-error-message :errors="errors"
-                                                fieldName="total_price"></field-error-message>
+                                            <field-error-message :errors="errors" fieldName="total_price"></field-error-message>
                                         </div>
                                     </div>
                                 </div>
@@ -321,8 +336,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="row"
-                        v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
+                    <div class="row" v-if="((userStore.user && (userStore.user.type == 'C' || userStore.user.type == 'EM')) || !userStore.user) && $route.name == 'Order'">
                         <div class="col">
                             <div class="card widget-flat orange-bg h-100">
                                 <div class="card-body d-flex align-items-center">

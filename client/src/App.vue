@@ -1,12 +1,14 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { useConfigStore } from './stores/config.js'
+import { useOrderStore } from './stores/order.js'
 
 import Navbar from "@/layout/Navbar.vue"
 import Sidebar from "@/layout/Sidebar.vue"
 import Footer from "@/layout/Footer.vue"
 
 const configStore = useConfigStore()
+const orderStore = useOrderStore()
 </script>
 
 <template>
