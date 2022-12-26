@@ -42,7 +42,6 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        dd("here");
         return new ProductResource($product);
     }
 
